@@ -1,0 +1,224 @@
+\documentclass[]{article}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{mathtools}
+
+\newcommand{\ud}{\mathrm{d}}
+\newcommand{\vx}{\mathbf{x}}
+
+\theoremstyle{definition}\newtheorem{theorem}{Theorem}
+
+\begin{document}
+
+Let $S_n$ be the permutation group of $n$ elements. We use elements in $S_n$ as functions $\mathbb{C}^n\rightarrow\mathbb{C}^n$. The group operation is noted as $\circ$, standing for function composition.
+
+For a function $f: \mathbb{C}^n\rightarrow\mathbb{C}$ and a permutation $s \in S_n$, if for any $\vx\in\mathbb{C}^n$, we have $f(s(\vx)) = f(\vx) $, then we call $f$ is $s$-symmetric.
+
+\begin{theorem}
+	All $s \in S_n$ such that $f$ is $s$-symmetric forms a subgroup of $S_n$, which we call the symmetric group of $f$ and note as $G(f)$.
+\end{theorem}
+\begin{proof}
+	To test that $G(f)$ indeed forms a group, we test group axioms:
+	\begin{itemize}
+		
+	\item Closure: $
+	f((s\circ t)(\vx)) = f(s(t(\vx))) = f(t(\vx)) = f(\vx)
+	$ so $s\circ t \in G(F)$.
+	\item Associativity is inherited from group $S_n$.
+	\item Identity element is the identity permutation that does not change $\vx$ (hence the function value $f(\vx)$ is unchanged).
+	\item Inverse element is inherited from group $S_n$. If  $f(s(\vx)) = f(\vx) $, then  $f(s(s^{-1}(\vx))) = f(s^{-1}(\vx))$, which means $f(\vx) = f(s^{-1}(\vx))$ so $s^{-1}\in G(f)$.
+	
+	\end{itemize}
+\end{proof}
+
+
+\begin{theorem}
+	\label{composition}
+	If the function $g: \mathbb{C}^n\rightarrow\mathbb{C}$ is composed by many functions $f_1, f_2,\dots, f_m: \mathbb{C}^n\rightarrow\mathbb{C}$ using an operator $\xi: \mathbb{C}^m\rightarrow\mathbb{C}$, as in \[g(\vx) = \xi(f_1(\vx), f_2(\vx),\dots,f_m(\vx))\,,\] then
+	\[
+		\bigcap_{i=1}^m G(f_i) \subseteq G(g)\,.
+	\]
+\end{theorem}
+\begin{proof}
+	\begin{align*}
+		&s \in \bigcap_{i=1}^m G(f_i) \\
+	\Rightarrow\quad& \forall \vx, i,\, f_i(s(\vx)) = f_i(x)\\
+	\Rightarrow\quad& g(s(\vx)) = g(s(\vx)) \\
+	\Rightarrow\quad& s \in  G(g)\,.
+	\end{align*}
+\end{proof}
+
+\begin{theorem}
+	For a prime $p$, if $(g(\vx))^p = f(\vx)$, then $G(g) \triangleleft G(f)$
+\end{theorem}
+\begin{proof}
+	Using theorem \ref{composition}, we can first proof that $G(g) \subseteq G(f)$.
+	
+	For any $s \in G(f)$, we have
+	\[
+		(g(s(\vx)))^p = f(s(\vx)) = f(\vx) = (g(\vx))^p\,,
+	\]
+	which means
+	\[
+		g(s(\vx)) = w_p^k g(\vx)\,,
+	\]
+	where $w_p = \cos(2\pi/p) + i\sin(2\pi/p)$, and $k$ is some integer in $\mathbb{Z}/n\mathbb{Z}$. For each $s \in G(f)$, we can note $k$ as its ``level" $k(s)$. Therefore $G(g)$ is the set of all $s$ such that $k(s) \equiv 0 $. A property of $k$ follows:
+	\[
+		k(s\circ t) \equiv k(s) + k(t) \mod p\,.
+	\]
+	This is because
+	\[
+		g((s\circ t)(\vx)) =  w_p^{k(s)} g(t(\vx)) = w_p^{k(s)}w_p^{k(t)} g(\vx) =  w_p^{k(s) + k(t)} g(\vx)
+	\]
+	
+	Now for any $s \in G(g)$ and $t \in G(f)$, we have
+	\begin{align*}
+	g((t\circ s \circ t^{-1})(\vx)) &= w_p^{k(s)} g((s \circ t^{-1})(\vx))\\
+	&= w_p^{k(t)} g( t^{-1}(\vx))\\
+	&= w_p^{k(t)}w_p^{k(s^{-1})} g( \vx)\\
+	&= w_p^{k(t)+k(s^{-1})} g( \vx)\\
+	&= w_p^{k(e)}g( \vx)\\
+	&= g( \vx)\,,
+	\end{align*}
+	so $t\circ s \circ t^{-1} \in G(g)$ and $G(g)$ is a normal subgroup of $G(f)$
+\end{proof}
+
+\begin{theorem}
+	\label{cyclic}
+	For a prime $p$, if $(g(\vx))^p = f(\vx)$, then the quotient group $G(f) / G(g)$ is isomorphic to either the trivial group, or the cyclic group $C_p$.
+\end{theorem}
+
+\begin{proof}
+	On one hand, for a $s\notin G(g)$ (i.e. $k(s) \not\equiv 0$), the minimum $r$ such that $s^r \in G(g)$ is $r = p$ (because $w_p^{kp} = 1$ and $p$ is prime), the coset $s\circ G(g)$, as an element in $G(f) / G(g)$, has a rank of $p$. Therefore all elements except the identity element in $G(f) / G(g)$ has the same rank $p$.
+	
+	On the other hand, we can show that if $k(s)\equiv k(t)$, then $s\in t\circ G(g)$, which is equivalent to $\exists u \in G(g), t\circ u = s$. We can pick $u = t^{-1}\circ{s}$ and it follows that
+	\begin{align*}
+	k(u) \equiv k(t^{-1}) + k(s) \equiv k(t^{-1}) + k(t) \equiv 0 \Rightarrow u \in G(g)\,.
+	\end{align*}
+	So we showed that all element $s$ with the same $k(s)$ are in the same coset, forming one element in $G(f) / G(g)$. As there are only $p$ distinct values for $k(s)$, $|G(f) / G(g)| \le p$.
+	
+	If $|G(f) / G(g)| = 1$, we get the trivial group. If $1 < |G(f) / G(g)| \le p$, as the second element must have rank $p$, the quotient group must has $p$ elements, and the element generates all other elements, forming the cyclic group $C_n$.
+	
+	
+\end{proof}
+
+\begin{theorem}
+	\label{reduce-sn1}
+	For $n \ge 2$, $S_n$ has a normal subgroup $A_n$, the alternating group, which consists of all even permutation from $S_n$. $S_n/A_n$ is isomorphic to $C_2$.
+\end{theorem}
+\begin{proof}
+		(TODO)
+\end{proof}
+
+We will use the notation $\{p\rightarrow q, u\rightarrow v,\dots\}$ to represent a permutation $s$ such that $s(\mathbf{x})_p = \mathbf{x}_q$ and $s(\mathbf{x})_u = \mathbf{x}_v$. It can be seen that $\{\dots,u\rightarrow v,\dots\}\circ\{\dots,v\rightarrow w,\dots\}=\{\dots,u\rightarrow w,\dots\}$.
+
+\begin{theorem}
+	\label{cycle-parity}
+	In the notation above, if we list all arrows including fixed items $i\rightarrow i$, each item will appear at the left side of an arrow and the right side of an arrow exactly once each. We can then chain all arrows together and they will form one or several cycles ($i\rightarrow i$ is treated as a cycle of size 1). Then the parity of a permutation is the parity of $\sum L_i - 1$, where $L_i$ is the size of each cycle.
+\end{theorem}
+\begin{proof}
+	Use mathematical induction. It is trivial to see that this is true for $e$, which has $L_i = 1 $ for all cycles and the sum is always even. Now we show that a cycle with size $L$ in an element can always be built from a smaller cycle $L - 1$ plus a singleton cycle, and the parity property preserves. If we want to build $s = \{a\rightarrow b, b\rightarrow c, c\rightarrow\dots\rightarrow x, x\rightarrow a, \dots\}$, we can do $s = s' \circ t$, where $s' = \{b\rightarrow b, a\rightarrow  c, c\rightarrow\dots\rightarrow x, x\rightarrow a, \dots \}$ and $t = \{b\rightarrow c, c\rightarrow b\}$. The change from $s'$ to $s$ is increasing the size of a cycle by 1, while also removing a singleton cycle. This results in a $+1$ to the sum $\sum L_i - 1$ and a change in its parity. $t$ is an odd permutation, so it indeed changes parity between $s'$ and $s$, consistent with the sum parity change. As all elements can be built from $e$ in this way, we proved the parity property for all elements.
+\end{proof}
+	
+\begin{theorem}
+	$A_5$ is simple: the only normal subgroups it has are itself and $\mathrm{E}$.
+\end{theorem}
+\begin{proof}
+	Elements in $A_5$ can be divided into the following categories:
+	\begin{itemize}
+	\item A: the element $e$, which keeps all items in-place.
+	\item B: keeps two items in-place, cycles the other three elements.
+	\item C: keeps one item $a$ in-place, swaps $b$ and $c$, and swaps $d$ and $e$.
+	\item D: all five items are cycled together.
+	\end{itemize}
+Theorem \ref{cycle-parity} indicates all these categories are even permutations.
+
+To prove that these categories covers all elements, we count the order of each category:
+	\begin{itemize}
+		\item A: $1$
+		\item B:  ${5 \choose 3} * 2 = 20$ 
+		\item C: ${5 \choose 2} * {3 \choose 2} / 2 = 15$
+		\item D: $4! = 24$
+	\end{itemize}
+The total count is $1 + 20 + 15 + 24 = 60 = 5! / 2$, which is the order of $A_5$.
+
+
+\paragraph{Generation from $B$}First we show that if any element $s\in B$ is in the normal subgroup $s\in H \triangleleft A_5$, then $H = A_5$. Say $s$ cycles between $a$, $b$ and $c$ (That is, $s(\dots a \dots b \dots c \dots) = (\dots b \dots c \dots a \dots)$, which we note as $\{a\rightarrow b, b \rightarrow c, c\rightarrow a\}$), itself generates the reverse rotation element $s^2 = \{a\rightarrow c, b \rightarrow a, c\rightarrow b\}$, which are all possible rotation between $a$, $b$ and $c$. It can then generate 3-item cycle with one item replaced. For example, to generate a cycle $s' = \{a\rightarrow b, b \rightarrow d, d\rightarrow a\}$  from $s = \{a\rightarrow b, b \rightarrow c, c\rightarrow a\}$ , we use the normal subgroup's definition $s'=t\circ s\circ t^{-1}$, where $t = \{e\rightarrow d, d\rightarrow c, c\rightarrow e\}$ (Note that this is only possible when there are at least five items). Replacing one cycle item at a time, we can generate all elements in category $B$ into $H$. 
+
+Now we can generate every element in $C$ into $H$ as well, by $\{a\rightarrow b, b\rightarrow a, c\rightarrow d, d\rightarrow c\} = \{a\rightarrow b, b \rightarrow c, c\rightarrow a\}\circ \{a\rightarrow d, d\rightarrow c, c\rightarrow a\}$.
+
+For any elements in $D$, we can also generate it into $H$ by $\{a\rightarrow b,b\rightarrow c,c\rightarrow d,d\rightarrow e,e\rightarrow a\} = \{a\rightarrow b, b\rightarrow a, c\rightarrow d, d\rightarrow c\} \circ \{a\rightarrow c, c\rightarrow e, e\rightarrow a\}$. Now we have generated all elements from a single element in B.
+
+
+\paragraph{Generation from $C$}Then we show that if any element $s\in C$ is in the normal subgroup $s\in H \triangleleft A_5$, then we can find a $t\in B$ that is also in $H$, leading to $H = A_5$. First we generate another category C element using normal subgroups definition $v = u\circ s\circ u^{-1}$. Let $s =  \{a\rightarrow b, b\rightarrow a, c\rightarrow d, d\rightarrow c\}$, $u = \{a\rightarrow e, e\rightarrow b, b\rightarrow a\}$, then we have $v = \{e\rightarrow b, b\rightarrow e,  c\rightarrow d, d\rightarrow c\}$. We can then generate  $t = v\circ s = \{a\rightarrow b, b\rightarrow e, e\rightarrow a\} \in B$. We can now generate all elements into $H$ from $t$.
+
+\paragraph{Generation from $D$}Then we show that if any element $s\in D$ is in the normal subgroup $s\in H \triangleleft A_5$, then we can find a $t \in B$, that is also in $H$, leading to $H = A_5$. First we generate another category D element using normal subgroup definition $v = u\circ s\circ u^{-1}$. Let $s = \{a\rightarrow b, b\rightarrow c, c\rightarrow d, d\rightarrow e, e\rightarrow a\}$, $u = \{a\rightarrow b, b\rightarrow a, c\rightarrow d, d\rightarrow c\}$, then we have $v = \{a\rightarrow d, c\rightarrow e, e\rightarrow b, b\rightarrow a, d\rightarrow c\}$, and then we can generate $t = v\circ s = \{a\rightarrow e,e\rightarrow c,c\rightarrow a\} \in B$, from where we can general all elements
+
+\paragraph{Conclusion}Now we conclude that the to make $H \triangleleft A_5$ a proper subgroup, it can only contain elements in $A$, which means $H = \mathrm{E}$.
+
+\end{proof}
+
+
+\begin{theorem}
+	If $A_n$ is simple, $A_{n+1}$ is also simple.
+\end{theorem}
+\begin{proof}
+Elements in $A_{n+1}$ can be divided into three categories:
+\begin{itemize}
+	\item A: the element $e$
+	\item P: permutation that keeps at least one item in-place, but not all.
+	\item Q: permutation that cycles all elements. This category only exists if $n+1$ is odd.
+\end{itemize}
+
+\paragraph{Generation from $P$} First we show that if any element $s \in P$ is in the normal subgroup $s \in H\triangleleft A_{n+1}$, then $H = A_{n+1}$. Say we have $s = \{a\rightarrow a, x\rightarrow b, b\rightarrow y, z\rightarrow c, c\rightarrow w, \dots\}$ which keeps item $a$ in-place, we can generate another element, using normal subgroup's definition, $s' = t\circ s \circ t^{-1}$ with $t = \{a\rightarrow b, b\rightarrow c, c\rightarrow a\}$ , and $s'$ would be an element that keeps $c$ in-place: $s' = \{c\rightarrow c,  x\rightarrow a, a\rightarrow y,z\rightarrow b, b\rightarrow w,\dots\}$. Using this method, for each item we can generate a permutation that keeps that item in-place. Now we observe that all permutation that keeps the same item in-place forms a subgroup isomorphic $N \simeq 
+A_n$, which is a simple group, so one non-$e$ element in $N$ can generates all elements into a normal subgroup of $N$. The same generation path can be applied to generate these elements into $H$, so we generates all elements in $P$ into $H$.
+
+If category $Q$ exists, we can generate its elements, say $t = \{a\rightarrow b, b\rightarrow c,c\rightarrow\dots\rightarrow z,z\rightarrow a\}$, by $t = u\circ v$, where $u = \{a\rightarrow a,b\rightarrow b,c\rightarrow\dots\rightarrow z,z\rightarrow c\}$ and $v = \{a\rightarrow b, b\rightarrow c, c\rightarrow a\}$. Both $u$ and $v$ are category-$P$ element, so we can generates the entire category $Q$ from category $P$. Now we have generated all elements from one element in $P$.
+
+\paragraph{Generation from $Q$}Then we show that if any element $s\in Q$ is in the normal subgroup $s \in H\triangleleft A_{n+1}$, we can find an element $t \in P$ that is also in the normal subgroup $H$, leading to $H = A_{n+1}$. We can use normal subgroup's definition to generate another category-$Q$ element $s' = u\circ s \circ u^{-1}$, where $u = \{a\rightarrow b,b\rightarrow c, c\rightarrow a\}$, and $s = \{a\rightarrow b,b\rightarrow c,c\rightarrow d,d\rightarrow \dots\rightarrow z,z\rightarrow a\}$, then $s' = \{a\rightarrow b,b\rightarrow d,d\rightarrow \dots\rightarrow z,z\rightarrow c,c\rightarrow a\}$. Now we can generates an element $t = s\circ s'^{-1} = \{b\rightarrow z,c\rightarrow b,z\rightarrow c\}$, which is an element in $P$, from where we can generate all elements into $H$.
+
+\paragraph{Conclusion}Now we conclude that the to make $H \triangleleft A_5$ a proper subgroup, it can only contain elements in $A$, which means $H = \mathrm{E}$.
+
+\end{proof}
+
+\begin{theorem}
+	\label{an-simple}
+	For $n \ge 5$, $A_n$ are all simple.
+\end{theorem}
+\begin{proof}
+	Use mathematical induction on the previous two theorem.
+\end{proof}
+
+\begin{theorem}
+	\label{reduce-sn2}
+	For $n \ge 5$, the only normal subgroup that $S_n$ has are itself, $A_n$, and $\mathrm{E}$
+\end{theorem}
+\begin{proof}
+	Assuming $S_n$ has another normal subgroup $H \triangleleft S_n$, then its intersection with $A_n$, $K = H \cap A_n \triangleleft A_n$. Using theorem \ref{an-simple}, $K$ can be only $A_n$ or $\mathrm{E}$ .
+	
+	If $K = A_n$, then $A_n \in H$. As $A_n$ is a subgroup of $S_n$ with index of 2, shown by theorem \ref{reduce-sn1}, $H$ can only have index of 1 or 2, which correspond to $H = S_n$ or $H = A_n$.
+	
+	If $K = \mathrm{E}$, $H$ doesn't contain any even permutation except for $e$. If $H$ contains an odd permutation $s$, then $s^2 = e \Rightarrow s^{-1} = s$ (otherwise the group closure would imply another even permutation is in $H$). If there is another odd permutation $t\in H$, $s\circ t= e \Rightarrow t = s^{-1} = s$ (same reasoning with closure). This means $H$ can contain at most one odd permutation. Assuming $H$ contains one odd permutation $s$, $s$ must contain a pair $a\rightarrow b, b\rightarrow a$ and possibly a few other similar pairs (because $s^2=e$). We can set $t = \{a\rightarrow c, c\rightarrow a\}$ (while in $s$ it is either $c\rightarrow c$ or $c\rightarrow d,d \rightarrow c$), then $s'=t\circ s\circ t^{-1} = \{c\rightarrow b, b\rightarrow c,\dots\}\neq s$ is another odd permutation that should be in $H$ according to the definition of normal subgroup, which means $H$ now has two odd permutations, contradicting to the assumption. So $H$ cannot contain any odd permutation, thus $H = \mathrm{E}$.
+\end{proof}
+
+\begin{theorem}
+	There is no general formula that consists of only basic arithmetic operations and radical for the roots of polynomial equation with degree greater or equal to 5. 
+\end{theorem}
+\begin{proof}
+	Without losing generality, we consider polynomial equation with coefficient 1 on the highest term
+	\[
+		x^n + a_{n-1}x^{n-1}+\dots+a_0 = 0
+	\]
+	Each coefficient $a_{i}$ can be seen as a function of all roots $a_{i}(\vx)$ with the symmetric group $G(a_i) = S_n$ (full permutation), while the formulas for the roots, are also functions $f(\vx)$ with symmetric group $G(f) \simeq S_{n-1}$, which is a group of permutations that keep one element in-place and permute all other elements. The process of compositing $a_{i}$ into $f$ is reducing the symmetric $S_n$. Theorem \ref{composition} and \ref{cyclic} show that, using basic arithmetic operations and radical, we can only reduce the symmetric group in the following way:
+	\begin{itemize}
+		\item Use binary arithmetic operations on two function with different symmetric groups to compose a function with the intersection group.
+		\item Use radical to divide the symmetric group by a cyclic group. Although we have only showed the case for $p$-th root where $p$ is prime, other $n$-th roots only have the same power of multiple $p$-th roots combined.
+	\end{itemize}
+	At the beginning, we only have the group $S_n$.	According to theorem \ref{reduce-sn1} and \ref{reduce-sn2}, the only thing we can do initially is to reduce it to $A_n$ by $C_2$ (equivalent to performing a square root). Since $A_n$ is simple, there is no way to reduce further. As $A_n \not\simeq S_{n-1}$, we cannot have the formula for the roots.
+	
+\end{proof}
+
+
+\end{document}

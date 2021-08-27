@@ -1,0 +1,513 @@
+\documentclass[]{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{mathtools}
+\usepackage
+[
+left=2cm,
+right=2cm,
+top=2cm,
+bottom=2cm,
+]
+{geometry}
+
+\newcommand{\ud}{\mathrm{d}}
+
+\title{Poncelet's Closure Theorem}
+
+\begin{document}
+\maketitle
+
+\section{The theorem}
+Given two ellipses, one inside the other, and one point $A_0$ on the outer ellipse. From $A_0$ draw a tangent line to the inner ellipse, and meet the outer ellipse at $A_1$. As there are two such tangent lines, we always choose the one such that from $A_0$ to $A_1$ forms a counterclockwise rotation about the center of the inner ellipse. We can then do the same to find $A_2$ from $A_1$, and so on. If at one step we get $A_n = A_0$, then we can choose any point on the outer ellipse, and it will still get back to the starting point after $n$ steps.
+
+\section{The theorem, in other words}
+Given two ellipses $\Omega$ and $\Phi$, where $\Phi$ is inside $\Omega$, there is a isomorphism $\Gamma: \Omega\to \mathbb{R}/\mathbb{Z}$, such that for a step from $A_k$ to $A_{k+1}$ as described above, $\Gamma(A_k) + \rho = \Gamma(A_{k+1})$, where $\rho \in \mathbb{R}/\mathbb{Z}$ is some constant.
+
+Having such isomorphism means $\Gamma(A_n) = \Gamma(A_0) + n\rho$. $A_n = A_0$ for some $n > 0$ if and only if $\rho$ is rational. If $\rho$ is rational, $n\rho = 0$ regardless of the starting point $A_0$, so the original theorem holds.
+
+\section{Transformation}
+It is obvious that the construction can be freely transformed under affine transformation, so we can assume $\Omega$ to be the unit circle without loosing generality. We will then show that using projective transformation, we can transform the inner ellipse $\Phi$ to a circle, while preserving the unit circle $\Omega$.
+
+ 
+We need to show such projective transformation exists. A projective transformation in the plane $(x, y)$ is equivalent to a linear transformation on homogeneous coordinates $[X:Y:T]$, where $x = X/T$ and $y = Y/T$. The unit circle we want to preserve becomes the surface $X^2+Y^2-T^2 = 0$ in homogeneous coordinates. Notice that this surface is the light cone in the Minkowski space, so a linear transformation preserving the light cone would be a Lorentz transformation (optionally with rotation).
+
+To simplify the proof, we will perform the transformation in multiple steps.
+
+\subsection{Adjust center}
+Before performing our transformation, we first find a special point $H$. We write both $\Omega$ and $\Phi$ in their 3-dimensional matrix form, such that
+\begin{align*}
+\Omega:&\, \mathbf{X}^{\intercal} \mathbf{\Omega} \mathbf{X} = 0\\
+\Phi:&\, \mathbf{X}^{\intercal} \mathbf{\Phi} \mathbf{X} = 0
+\end{align*}
+where $\mathbf{X} = [X : Y : T]$ (column vector) is the homogeneous coordinates for point $(X/T, Y/T)$. We then find a third curve by linearly combining $\mathbf{\Omega}$ and $\mathbf{\Phi}$:
+\[
+H: \mathbf{X}^{\intercal} (\mathbf{\Phi} - k\mathbf{\Omega})  \mathbf{X} = 0
+\]
+and we choose a positive $k$ such that $H$ is a degenerate point-ellipse ($|\mathbf{\Phi} - k\mathbf{\Omega}| = 0$). It can be seen that $H$ is always inside $\Phi$, which is inside $\Omega$. So we can write $H$ coordinates as 
+\[
+H = (\tanh\xi\cos\theta, \tanh\xi\sin\theta) = [\sinh\xi\cos\theta:\sinh\xi\sin\theta:\cos\xi]
+\]
+for some $0\le\theta<2\pi$ and $\xi\ge 0$. From $H$'s coordinates, we find our first transformation:
+\[
+\mathbf{T}_1 = \left[\begin{matrix}
+(\cosh\xi - 1)\cos^2\theta + 1 & (\cosh\xi - 1)\sin\theta\cos\theta & -\sinh\xi\cos\theta\\
+(\cosh\xi - 1)\sin\theta\cos\theta & (\cosh\xi - 1)\sin^2\theta + 1 &  -\sinh\xi\sin\theta\\
+-\sinh\xi\cos\theta &  -\sinh\xi\sin\theta & \cosh\xi
+\end{matrix}\right]
+\]
+$\mathbf{T}_1$ is a Lorentz transformation that preserves $\Omega$, and that also moves point $H$ to the origin. Note that $\Phi$ can also be written as the linear combination of $\Omega$ and $H$, and remain so after the transformation:
+\[
+\mathbf{\Phi} = k\mathbf{\Omega} + \mathbf{H}
+\]
+\[
+\mathbf{\Phi}' = \mathbf{T}_1^{-\intercal}\mathbf{\Phi}\mathbf{T}_1^{-1} = \mathbf{T}_1^{-\intercal}(k\mathbf{\Omega} + \mathbf{H})\mathbf{T}_1^{-1} = k\mathbf{T}_1^{-\intercal}\mathbf{\Omega}\mathbf{T}_1^{-1} + \mathbf{T}_1^{-\intercal}\mathbf{H}\mathbf{T}_1^{-1} = k\mathbf{\Omega}' + \mathbf{H}'
+\]
+
+ After transformation, both $\Omega$ and $H$ have the same center which is the origin, so $\Phi$'s center must also be at the origin.
+
+\subsection{Adjust angle}
+Now $\Phi$ is an ellipse whose center is at the origin. If $\Phi$ is already a circle, we have done our transformation. Otherwise, we apply a rotation $\mathbf{T}_2$ such that $\Phi$'s major axis is on x-axis.
+
+\subsection{Adjust axis}
+$\Phi$ now has a matrix in the following form, where $0 < b < a < 1$
+\[
+\mathbf{\Phi} = \left[\begin{matrix}
+\frac{1}{a} & 0 & 0 \\ 0 & \frac{1}{b} & 0 \\ 0 & 0 & -1
+\end{matrix}\right]
+\]
+We choose the following transformation
+\[
+\mathbf{T}_3 = \left[\begin{matrix}
+\sqrt{a(1-b)} & 0 & \sqrt{a - b}\\
+0 & \sqrt{b(1-a)} & 0\\
+\sqrt{a - b} & 0 &\sqrt{a(1-b)} 
+\end{matrix}\right]
+\]
+This is also a Lorentz transformation. After transformation, $\Phi$ becomes
+\[
+\mathbf{\Phi}' = \mathbf{T}_3^{-\intercal}\mathbf{\Phi}\mathbf{T}_3^{-1} = \left[\begin{matrix}
+1-a & 0 & -\frac{1-a}{a}\sqrt{a(a-b)(1-b)} \\
+0 & 1-a & 0\\
+-\frac{1-a}{a}\sqrt{a(a-b)(1-b)} & 0 & \frac{(1-a)(a-b-ab)}{a}
+\end{matrix}\right]
+\]
+Note that this matrix has the same value on the $X^2$ and $Y^2$ coefficient, and zero coefficient for $XY$, so $\mathbf{\Phi}'$ represents a circle. As the coefficient of $XT$ is negative and the one of $YT$ is 0, the center of the circle is on $((0, 0), (1, 0))$.
+
+\subsection{Summary}
+We have done transforming $\Phi$ into a circle whose center is on $[(0, 0), (1, 0))$. The transformed $H$ will also be useful later on.
+
+\section{Circle pencil}
+We now only need to prove the case where $\Omega$ and $\Phi$ are both circles. The case where $\Omega$ and $\Phi$ are cocentric is trivial, so we only consider the case where $\Phi$'s center is on the segment $((0, 0), (1, 0))$.
+
+We write $\Phi$'s equation as a linear interpolation between $\Omega$ and a degenerate point-circle at $H = (h, 0)$, with the interpolation coefficient $p$, where $0 < p < h < 1$:
+\[
+\Phi_{h}^{p}: \frac{p}{h}((x-h)^2 + y^2 - 0) + \left(1-\frac{p}{h}\right)(x^2+y^2-1) = 0\,,
+\]
+Let $C_h=(h^2+1)/(2h)>1$ and $C_p=(p^2+1)/(2p)>C_h$, and write the equation in the standard form for a circle:
+\[
+\Phi_{h}^{p}: (x-p)^2 + y^2 = 2p(C_p-C_h)
+\]
+
+It can be easily proved that $\Phi_{h}^{p}$ covers all possible $\Phi$ we are concerning. The advantage of writing $\Phi$ in this way is that we reveals a set of circle families: for the same $h$, all $\Phi_{h}$ forms a circle family that has the following properties we can observe
+\begin{itemize}
+	\item For each pair of two circles in the same family, one is completely inside the other.
+	\item Each such circle family is part of Apollonian circles.
+	\item Every circle in $\Phi_{h}$ has the same ``intersections" with $\Omega$: $(C_h, \pm i S_h)$. Here $S_h = (1-h^2)/(2h)$.
+	\item All $\Phi_{h}$ shares the same isomorphism $\Gamma_h$, and $p$ only controls the constant $\rho$. We will prove this soon.
+	\item For $A$, $B$, $C$ on $\Omega$, If $AB$ is tangent to $\Phi_{h}^{p}$ and $BC$ is tangent to $\Phi_{h}^{q}$, then $AC$ is tangent to $\Phi_{h}^{r}$ in the same family for some $r$, baring some extreme cases. We won't directly prove this but this can be derived from other proofs below.
+\end{itemize}
+
+We have been using the notation $C_x = (1+x^2)/(2x)$ and $S_x = (1-x^2)/(2x)$. They are actually the hyperbolic functions
+\[
+C_x = \cosh\ln \frac{1}{x}, \, S_x = \sinh\ln \frac{1}{x}
+\] 
+In the following sections, we can see that they are like trigonometric functions with imaginary angles, forming symmetry with other real angles.
+
+The two last properties mentioned above also hints a group structure in a circle family $\Phi_{h}$. To show this, we first add two extreme cases to the family: $\Phi_h^h$ being the degenerated circle-point $H$, and $\Phi_h^0$ being the same circle as $\Omega$. We then also add $\Phi_h^p$ for negative $p$: $\Phi_h^p$ represents the same circle as $\Phi_h^{-p}$, but the tangent line $A_k A_{k+1}$ will rotate in the opposite direction, clockwise for a negative $p$. We only borrow the notation of negative $p$ here, which doesn't mean $H$ has a negative x-coordinate.
+Note that $\Phi_h^h$ and $\Phi_h^{-h}$ are essentially the same, because there is no direction for a line to be ``tangent" (passing through) a circle point. We can now define a group over $\Phi_h^p$ for $p\in(-h,h]$ with the operator $\bigodot$:
+\begin{itemize}
+	\item The identity element is $\Phi_h^0$. This is because $\Phi_h^0 = \Omega$, and for a segment $AB$ to be both a chord and a tangent of $\Omega$, $A$ and $B$ must be coincide, representing a no-op on point $A$.
+	\item The inverse element of $\Phi_h^p$ is $(\Phi_h^p)^{-1} = \Phi_h^{-p}$, because they represent the same circle but the opposite direction, so their operation cancels each other.
+	\item If $AB$ is tangent to $\Phi_{h}^{p}$ and $BC$ is tangent to $\Phi_{h}^{q}$, both counterclockwise, then $AC$ is tangent to $\Phi_{h}^{r} = \Phi_{h}^{p} \bigodot \Phi_{h}^{q}$ counterclockwise, or is tangent is tangent to $(\Phi_{h}^{r})^{-1} = \Phi_{h}^{-r}$ clockwise.
+\end{itemize}
+We omit the proof of the group structure, as it can be trivially derived from Poncelet's Closure Theorem itself. For now, we use it as an intuition for finding the proof of Poncelet's Closure Theorem. We can also guess that the group $\Phi_h$ is isomorphic to $\mathbb{R}/\mathbb{Z}$, and there is a isomorphism $\Xi_h:  \Phi_h \to \mathbb{R}/\mathbb{Z}$, where $\Xi_h(\Phi_h^0) = 0$ and $\Xi_h(\Phi_h^h) = \pm 1/2$. This isomorphism will have a direction relationship with $\Gamma_h$: for chore $A_k A_{k+1}$ tangent to $\Phi_h^p$ counterclockwise
+\[
+	\Gamma_h(A_k) + \Xi_h(\Phi_h^p) = \Gamma_h(A_{k+1})
+\]
+
+\section{Differential}
+To get the intuition of the next step, we consider finding the isomorphism $\Gamma$ using differential method. The equation above can also be loosely written as
+\[
+\ud \Gamma_h(A_{k+1}) = \Xi_h(\Phi_h^\xi)
+\]
+where $\xi$ is infinitesimal. $\Phi_h^\xi$ represents a circle that is very close to $\Omega$. Consider a $\Omega$'s chore $AB$ that touches $\Phi_h^\xi$ at $M$, then $OM$ intersect with $\Omega$ at $C$. As $\xi\to 0$, $\Phi_h^\xi$ approaches $\Omega$ from inside, the two points  $A$ and $B$ gets closer, and $OC$ becomes perpendicular to $AB$. Let $C = (\cos\theta, \sin\theta)$, $M = (\lambda\cos\theta, \lambda\sin\theta)$. Because $M$ is on $\Phi_h^\xi$, we have
+\[
+(\lambda\cos\theta-\xi)^2 + (\lambda\sin\theta)^2 = 2\xi(C_\xi-C_h)
+\]
+\[
+\lambda^2 - 2\xi\lambda\cos\theta + \xi^2 =  2\xi(C_\xi-C_h)
+\]
+
+\[
+\ud\theta \approx AB \approx 2\sqrt{1-\lambda^2} = 2\sqrt{1-2\xi(C_\xi-C_h) - 2\xi\lambda\cos\theta + \xi^2} = 2\sqrt{2\xi(C_h - \lambda\cos\theta)}\]
+\[
+\frac{2\sqrt{2\xi}}{\ud \theta} = \frac{1}{\sqrt{C_h-\cos\theta}}\quad (\xi\to 0, \lambda \to 1)
+\]
+If we guess that $\Lambda_h(\Phi^\xi_h) \approx c\sqrt{\xi}$ near $\xi = 0$, then we have
+\[
+\frac{\ud \Gamma_h}{\ud \theta} \propto \frac{1}{\sqrt{C_h-\cos\theta}}
+\]
+\[
+\Gamma_h(\cos\theta_0, \sin\theta_0) = \int\ud\Gamma_h \propto\int_0^{\theta_0} \frac{\ud\theta}{\sqrt{C_h-\cos\theta}}\,.
+\]
+This is an elliptic integral. We can substitute $x=\cos\theta, y=\sin\theta$ and get
+\[
+\Gamma_h(x_0, y_0)\propto\mathrm{sgn}(y_0)\int_{x_0}^{1}\frac{\ud x}{\sqrt{(C_h-x)(1-x^2)}}
+\]
+
+\subsection{Jacobi}
+If we go further and invert the elliptic integral, we get
+\[
+\Gamma_h^{-1}(\propto\gamma) = (2\, \mathrm{cn}^2(\gamma|m)-1,\, 2\, \mathrm{sn}(\gamma|m)\, \mathrm{cn}(\gamma|m)),\mbox{where } m = -\frac{4h}{(1-h)^2}
+\]
+
+\section{Elliptic}
+We will now formally proof Poncelet's Closure Theorem.
+The integral above hints the elliptic curve $\Psi$
+\[
+	\Psi: y^2 = \left(C_h-x\right)(1-x^2)\,.
+\]
+This elliptic curve has two separate parts: a circular part $\Psi_L$ between $-1\leq x\leq1$, and a part $\Psi_R$ for $x \geq C_h$. We now define a bijective mapping between $\Psi_L$ and $\Omega$:
+\begin{align*}
+	f: \Psi_L\to\Omega,&\quad f(x, y) = \left(x, \frac{y}{\sqrt{C_h-x}}\right)\\
+	g: \Omega\to\Psi_L,&\quad g(x, y) = \left(x, y \sqrt{C_h-x}\right)
+\end{align*}
+We also find the point $P\in\Psi_R$ whose coordinate is
+\[
+P = (C_p, S_p \sqrt{C_p-C_h})
+\]
+where $S_p = (1-p^2)/(2p)$
+
+We will then proof the following statement: for any pair of point $A, B \in \Omega$, $AB$ tangent to $\Phi$ and from $A$ to $B$ is a counterclockwise rotation about the center of $\Phi$ \textit{if and only if} the three point, $P$, $g(A)$ and $\overline{g(B)}$ are collinear on a line $l$. Here $\overline{Z}$ means the reflection of $Z$ about x-axis. In the case where $g(A)$ and $\overline{g(B)}$ coincide, the line tangent to $\Psi_L$ at $g(A)$ must pass through $P$.
+
+\subsection{Collinearity $\to$ Tangency}
+Let $A = (\cos\alpha, \sin\alpha)$ and $B = (\cos\beta,\sin\beta)$, then $g(A) = (\cos\alpha, \sin\alpha\sqrt{C_h - \cos\alpha})$ and  $\overline{g(B)} = (\cos\beta, -\sin\beta\sqrt{C_h - \cos\beta})$.  $P$, $g(A)$ and $\overline{g(B)}$ should be the three solutions to the following system of equations
+\[
+\begin{cases}
+y^2 = \left(C_h-x\right)(1-x^2)\\
+y = mx + n
+\end{cases}
+\]
+where $m$ and $n$ are some real numbers. Eliminating $y$, we get
+\[
+x^3 - (C_h+m^2)x^2-(1+2mn)x+C_h-n^2=0
+\]
+from which we have 
+\begin{align*}
+\cos\alpha+\cos\beta+C_p &= C_h + m^2\\
+\cos\alpha\cos\beta + C_p\cos\alpha +C_p\cos\beta  &= -(1+2mn)\\
+C_p\cos\alpha\cos\beta  &= n^2-C_h
+\end{align*}
+We can also get
+\begin{align*}
+&\sqrt{(C_h-\cos\alpha)(C_h-\cos\beta)(C_p-C_h)} \\
+=&\sqrt{C_p\cos\alpha\cos\beta  - C_h(\cos\alpha\cos\beta +C_p \cos\alpha +C_p\cos\beta ) +C_h^2(\cos\alpha+\cos\beta+C_p)-C_h^3}\\
+=&\sqrt{n^2-C_h + C_h(1+2mn) +C_h^2(C_h + m^2)-C_h^3}\\
+=&\sqrt{(mC_h+n)^2}\\
+=&mC_h+n
+\end{align*}
+($mC_h+n > 0$ because $(C_h, mC_h+n)$ is on the line $l$, and if that point is below x-axis, the line would have another intersection with $\Psi_R$) \\On the other hand, eliminating $x$ from the system, we get
+\[
+m^3y^2 = (mC_h - (y-n))(m^2 - (y-n)^2)
+\]
+and for the three solutions we have, by comparing the 0-th degree terms
+\begin{align*}
+ (\sin\alpha\sqrt{C_h - \cos\alpha}) (-\sin\beta\sqrt{C_h - \cos\beta}) (S_p \sqrt{C_p-C_h}) &= -(mC_h+n)(m^2-n^2)\\
+S_p\sin\alpha\sin\beta \sqrt{(C_h - \cos\alpha)(C_h - \cos\beta)(C_p-C_h)} &= (mC_h+n)(m^2-n^2)\\
+ S_p\sin\alpha\sin\beta  &= m^2 - n^2
+\end{align*}
+Combining what we have, we get
+\begin{align*}
+C_p\cos\alpha\cos\beta  + S_p\sin\alpha\sin\beta  - (\cos\alpha+\cos\beta+C_p) &= -2C_h \\
+\frac{1+p^2}{2}\cos\alpha\cos\beta + \frac{1-p^2}{2}\sin\alpha\sin\beta - p(\cos\alpha+\cos\beta) + \frac{1+p^2}{2} &=2p(C_p - C_h) = Radius_\Phi^2
+\end{align*}
+Multiplying both side with $AB^2 = 2-2\cos\alpha\cos\beta-2\sin\alpha\sin\beta$, we get
+\begin{align*}
+(\sin\alpha\cos\beta-\sin\beta\cos\alpha-p\sin\alpha+p\sin\beta)^2 &= (Radius_\Phi * AB)^2\\
+((\cos\alpha-p, \sin\alpha)\times(\cos\beta-p, \sin\beta))^2 &=(Radius_\Phi * AB)^2\\
+4Area_{\triangle A,B,(p, 0)}^2 &= (Radius_\Phi * AB)^2
+\end{align*}
+This proves that AB is tangent to $\Phi$.
+
+\subsection{Collinearity $\to$ Tangency, Counterclockwise}
+
+However, we also need to prove the rotation from A to B is counterclockwise. Note that the point $H$ is always inside $\Phi$, we only need to prove the rotation around this point is counterclockwise, which means to prove
+\[
+(\cos\alpha-h, \sin\alpha)\times(\cos\beta-h, \sin\beta) > 0\,.
+\]
+We can start from the fact that the line $y = mx+n$ is positive at $x = C_h$.
+\paragraph{For $\cos\alpha = \cos\beta$}, we have $\sin\alpha = -\sin\beta \neq 0$ (otherwise $A$ and $B$ would coincide, and $AB$ can't be tangent to $\Phi$), and the coefficients of the line
+\[
+m = \frac{3\cos^2\alpha-2C_h\cos\alpha-1}{2\sin\alpha\sqrt{C_h-\cos\alpha}}
+\]
+\[
+n = \frac{-\cos^3\alpha-\cos\alpha+2C_h}{2\sin\alpha\sqrt{C_h-\cos\alpha}}
+\]
+At $x = C_h$, we have
+\[
+ \frac{3\cos^2\alpha-2C_h\cos\alpha-1}{2\sin\alpha\sqrt{C_h-\cos\alpha}} C_h + \frac{-\cos^3\alpha-\cos\alpha+2C_h}{2\sin\alpha\sqrt{C_h-\cos\alpha}} > 0
+\]
+\[
+\frac{(\cos\alpha-h)\left(\cos\alpha-\frac{1}{h}\right)(C_h-\cos\alpha)}{2\sin\alpha\sqrt{C_h-\cos\alpha}} > 0
+\]
+We know $\cos\alpha-1/h < 0$ and $C_h-\cos\alpha > 0$, so the sign of the remaining terms indicates
+\[
+\sin\alpha(\cos\alpha-h) < 0
+\]
+Using $\cos\alpha = \cos\beta$ and  $\sin\alpha = -\sin\beta$, this can be rewritten as 
+\[
+\sin\alpha(\cos\beta-h) -\sin\beta(\cos\alpha-h) < 0
+\]
+\[
+\sin\beta(\cos\alpha-h) - \sin\alpha(\cos\beta-h) > 0
+\]
+\[
+(\cos\alpha-h, \sin\alpha)\times(\cos\beta-h, \sin\beta) > 0
+\]
+
+\paragraph{For $\cos\alpha \neq \cos\beta$}, we have
+\begin{align*}
+m &= \frac{\sin\alpha\sqrt{C_h-\cos\alpha} + \sin\beta\sqrt{C_h-\cos\beta}}{\cos\alpha-\cos\beta}\\
+n &= \frac{-\cos\beta\sin\alpha\sqrt{C_h-\cos\alpha} - \cos\alpha\sin\beta\sqrt{C_h-\cos\beta}}{\cos\alpha-\cos\beta}
+\end{align*}
+At $x = C_h$, we have
+\[
+\frac{\sin\alpha\sqrt{C_h-\cos\alpha} + \sin\beta\sqrt{C_h-\cos\beta}}{\cos\alpha-\cos\beta} C_h + \frac{-\cos\beta\sin\alpha\sqrt{C_h-\cos\alpha} - \cos\alpha\sin\beta\sqrt{C_h-\cos\beta}}{\cos\alpha-\cos\beta} > 0\,.
+\]
+Removing a factor $\sqrt{C_h-\cos\alpha}\sqrt{C_h-\cos\beta} > 0$, we get
+\[
+\frac{\sin\alpha\sqrt{C_h-\cos\beta} + \sin\beta\sqrt{C_h-\cos\alpha}}{\cos\alpha-\cos\beta} > 0\,.
+\]
+Without losing generality, we will assume $\cos\alpha > \cos\beta$. For the opposite case, we can swap $\alpha$ and $\beta$ and prove following the same arguments. Now we have
+\[
+\sin\alpha\sqrt{C_h-\cos\beta} > - \sin\beta\sqrt{C_h-\cos\alpha}
+\]
+We have the following cases
+\begin{itemize}
+	\item in the case where both $\sin\alpha$ and $\sin\beta$ are positive, we consider the following increasing function
+	\[
+	j(t) = \frac{t-h}{\sqrt{1-t^2}}
+	\]
+	Because $\cos\alpha > \cos\beta$, we have
+	\[
+	\frac{\cos\alpha-h}{\sqrt{1-\cos^2\alpha}} > \frac{\cos\beta-h}{\sqrt{1-\cos^2\beta}}
+	\]
+	Given positive $\sin\alpha$ and $\sin\beta$, we get
+	\[
+	\frac{\cos\alpha-h}{\sin\alpha} > \frac{\cos\beta-h}{\sin\beta}
+	\]
+	\[
+	\sin\beta(\cos\alpha-h) -\sin\alpha(\cos\beta-h) > 0
+	\]
+	\[
+	(\cos\alpha-h, \sin\alpha)\times(\cos\beta-h, \sin\beta) > 0
+	\]
+	\item in the case where $\sin\beta = 0$, $\sin\alpha$ must be positive. $\cos\alpha > \cos\beta$ results in $\cos\beta = -1$. So we have
+	\[
+	(\cos\alpha-h, \sin\alpha)\times(\cos\beta-h, \sin\beta) = \sin\beta(\cos\alpha-h) -\sin\alpha(\cos\beta-h) = -\sin\alpha(-1-h) > 0
+	\]
+	\item $\sin\alpha$ and $\sin\beta$ can't be both negative, and $\sin\alpha$ can't be 0. The remaining cases are $\sin\alpha > 0 > \sin\beta$ (case 1) and $\sin\beta > 0 > \sin\alpha$ (case 2).
+\end{itemize}
+We continue analyzing the remaining two cases. We square both sides of the inequality:
+\[
+\sin^2\alpha(C_h-\cos\beta) >_1 <_2  \sin^2\beta(C_h-\cos\alpha)
+\]
+The symbol "$>_1 <_2$" means "$>$" for case 1 and "$<$" for case 2. We continue solving for $h$:
+\[
+\sin^2\alpha\left(\frac{h^2+1}{2h}-\cos\beta\right) >_1 <_2  \sin^2\beta\left(\frac{h^2+1}{2h}-\cos\alpha\right)
+\]
+\[
+(\sin^2\alpha - \sin^2\beta)(h^2 + 1) - 2h(\sin^2\alpha\cos\beta - \sin^2\beta\cos\alpha)>_1 <_2 0
+\]
+\[
+((1-\cos^2\alpha) - (1-\cos^2\beta))(h^2 + 1) - 2h((1-\cos^2\alpha)\cos\beta -(1-\cos^2\beta)\cos\alpha)>_1 <_2 0
+\]
+\[
+(\cos\beta-\cos\alpha)(\cos\alpha+\cos\beta)(h^2 + 1) - 2h(\cos\beta-\cos\alpha)(1+\cos\alpha\cos\beta) >_1 <_2 0
+\]
+\[
+(\cos\alpha+\cos\beta)(h^2 + 1) - 2h(1+\cos\alpha\cos\beta) <_1 >_2 0
+\]
+\begin{itemize}
+\item If $\cos\alpha+\cos\beta \le 0$, this is a line or a parabola that opens downwards about $h$. At $h = -1$, we have
+\[
+2(\cos\alpha+\cos\beta) + 2(1+\cos\alpha\cos\beta) = 2(1+\cos\alpha)(1+\cos\beta) \ge 0
+\]
+At $h = 0$, we have 
+\[
+2(\cos\alpha+\cos\beta) \le 0
+\]
+So the larger root (or the only root in the linear case) is between $-1$ and $0$. Therefore for $h > 0$, we always have
+\[
+(\cos\alpha+\cos\beta)(h^2 + 1) - 2h(1+\cos\alpha\cos\beta) < 0
+\]
+So case 2 is impossible, and we always have $\sin\alpha > 0 > \sin\beta$. Now we consider the following equation
+\[
+(\cos\alpha-\cos\beta)(\cos\alpha+\cos\beta) + (\sin\alpha-\sin\beta)(\sin\alpha+\sin\beta) = 0
+\]
+\[
+(\cos\alpha-\cos\beta)(\cos\alpha+\cos\beta) = -(\sin\alpha-\sin\beta)(\sin\alpha+\sin\beta)
+\]
+Since know that $\cos\alpha+\cos\beta \le 0$ and $\sin\alpha-\sin\beta > 0$, The other two terms $\cos\alpha-\cos\beta$ and $\sin\alpha+\sin\beta$ must have the same sign. That is
+\[
+(\cos\alpha-\cos\beta)(\sin\alpha+\sin\beta) \ge 0
+\]
+Now we consider another equation
+\[
+2(\sin\alpha\cos\beta - \sin\beta\cos\alpha) = -(\cos\alpha-\cos\beta)(\sin\alpha + \sin\beta) + (\sin\alpha - \sin\beta)(\cos\alpha+\cos\beta)
+\]
+Comparing the sign of each term, we have 
+\[
+	\sin\alpha\cos\beta - \sin\beta\cos\alpha \le 0
+\]
+As we also have $h > 0$ and $\sin\alpha - \sin\beta > 0$, we now have
+\[
+	h(\sin\alpha - \sin\beta) > \sin\alpha\cos\beta - \sin\beta\cos\alpha
+\]
+\[
+(\cos\alpha-h, \sin\alpha)\times(\cos\beta-h, \sin\beta) > 0
+\]
+\item If $\cos\alpha+\cos\beta > 0$, the parabola about $h$ opens upwards and has roots
+\[
+h^* = \frac{1 + \cos \alpha\cos \beta\pm \sin \alpha\sin\beta}{\cos\alpha + \cos\beta} 
+\]
+Note that $\sin\alpha\sin\beta < 0$, so $(1 + \cos \alpha\cos \beta- \sin \alpha\sin\beta)/(\cos\alpha + \cos\beta)$ is the larger root. Also, at $h = 1$, the parabola has value
+\[
+2(\cos\alpha+\cos\beta) - 2(1+\cos\alpha\cos\beta) = -2(1-\cos\alpha)(1-\cos\beta) \le 0
+\]
+So the larger root is always larger or equal than 1. Since $h$ is always less than 1, we only need to concern its relationship with the smaller root. The smaller root can also be written as
+\[
+h^* = \frac{1 + \cos \alpha\cos \beta+ \sin \alpha\sin\beta}{\cos\alpha + \cos\beta} = \frac{\sin(\alpha-\beta)}{\sin\alpha - \sin\beta}
+\]
+So we have the following cases
+\begin{itemize}
+	\item (case 1) $\sin\alpha > 0 > \sin\beta$
+	\[
+	 h > \frac{\sin(\alpha-\beta)}{\sin\alpha - \sin\beta}
+	\] 
+	\item (case 2) $\sin\beta > 0 > \sin\alpha$
+	\[
+	h < \frac{\sin(\alpha-\beta)}{\sin\alpha - \sin\beta}
+	\]
+\end{itemize}
+The two cases can be merged as
+\[
+h(\sin\alpha - \sin\beta) > \sin(\alpha-\beta) = \sin\alpha\cos\beta - \sin\beta\cos\alpha
+\]
+\[
+(\cos\alpha-h, \sin\alpha)\times(\cos\beta-h, \sin\beta) > 0
+\]
+\end{itemize}
+
+\subsection{Collinearity $\to$ Tangency, Extreme}
+We will also prove a special case that will be handy: if $g(A)$, $\overline{g(B)}$ and $(C_h, 0)$ are collinear, then $AB$ pass through point $H$. This is the extreme case where $p = h$.
+
+We can reuse the equation of the line $y=mx+n$ we derived above, and then use $mC_h+n = 0$ this time.
+
+\paragraph{For $\cos\alpha = \cos\beta$}, using the same formula for $m$ and $n$ as above, we eventually arrives at
+\[
+\frac{(\cos\alpha-h)\left(\cos\alpha-\frac{1}{h}\right)(C_h-\cos\alpha)}{2\sin\alpha\sqrt{C_h-\cos\alpha}} = 0
+\]
+\[
+\cos\alpha = h
+\]
+and $AB$ passing through $H$ becomes obvious.
+\paragraph{For $\cos\alpha \neq \cos\beta$}, using the same formula for $m$ and $n$ as above, we eventually arrives at
+\[
+\sin\alpha\sqrt{C_h-\cos\beta} = - \sin\beta\sqrt{C_h-\cos\alpha}
+\]
+\[
+(\cos\alpha+\cos\beta)(h^2 + 1) - 2h(1+\cos\alpha\cos\beta) = 0
+\]
+Similar to previous arguments, $\cos\alpha+\cos\beta \leq0$ would result in no solution for $0 < h <1$, and $\cos\alpha+\cos\beta >0$ gives h single solution for $0 < h <1$:
+\[
+h = \frac{\sin(\alpha-\beta)}{\sin\alpha - \sin\beta}
+\]
+from which we can get
+\[
+(\cos\alpha-h, \sin\alpha)\times(\cos\beta-h, \sin\beta) = 0
+\]
+so $AB$ passes through $H$.
+
+\subsection{Tangency $\to$ Collinearity}
+Given $AB$ tangent to $\Phi$ in counterclockwise, the line $l$ that passes through $g(A)$ and $\overline{g(B)}$ must intersect with $\Psi_R$ at one point $Q$. This is because the only lines that doesn't intersect with $\Psi_R$ are those perpendicular to x-axis, which is only possible when $A$ and $B$ coincide. We also know that $Q$ isn't on x-axis, because otherwise $Q = (C_h, 0)$, and from above we know this means $AB$ passes through $(h, 0)$, which is impossible when $AB$ is tangent to $\Phi$. We can also find the reflection of this construction: the line $\overline{l}$ that passes through $\overline{g(A)}$ ad $g(B)$ intersects with $\Psi_R$ at $\overline{Q}$. One of $Q$ and $\overline{Q}$ must be above the x-axis, and it has coordinates
+\[
+(C_q, S_q\sqrt{C_q-C_h}), \mbox{where } C_q = \frac{1+q^2}{2q}, S_q = \frac{1-q^2}{2q}
+\]
+such that a unique $q \in (0, h)$ exists. If $q \neq p$, $AB$ is also tangent to the circle $\Phi_{h}^{q}$ in the same circle family as $\Phi_{h}^{p}$. However, any pair of circles in this circle family is with one completely inside the other, so a line can't be tangent to both of them. This means $q = p$, and one of $Q$ and $\overline{Q}$ coincides with $P$. If $\overline{Q}$ coincides with $P$, the previous proof shows $BA$ will be tangent to $\Phi$ in counterclockwise (or $AB$ in clockwise). This contradicts with the given condition, so the only possibility left is that $Q$ coincides with $P$. In other words, $g(A)$, $\overline{g(B)}$ and $P$ are collinear.
+
+\subsection{Tangency $\to$ Collinearity, Extreme}
+The converse of the extreme case also be proved in the same fashion: if $AB$ pass through $H$, $Q$ must be on $(C_h, 0)$, otherwise it would indicate $AB$ is tangent to some circle in the circle family, which is impossible.
+
+\section{Group}
+
+ The collinearity of the aforementioned three points corresponds to the group low of the elliptic curve $g(B) = g(A) \oplus P$. The two-part elliptic curve $\Psi$ is isomorphic to the group $\mathbb{R}/\mathbb{Z} \times C_2$, via Weierstrass's elliptic function $\wp$. Let $y = s/2$ and $x=t+C_h/3$, and the elliptic curve becomes
+ \[
+ s^2 = 4t^3-\left(\frac{4}{3}C_h^2+4\right)t-\left(\frac{8}{27}C_h^3-\frac{8}{3}C_h\right)
+ \]
+ We set modular invariants
+ \[
+ g_2 = \frac{4}{3}C_h^2+4,\quad g_3 = \frac{8}{27}C_h^3-\frac{8}{3}C_h
+ \]
+ The corresponding Weierstrass's elliptic function $\wp_{g_2,g_3}$ has a real period $w_1$ and a pure imaginary period $w_2$. Then we have the mapping between $\Psi$ and $\mathbb{R}/\mathbb{Z}$:
+\begin{align*}
+ \eta_1: \mathbb{R}/\mathbb{Z}\to\{\mathbb{R}+\frac{w_2}{2}\}/\Lambda_{w_1,w_2},& \quad  \eta_1(r) = w_1 r + \frac{w_2}{2}\\
+ \eta_2: \mathbb{R}/\mathbb{Z}\to\mathbb{R}/\Lambda_{w_1,w_2},& \quad  \eta_2(r) = w_1 r\\
+ \eta_3: \{\mathbb{R}+\frac{w_2}{2}\}/\Lambda_{w_1,w_2}\to\Psi_L\Big\Vert\mathbb{R}/\Lambda_{w_1,w_2}\to\Psi_R,&\quad \eta_3(z) = \left(\wp_{g_2,g_3}(z)+\frac{C_h}{3}, \frac{1}{2}\wp'_{g_2,g_3}(z)\right)
+\end{align*}
+Combining these, we find the isomorphism  \[
+\Gamma = (\eta_3  \circ \eta_1)^{-1} \circ g\]
+\[
+\Xi = (\eta_3  \circ \eta_2)^{-1} \circ (\Phi_h^p \mapsto P)
+\]
+and the constant $\rho$ is
+\[
+\rho =(\eta_3  \circ \eta_2)^{-1}(P) =  \Xi(\Phi_h^p)
+\]
+
+We can also express the map in a different way
+
+\[
+\Theta(r) = 2\pi r + \sum_{n=1}^\infty (-1)^n\frac{2 \sin 2\pi nr}{n\cosh n Q }, \mbox{where } Q = \pi\frac{K(k=(1-h)/(1+h)}{K(k=2\sqrt{h}/(1+h))}
+\]
+
+\[
+\Gamma = \Theta^{-1} \circ ((\cos\theta, \sin\theta) \mapsto \theta)
+\]
+ 
+\section{Cayley-Bacharach theorem}
+ 
+ Of course, we don't have to use transcendental function. We can finish the proof of our original question with algebraic reasoning. 
+ 
+ The previous section provides an alternative method to find $A_{k+1}$ from $A_k$: construct the elliptic curve $\Psi$ and the point $P$ from the given $\Omega$ and $\Phi$. Find $g(A_k)$ and the line $l$ that passes through $P$ and $g(A_k)$. The third intersection between $l$ and $\Psi$ is $\overline{g(A_{k+1})}$, then we can find $A_{k+1}$ by reflect $\overline{g(A_{k+1})}$ around x-axis and apply $f$.
+ 
+ Now we set $P_1 = P$, and generate the sequence $P_n$ in the following way: find the line $h$ that pass through $P$ and $P_k$ (if the two points coincide, $h$ is tangent at this point). The third intersection between $h$ and $\Psi$ is $\overline{P_{k+1}}$ (It can be easily shown that it must be on $\Psi_R$), and $P_{k+1}$ would be the reflection of that point. There is one special case that $h$ is perpendicular to the x-axis, in which case the third intersection is the infinite point $\overline{P_{k+1}} = P_{k+1} = \mathcal{O}$, and the next point $P_{k+2} = P$.
+ 
+ We then prove the following relation ship using induction: for any positive integer $k$, one can find $A_k$ given $A_0$ using the same method as finding $A_1$, but using the point $P_k$ instead of $P$. Specifically, if $P_k = \mathcal{O}$, then $A_k$ coincides with $A_0$. This is obviously true for $k = 1$. Now assume it is true for $k$, we will show it is also true for $k+1$. This is equivalent to showing that $\overline{g(A_0)}$, $\overline{P_{k+1}}$ and $g(A_{k+1})$ are collinear (note that we take the reflections of all three points). From the given condition, we already have the following geometry relationship:
+\begin{itemize}
+	\item $g(A_0)$, $P_k$ and $\overline{g(A_k)}$ collinear on line $c_1$
+	\item $P_1$, $\overline{P_1}$ and $\mathcal{O}$ collinear on line $c_2$
+	\item $\overline{g(A_0)}$, $\overline{P_{k+1}}$ on line $c_3$, to be proven also passing through $g(A_{k+1})$
+	\item $g(A_0)$, $\overline{g(A_0)}$ and $\mathcal{O}$ collinear on line $d_1$
+	\item $\overline{g(A_k)}$, $g(A_{k+1})$, $P_1$ collinear on line $d_2$
+	\item $P_1$, $P_k$, $\overline{P_{k+1}}$ collinear on line $d_3$
+\end{itemize}
+Let $C$ be the cubic curve formed by combining $c_1$, $c_2$ and $c_3$, and $D$ be the cubic curve formed by combining $d_1$, $d_2$ and $d_3$. There are 9 points in total mentioned in the list. All of these 9 points are on $\Psi$ and $D$. They are also all on $C$, except for the point $g(A_{k+1})$. According to Cayley–Bacharach theorem, the ninth point $g(A_{k+1})$ must also be on $C$. Since $g(A_{k+1})$ can't be on $c_1$ or $c_2$ (otherwise we would have a line intersecting a cubic curve at 4 points), $\overline{g(A_0)}$, $\overline{P_{k+1}}$ and $g(A_{k+1})$ must be collinear on $c_3$. The prove for special cases involving $P_k = \mathcal{O}$ follows a similar reasoning.
+
+With all the tools in hand, we finish the last part of the proof: for a starting point $A_0$, if $A_n$ comes back to $A_0$, then the corresponding $P_n = \mathcal{O}$, and this means we can start from any point and comes back after $n$ steps.
+
+
+ 
+\end{document}

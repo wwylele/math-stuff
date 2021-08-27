@@ -1,0 +1,395 @@
+\documentclass[10pt,a4paper,draft]{article}
+\usepackage[latin1]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{mathdots}
+\usepackage
+[
+left=2cm,
+right=2cm,
+top=2cm,
+bottom=2cm,
+]
+{geometry}
+
+
+\author{wwylele}
+\title{Infinite Grid of Resistors}
+\begin{document}
+	\newtheorem{lemma}{Lemma}
+	\newcommand{\ud}{\mathrm{d}}
+	\newcommand{\sech}{\operatorname{sech}}
+	\section{The problem}
+	An infinite grid of resistors $r=1$ connecting adjacent nodes of a square lattice. Find the equivalent resistance between any given two nodes.
+	
+	\section{Simplify}
+	To find the equivalent resistance, we need to connect the two given nodes to a battery with emf of $U$, which produce a current of $I$ in the battery. The resistance can be compute as $R=U/I$. The current in the grid can be treat as a superposition as two sets of currents: one flows from the anode (point A) to the infinity, and the other from the infinity to the cathode (point B). Denote $u$ as the potential difference between A and B for the first case. For the second case,  the potential difference between them should be also $u$ according to the symmetry. Applying the superposition, we get $U=2u$. So now we can consider this question:
+	
+	A current $I$ flow out from a node of the infinite grid, find the potential difference $u$  between the node and any other node.
+	
+	Then the answer to our first problem is $R=2u/I$.
+	
+	\section{Solution}
+	For convenience, we assume the current is $I=1$, and construct a coordinate system over the grid, with the origin at where the current flow out, and the point $(x,y)$ from which we want to compute the potential deference. We denote $\varphi_{x,y}$ as the potential of each node. If we can get $\varphi_{x,y}$ for each $x$ and $y$, we just compute the difference between $\varphi_{x,y}$ and $\varphi_{0,0}$ to get the answer. We can further set $\varphi_{0,0} = 0$, so we only need to calculate $\varphi_{x,y}$.
+	
+	Using Ohm's law and Kirchhoff's law, we can get the core equation of the question:
+	\begin{equation}
+		\varphi_{x-1,y}+\varphi_{x+1,y}+\varphi_{x,y-1}+\varphi_{x,y+1}-4\varphi_{x,y}=I_{x,y}\;,
+		\label{eqn:core}
+	\end{equation}
+	where $I_{x,y}$ is the current flow out from the node $(x,y)$, which is $1$ at $(0,0)$ and $0$ for other nodes in this question.
+	
+    We can easily know that $\varphi_{\pm1,0}=\varphi_{0,\pm1}=1/4$ from symmetry. and if we manage to find a method to compute $\varphi_{x,y}$ on the line $x=y$ (which are also equal to those on the line $x=-y$), we can essentially compute $\varphi_{x,y}$ of all other nodes by using equation~\eqref{eqn:core} recursively. So our first goal is to compute the potential on the line $x=y$.
+	
+	
+	First considering the homogeneous equation
+	\begin{equation}
+		\varphi_{x-1,y}+\varphi_{x+1,y}+\varphi_{x,y-1}+\varphi_{x,y+1}-4\varphi_{x,y}=0\;.
+		\label{eqn:homo}
+	\end{equation}
+
+	we can guess the form of the solutions to be  $\varphi_{x,y}=u^{x+y}v^{x-y} + c$. Substitute this into equation~\eqref{eqn:homo} and we get
+	\begin{align*}
+	u^{-1}v^{-1}+uv+u^{-1}v+uv^{-1}-4&=0\;;\\
+	\frac{u+u^{-1}}{2}\frac{v+v^{-1}}{2}&=1\;.
+	\end{align*}
+	If we define $u=e^{i\alpha}$ and $v=e^\beta$, and let $c = -1$ so that $\varphi_{0,0}=0$, the solution can be written as
+	\begin{eqnarray}
+	\varphi_{x,y}=e^{i\alpha(x+y)+\beta(x-y)}-1\;,\\\label{eqn:base}
+	\cos\alpha\cosh\beta=1\;.\label{eqn:cons}
+	\end{eqnarray}
+	These solutions are actually the basis of the solution space. So any solutions to the equation~\eqref{eqn:homo} can be a combination of such basis. At present, we just write the solution as an integral with unknown differential element
+	\[
+	\varphi_{x,y}=\int_A (e^{i\alpha(x+y)+\beta(x-y)}-1)\,\ud A\;,
+	\]
+	
+	Now we add the non-homogeneous part at the origin. It breaks the homogeneous equation over the whole grid, but still keeps it in each two half planes which are separated by a line that pass through the origin, or to be more specified, the line $x=y$. Taking the advantage of symmetry, we can rewrite the solution as
+	\[
+	\varphi_{x,y}=\int_A (e^{i\alpha(x+y)+\beta|x-y|}-1)\,\ud A\;,
+	\label{eqn:integ}
+	\] 
+	which keeps equation~\eqref{eqn:homo} for two half planes but breaks it on the symmetric axis $x=y$.
+	
+	 On the axis where $x=y=n$, we have
+	\begin{align*}
+	I_{n,n}&=\varphi_{n-1,n}+\varphi_{n+1,n}+\varphi_{n,n-1}+\varphi_{n,n+1}-4\varphi_{n,n}\\
+	&=\int_A \,\big(e^{i\alpha(2n+1)+\beta}+e^{i\alpha(2n-1)+\beta}+e^{i\alpha(2n+1)+\beta}+e^{i\alpha(2n-1)+\beta}-4e^{i\alpha\cdot 2n}\big)\,\ud A\\
+	&=4\int_A\,e^{i\alpha\cdot 2n}\big(e^\beta\cos\alpha -1\big)\,\ud A\\
+	&=4\int_A\,e^{i\alpha\cdot 2n}\Big(\frac{e^\beta}{\cosh\beta} -1\Big)\,\ud A\quad\textrm{(equation~\eqref{eqn:cons})}\\
+	&=4\int_A\,e^{i\alpha\cdot 2n}\tanh\beta\,\ud A\\
+	&=\pm4\int_A\,e^{i\alpha\cdot 2n}\sqrt{1-\sech^2\beta}\,\ud A\\
+	&=\pm4\int_A\,e^{i\alpha\cdot 2n}\sqrt{1-\cos^2\alpha}\,\ud A\quad\textrm{(equation~\eqref{eqn:cons})}\\
+	&=\pm4\int_A\,e^{i\alpha\cdot 2n}\sin\alpha\,\ud A\;.
+	\end{align*}
+	To satisfy the condition $I_{0,0}=1$ and $I_{n,n}=0$ for any non-zero integer $n$, we can specify the integral to be on $\alpha$ from $0$ to $\pi$, and the differential element to be
+	\[
+	\ud A= \pm\frac{1}{4\pi\sin\alpha}\,\ud\alpha\;.
+	\]
+	Now we can compute the potential on the symmetric axis as
+	\begin{align*}
+	\varphi_{n,n}
+	&=\pm\int^\pi_0 \frac{e^{i\alpha\cdot2n}-1}{4\pi\sin\alpha}\,\ud\alpha\\
+	&=\pm\int^\pi_0 \frac{\cos(2n\alpha)-1}{4\pi\sin\alpha}\,\ud\alpha\quad\textrm{(take away the imaginary part)}\\
+	&=\int^\pi_0 \frac{1-\cos(2n\alpha)}{4\pi\sin\alpha}\,\ud\alpha\quad\textrm{(take the non-negative value)}
+	\end{align*}
+	To calculate this integral, we first introduce a lemma:
+	\begin{lemma}
+		\label{lemma:sigmasin}
+		For any positive integer $n$, we have
+		\[
+		\sum_{k=1}^n \sin\big((2k-1)\alpha\big)=\frac{1-\cos(2n\alpha)}{2\sin\alpha}
+		\]
+	\end{lemma}
+	\begin{proof}
+		\begin{align*}
+		\sum_{k=1}^n \sin\big((2k-1)\alpha\big)&=\Im\bigg(\sum_{k=1}^n e^{i(2k-1)\alpha}\bigg)\\
+		&=\Im\bigg(\frac{e^{2ni\alpha}-1}{e^{i\alpha}-e^{-i\alpha}}\bigg)\\
+		&=\Im\bigg(\frac{e^{2ni\alpha}-1}{2i\sin\alpha}\bigg)\\
+		&=\Im\bigg(\frac{1-e^{2ni\alpha}}{2\sin\alpha}i\bigg)\\
+		&=\frac{1-\cos (2n\alpha)}{2\sin\alpha}\qedhere
+		\end{align*}
+	\end{proof}
+	Using this lemma, we can finish computing $\varphi_{n,n}$:
+	\begin{align*}
+	\varphi_{n,n}&=\int^\pi_0 \frac{1}{2\pi}\sum_{k=1}^{|n|} \sin\big((2k-1)\alpha\big)\,\ud\alpha\\
+	&=\frac{1}{\pi}\sum_{k=1}^{|n|}\frac{1}{2k-1}
+	\end{align*}
+	Now we can get the value for each $\varphi_{n,n}$:
+	\begin{align*}
+	\varphi_{0,0}&=0\\
+	\varphi_{1,1}&=\frac{1}{\pi}\\
+	\varphi_{2,2}&=\frac{1}{\pi}\bigg(1+\frac{1}{3}\bigg)=\frac{4}{3\pi}\\
+	\varphi_{3,3}&=\frac{1}{\pi}\bigg(1+\frac{1}{3}+\frac{1}{5}\bigg)=\frac{23}{15\pi}\\
+	...
+	\end{align*}
+	and other $\varphi_{x,y}$ can also be computed using equation~\eqref{eqn:core} and symmetry:
+	\[
+	\begin{array}{c|c|c|c|c|c|c|c|c}
+	\ddots & & & & \vdots & & & & \iddots\\
+	\hline
+	& \frac{23}{15\pi} & \frac{2}{3\pi}+\frac{1}{4} & \frac{23}{3\pi}-2 & \frac{17}{4}-\frac{12}{\pi} & \frac{23}{3\pi}-2 & \frac{2}{3\pi}+\frac{1}{4} & \frac{23}{15\pi} &\\
+	\hline
+	& \frac{2}{3\pi}+\frac{1}{4} & \frac{4}{3\pi} & \frac{2}{\pi}-\frac{1}{4} & 1-\frac{2}{\pi} & \frac{2}{\pi}-\frac{1}{4} & \frac{4}{3\pi} & \frac{2}{3\pi}+\frac{1}{4} &\\
+	\hline
+	& \frac{23}{3\pi}-2 & \frac{2}{\pi}-\frac{1}{4} & \frac{1}{\pi} & \frac{1}{4} & \frac{1}{\pi} & \frac{2}{\pi}-\frac{1}{4} & \frac{23}{3\pi}-2 &\\
+	\hline
+	\cdots & \frac{17}{4}-\frac{12}{\pi} & 1-\frac{2}{\pi} & \frac{1}{4} & 0 & \frac{1}{4} & 1-\frac{2}{\pi} & \frac{17}{4}-\frac{12}{\pi} & \cdots\\
+	\hline
+	& \frac{23}{3\pi}-2 & \frac{2}{\pi}-\frac{1}{4} & \frac{1}{\pi} & \frac{1}{4} & \frac{1}{\pi} & \frac{2}{\pi}-\frac{1}{4} & \frac{23}{3\pi}-2 &\\
+	\hline
+	& \frac{2}{3\pi}+\frac{1}{4} & \frac{4}{3\pi} & \frac{2}{\pi}-\frac{1}{4} & 1-\frac{2}{\pi} & \frac{2}{\pi}-\frac{1}{4} & \frac{4}{3\pi} & \frac{2}{3\pi}+\frac{1}{4} &\\
+	\hline
+	& \frac{23}{15\pi} & \frac{2}{3\pi}+\frac{1}{4} & \frac{23}{3\pi}-2 & \frac{17}{4}-\frac{12}{\pi} & \frac{23}{3\pi}-2 & \frac{2}{3\pi}+\frac{1}{4} & \frac{23}{15\pi} &\\
+	\hline
+	\iddots & & & &\vdots & & & &\ddots
+	\end{array}
+	\]
+	
+	We can also explicitly express $\varphi_{x,y}$ as integral, by plugging the integration interval and $\ud A$ back to \eqref{eqn:integ}
+	\[
+	\varphi_{x,y}=\int_0^{\pi/2} \frac{1-e^{-\beta(\alpha)|x-y|}\cos(\alpha(x+y))}{2\pi\sin\alpha}\,\ud\alpha\;,
+	\]
+	where $\beta(\alpha)$ is the non-negative value that satisfies $\cos\alpha\cosh\beta(\alpha) = 1$. Note that we halved the interval and the denominator here. For the second half of the interval, $\cos\alpha < 0$, which would result in complex number $\beta(\alpha)$ that has a $i\pi$ term. By carefully reorganizing the terms, we can prove that the integration result of the second half is equal to the one of the first half, so we can remove the second half to avoid complex numbers. We also choose the sign of $\beta(\alpha)$ and added a minus sign in $e^{-\beta(\alpha)|x-y|}$. The sign is chosen such that $\varphi_{1,0} = 1/4$.
+	
+	 Since the formula for $\varphi_{n,n}$ is harmonic-series like, we cannot expect that there exists a simple formula for $\varphi_{x,y}$.
+	 
+	 \section{Extension}
+	 
+	 We can extend our problem to higher dimension: instead of considering 2D square grid, we can consider potential $\varphi(x_1,x_2,\dots,x_n)$ over n-D cubic mesh. These potential satisfies a similar core equation:
+	 \begin{align}
+	 \left(\sum_{k=1}^n \varphi(x_1,x_2,\dots,x_k-1\dots,x_n)+\varphi(x_1,x_2,\dots,x_k+1\dots,x_n)\right) - 2n\varphi(x_1,x_2,\dots,x_n) = I(x_1,x_2,\dots,x_n)\;, \label{eq:extension}
+	 \end{align}
+	 where $I(0,0,\dots,0) = 1$ and $I(x_1,x_2,\dots,x_n) = 0$ elsewhere. We can use the same trick to try solving the homogeneous equation first
+	  \begin{align}
+	 	 \sum_{k=1}^n \varphi(x_1,x_2,\dots,x_k-1\dots,x_n)+\varphi(x_1,x_2,\dots,x_k+1\dots,x_n) = 2n\varphi(x_1,x_2,\dots,x_n)\;.\label{eqn:homon}
+	 \end{align}
+	 Unfortunately, there is no trivial n-dimensional extension to the diagonal trick we used for the 2D problem. So instead of guessing the solution using $x+y$ and $x-y$, we guess the solution to \eqref{eqn:homon} is in the following form
+	 \[
+	 \varphi(x_1,x_2,\dots,x_n) = e^{i\beta_1 x_1} e^{i\beta_2 x_2}\dots e^{i\beta_{n-1} x_{n-1}} e^{\alpha x_n} - 1\;.
+	 \]
+	 Plugging this into \eqref{eqn:homon}, we get
+	 \[
+	 \cos\beta_1+\cos\beta_2+\dots+\cos\beta_{n-1}+\cosh\alpha = n
+	 \]
+	 We then guess the solution to be an integral over some surface $A$ in the space $(\beta_1,\beta_2,\dots,\beta_{n-1},\alpha)$
+	 \[
+	 \varphi(x_1,\dots,x_n) = \int_A\left( e^{\alpha |x_n|}\left(\prod_{k=1}^{n-1}e^{i\beta_k x_k}\right) - 1\right)\,\ud A\,.
+	 \]
+	 Note that we already added absolute value over $x_n$ using the symmetry. This will break the homogeneous equation \eqref{eqn:homon} on the plane $x_n = 0$, so now we need to take care of this plain and calculate the external current we introduced on it.
+	 \begin{align*}
+	 I(x_1,\dots,x_{n-1},0) &= \int_A 2\left(\prod_{k=1}^{n-1}e^{i\beta_k x_k}\right) \left(\left(\sum_{k=1}^{n-1}\cos(\beta_k)\right)+e^{\alpha}-n\right)\,\ud A \\
+	 &= \int_A 2\left( \prod_{k=1}^{n-1}e^{i\beta_k x_k}\right) \left(e^{\alpha}-\cosh\alpha\right)\,\ud A\\
+	 &= \int_A 2 \left(\prod_{k=1}^{n-1}e^{i\beta_k x_k}\right) \sinh\alpha\,\ud A
+	 \end{align*}
+	 To make this integral equal to $1$ at $I(0,\dots,0)$, and $0$ at anywhere else, we can set the following integration interval and element 
+	 \[
+	 \beta_k \in [-\pi, \pi]
+	 \]
+	 \[
+	 \ud A = \frac{1}{2(2\pi)^{n-1}\sinh\alpha}\ud\beta_1\ud\beta_2\dots\ud\beta_{n-1}
+	 \]
+	 Plugging back, we get the solution for $\varphi$ (here we flip the sign $\alpha' = -\alpha$ to make the formula prettier)
+	 \[
+	 \varphi(x_1,\dots,x_n) = \underbrace{\int_{-\pi}^{\pi}\dots\int_{\pi}^{\pi}}_{\text{$(n-1)$ times}}\frac{1 - e^{-\alpha' |x_n|}\cos\left(\sum_{k=0}^{n-1}\beta_k x_k\right)}{2(2\pi)^{n-1}\sinh\alpha'}\ud\beta_1\dots\ud\beta_{n-1}\;,
+	 \]
+	 where $\alpha'$ is the non-negative value that satisfies
+	 \[
+	 \cos\beta_1+\cos\beta_2+\dots+\cos\beta_{n-1}+\cosh\alpha' = n
+	 \]
+	 Here we eliminated the imaginary part that would cancel each other, and also chose a sign for $\alpha$ by verifying $\varphi(0,0,\dots,0,1)$
+	 
+	 This also gives an alternative formula for 2D case:
+	 \begin{align}
+	 \varphi_{x,y} &= \int_{-\pi}^{\pi}\frac{1 - e^{-\alpha' |y|}\cos\beta x}{4\pi\sinh\alpha'}\ud\beta \nonumber\\
+	 &= \int_{0}^{\pi}\frac{1 - e^{-\alpha' |y|}\cos\beta x}{2\pi\sinh\alpha'}\ud\beta \label{eq:2d}
+	 \end{align}
+	 which gives interesting result on the x-axis
+	 \begin{align*}
+	 \varphi_{x,0} &= \int_{0}^{\pi}\frac{1 - \cos\beta x}{2\pi\sinh\alpha'}\ud\beta\\
+	 &=\int_{0}^{\pi}\frac{1 - \cos\beta x}{2\pi\sqrt{(2-\cos\beta)^2 - 1}}\ud\beta\\
+	 &=\int_{0}^{\pi/2}\frac{1 - T_{|x|}(1-2\sin t)}{4\pi\sin t}\ud t\quad (\cos\beta=1-2\sin t)
+	 \end{align*}
+	 where $T_n$ is the order $n$ Chebyshev polynomial of the first kind. It can be proved by induction that the integrand is a polynomial of $\sin t$, so the integral can be calculated in term of power series of $\sin t$.
+	 
+\section{Verification}
+
+	So far we have derived our solutions by "guessing the form". While the solution is valid, it doesn't guarantee that it is the only solution. In fact, we can easily see the original mathematical formulation of the question can indeed have infinite number of solutions: there are infinite number of solutions to the homogeneous equation \eqref{eqn:homon}, and when we have a solution to the non-homogeneous equation \eqref{eqn:cons}, we can add one homogeneous solution to get a new solution.
+	
+	To further qualify our question to have a unique solution, we add the following condition that makes sense physically: 
+\[
+\varphi(x_1,\dots,x_n) \leq 0 \quad\text{ for all points}
+\]
+	We will show that the solution we obtained above satisfies, and is the only solution that satisfies this condition.
+	
+	That the solution satisfy the condition can be seen from the equation itself
+	 \[
+		 \varphi(x_1,\dots,x_n) = \underbrace{\int_{-\pi}^{\pi}\dots\int_{-\pi}^{\pi}}_{\text{$(n-1)$ times}}\frac{1 - e^{-\alpha' |x_n|}\cos\left(\sum_{k=0}^{n-1}\beta_k x_k\right)}{2(2\pi)^{n-1}\sinh\alpha'}\ud\beta_1\dots\ud\beta_{n-1}\;,
+	\]
+	The term $e^{-\alpha'|x_n|} \in (0, 1]$ for $\alpha' \geq 0$, and $\cos(\dots) \leq 1$, so it is obvious that the integrand is non-negative, so is the integral.
+	
+	To prove the uniqueness, we first show that this solution is bounded on both sides (the lower bound $0$ is already proved above). The existence of the upper bound can be proved as follows for $n \geq 3$. Notice that the integrand is bounded by
+	\[
+	\frac{1 - e^{-\alpha' |x_n|}\cos\left(\sum_{k=0}^{n-1}\beta_k x_k\right)}{2(2\pi)^{n-1}\sinh\alpha'} \leq \frac{2}{2(2\pi)^{n-1}\sinh\alpha'}
+	\]
+	so we just need to prove the following improper integral is finite
+	\[ \int_{-\pi}^{\pi}\dots\int_{-\pi}^{\pi}\frac{1}{(2\pi)^{n-1}\sinh\alpha'}\ud\beta_1\dots\ud\beta_{n-1}
+	\]
+	The integrand has a singularity at $(\beta_1,\dots,\beta_{n-1}) = (0,\dots,0)$. Note that the original integral also had this singularity but it wass removable. Here it becomes a pole in the bound. We then notice the following asymptotic relation near the singularity
+	\[
+	\sinh\alpha' \sim \alpha' \sim\sqrt{2(\cosh\alpha' - 1)} = \sqrt{2\sum_{k=0}^{n-1}(1-\cos\beta_k)} \sim \sqrt{\sum_{k=0}^{n-1}\beta_k^2}
+	\]
+	so we can relax the integral near the singularity to
+	\[
+	\int_{V^{n-1}_\epsilon}\frac{1}{\pi^{n-1}\sinh\alpha'}\ud V^{n-1}_\epsilon < \int_{V^{n-1}_\epsilon}\frac{1 + \delta}{\pi^{n-1}\sqrt{\sum_{k=0}^{n-1}\beta_k^2}}\ud V^{n-1}_\epsilon = \int_{V^{n-1}_\epsilon}\frac{1 + \delta}{\pi^{n-1}r}\ud V^{n-1}_\epsilon
+	\]
+	where $V^{n-1}_\epsilon$ is a $(n-1)$-ball of radius $\epsilon$, and $\epsilon$ and $\delta$ are small values such that the in equality holds (We can always find such values given the asymptotic relation). This integral is known finite for all $n\ge3$. Therefore we show that the solution has an upper bound.
+	
+	For the special case $n = 2$, unfortunately the solution is not upper-bounded. We will discuss this special case later.
+	
+	
+	Then we recall the discrete Lioville's theorem, which states that any one-side bounded harmonic function (solution to the homogeneous equation \eqref{eqn:homon}) is constant, and must be all 0 if we fix $\varphi(0,\dots,0) = 0$.  (TODO)
+	
+	With the two statements together, any alternative solution $\varphi^{alt} = \varphi + \varphi^{homo}$, which is a sum of a bounded function and an unbounded function, must be unbounded, and therefore violates the condition of bounded by 0.
+	
+	For $n = 2$, we will prove a less strict bound for our solution first
+	\[
+	\lim_{(x,y)\to\infty}\frac{\varphi_{x,y}}{\sqrt{x^2+y^2}} = 0
+	\]
+	We prove this by gradually relaxing the integrand in \eqref{eq:2d}, looking at $\beta \in [0, \pi]$. First for the denominator, it is easy to prove that
+	\[
+	\sinh\alpha' > 0.9\beta
+	\]
+	Then we look at the numerator
+	\[
+	g(\beta) = 1-e^{-\alpha' |x|}\cos\beta y
+	\]
+	and its derivative
+	\begin{align*}
+	\frac{\ud g}{\ud \beta} &= e^{-\alpha' |x|}\left(|x|\frac{\ud\alpha'}{\ud\beta}\cos\beta y + y \sin\beta y\right)\\
+	& \leq|x|\frac{\ud\alpha'}{\ud\beta}\cos\beta y + y \sin\beta y \\ 
+	& \leq\sqrt{\left(|x|\frac{\ud\alpha'}{\ud\beta}\right)^2+y^2}
+	\end{align*}
+	We can show that 
+	\[
+	\frac{\ud\alpha'}{\ud\beta} = \frac{\sin\beta}{\sinh\alpha'} \in [0,1]
+	\]
+	so we have
+	\[
+	\frac{\ud g}{\ud \beta}\leq\sqrt{x^2+y^2}
+	\]
+	Since $g(0) = 0$, we have
+	\[
+	g(\beta) \leq \beta \sqrt{x^2+y^2}
+	\]
+	We also have $g(\beta) \leq 2$, so we can define, for $(x,y)\neq(0,0)$
+	\[
+	g(\beta) \leq h(\beta) =\begin{cases}
+	\beta \sqrt{x^2+y^2}, & 0\leq\beta\leq\frac{2}{\sqrt{x^2+y^2}}\\
+	2, & \frac{2}{\sqrt{x^2+y^2}}\leq\beta\leq\pi
+	\end{cases}
+	\]
+	With these, we can find the bound for the integral
+	\begin{align*}
+	\varphi_{x,y} &= \int_{0}^{\pi}\frac{1 - e^{-\alpha' |y|}\cos\beta x}{2\pi\sinh\alpha'}\ud\beta \\
+	&\leq 	0.177\int_{0}^{\pi}\frac{h(\beta)}{\beta}\ud\beta \\
+	&= 0.177\left(\int_{0}^{2/\sqrt{x^2+y^2}}\sqrt{x^2+y^2}\,\ud\beta + \int_{2/\sqrt{x^2+y^2}}^{\pi}\frac{2}{\beta}\ud\beta\right)\\
+	&=0.177\left(2 + 2\ln\frac{\pi\sqrt{x^2+y^2}}{2}\right)
+	\end{align*}
+	So we have
+	\[
+	0\leq\frac{\varphi_{x,y}}{\sqrt{x^2+y^2}}\leq0.177\frac{2 + 2\ln\frac{\pi\sqrt{x^2+y^2}}{2}}{\sqrt{x^2+y^2}}
+	\]
+	Both sides has limit to 0, so we have 
+	\[
+	\lim_{(x,y)\to\infty}\frac{\varphi_{x,y}}{\sqrt{x^2+y^2}} = 0
+	\]
+	With this bound, we can use an extended version of Lioville's theorem (TODO).
+	
+\section{Fourier transform}
+
+The way we guessed our solution also inspire us to use another tool: Discrete-time Fourier transform. We want to try transforming the solution by
+\[
+\mathcal{F}(\varphi)(\omega_1,\dots,\omega_n) = \sum_{x_1=-\infty}^{\infty}\dots\sum_{x_n=-\infty}^{\infty}\varphi(x_1,\dots, x_n)\,e^{-i\omega_1 x_1}\dots e^{-i\omega_n x_n}
+\]
+However, this transform doesn't converge. So we will introduce a new differential function
+\[
+D_\varphi^{x_1,\dots,x_n}(u_1,\dots,u_n) = \varphi(u_1+x_1,\dots,u_n+x_n) - \varphi(u_1,\dots,u_n)
+\]
+and we will work with its Fourier transform $\mathcal{F}(D_\varphi^{x_1,\dots,x_n})$. Similar to \eqref{eq:extension}, $D_\varphi^{x_1,\dots,x_n}$ satisfies the following equation
+\begin{align*}
+\left(\sum_{k=1}^n D_\varphi^{x_1,\dots,x_n}(u_1,\dots,u_k-1\dots,u_n)+D_\varphi^{x_1,\dots,x_n}(u_1,\dots,u_k+1\dots,u_n)\right) \nonumber \\- 2nD_\varphi^{x_1,\dots,x_n}(u_1,\dots,u_n) = I(u_1+x_1,\dots,u_n+x_n) - I(u_1,\dots,u_n)
+\end{align*}
+We take the Fourier transform of both sides
+\[
+\left(\left(\sum_{k=1}^n e^{i\omega_k} + e^{-i\omega_k}\right) - 2n\right)\mathcal{F}(D_\varphi^{x_1,\dots,x_n})(\omega_1,\dots,\omega_n)=e^{-i\omega_1 x_1}\dots e^{-i\omega_n x_n} - 1 
+\]
+\begin{align*}
+\mathcal{F}(D_\varphi^{x_1,\dots,x_n})(\omega_1,\dots,\omega_n) &= \frac{e^{-i\omega_1 x_1}\dots e^{-i\omega_n x_n} - 1 }{\left(\sum_{k=1}^n e^{i\omega_k} + e^{-i\omega_k}\right) - 2n}\\
+&=\frac{1-e^{i\sum_{k=1}^n\omega_k x_k}}{2n-2\sum_{k=1}^n\cos\omega_k}
+\end{align*}
+And then we apply inverse transform
+\[
+D_\varphi^{x_1,\dots,x_n}(u_1,\dots,u_n) =\frac{1}{(2\pi)^n}\int_0^{2\pi}\dots\int_0^{2\pi}\frac{\left(1-e^{i\sum_{k=1}^n\omega_k x_k}\right)e^{i\sum_{k=1}^n\omega_k u_k}}{2n-2\sum_{k=1}^n\cos\omega_k}\,\ud\omega_1\dots\ud\omega_n
+\]
+from which we can find the formula for $\varphi$
+\begin{align*}
+\varphi(x_1,\dots,x_n) &= D_\varphi^{x_1,\dots,x_n}(0,\dots,0) + \varphi(0,\dots,0) \\
+&= D_\varphi^{x_1,\dots,x_n}(0,\dots,0) \\
+& = \frac{1}{(2\pi)^n}\int_0^{2\pi}\dots\int_0^{2\pi}\frac{1-e^{i\sum_{k=1}^n\omega_k x_k}}{2n-2\sum_{k=1}^n\cos\omega_k}\,\ud\omega_1\dots\ud\omega_n\\
+\varphi(x_1,\dots,x_n)& = \frac{1}{2(2\pi)^n}\int_0^{2\pi}\dots\int_0^{2\pi}\frac{1-\cos\sum_{k=1}^n\omega_k x_k}{n-\sum_{k=1}^n\cos\omega_k}\,\ud\omega_1\dots\ud\omega_n\\
+& = \frac{1}{2\pi^n}\int_0^{\pi}\dots\int_0^{\pi}\frac{\sin^2\sum_{k=1}^n\theta_k x_k}{\sum_{k=1}^n\sin^2\theta_k}\,\ud\theta_1\dots\ud\theta_n
+\end{align*}
+
+
+\section{Triangular grid}
+
+We can have a analogy of the original question on a 2D triangular grid. To model the question, we use a different coordinate system $u;v;w$. A point with such coordinates is at location $u\mathbf{i}+v\mathbf{j}+w\mathbf{w}$, where $\mathbf{i}$, $\mathbf{j}$, and $\mathbf{w}$ are three unit vectors that are $120^{\circ}$ apart. Obviously, one point have multiple equivalent coordinates in this system. Any function $\Box_{u;v;w}$ over the triangular grid must satisfy
+\[
+\Box_{u;v;w} = \Box_{u+n;v+n;w+n},\quad\forall n \in \mathbb{Z}
+\]
+
+We can write the similar equation for $\varphi_{u;v;w}$ (homogeneous and non-homogeneous)
+\[
+\varphi_{u-1;v;w} + \varphi_{u+1;v;w} + \varphi_{u;v-1;w} + \varphi_{u;v+1;w} + \varphi_{u;v;w-1}+ \varphi_{u;v;w+1} - 6\varphi_{u;v;w} = I_{u;v;w}\quad(=0)
+\]
+We can guess that the homogeneous solution has the following form
+\[
+\varphi_{u;v;w} = e^{\alpha i(u+v)}e^{-\beta(u-v)}e^{-2\alpha w i}-1
+\]
+Plugging it in the equation, we get
+\begin{align*}
+e^{\alpha i -\beta} + e^{-\alpha i +\beta}+e^{-\alpha i -\beta}+e^{\alpha i +\beta}+e^{2\alpha i}+e^{-2\alpha i}&= 6\\
+2\cosh\beta\cos\alpha + \cos 2\alpha = 3\\
+\cosh\beta= \frac{2}{\cos\alpha}-\cos\alpha
+\end{align*}
+We integrate the homogeneous solution over unknown element $\ud A$, and mirror the solution along $u=v$ by adding absolute value to $u-v$
+\[
+\varphi_{u;v;w} = \int_A(e^{\alpha i(u+v)}e^{-\beta|u-v|}e^{-2\alpha w i}-1) \,\ud A
+\]
+The current $I_{0,0,w}$ generated by this solution is
+\begin{align*}
+I_{0;0;w} &=  \int_A e^{-2\alpha w i}(e^{\alpha i}e^{-\beta}+e^{-\alpha i}e^{-\beta}+e^{\alpha i}e^{-\beta}+e^{-\alpha i}e^{-\beta}+e^{-2\alpha i}+e^{2\alpha i}-6) \,\ud A\\
+&= \int_A e^{-2\alpha w i}(4 e^{-\beta}\cos\alpha+2\cos2\alpha-6) \,\ud A\\
+&= \int_A e^{-2\alpha w i}(4 e^{-\beta}\cos\alpha-4 \cosh\beta\cos\alpha) \,\ud A\\
+&= \int_A -4 \sinh\beta\cos\alpha e^{-2\alpha w i} \,\ud A
+\end{align*}
+We can set the differential element as 
+\[
+\ud A = -\frac{1}{4\pi \sinh\beta\cos\alpha}\,\ud\alpha,\quad \mbox{for } \alpha\in[0, \pi]
+\]
+such that $I_{0;0;0} = 1$ and $I_{0;0;w} = 0$ for all $w\neq0$. So the solution is
+\begin{align*}
+\varphi_{u;v;w} &= \int_0^{\pi}\frac{1-e^{\alpha i(u+v)}e^{-\beta|u-v|}e^{-2\alpha w i}}{4\pi \sinh\beta\cos\alpha} \,\ud\alpha\\
+&= \int_0^{\pi/2}\frac{1-e^{-\beta|u-v|}\cos(u+v-2w)\alpha}{2\pi \sinh\beta\cos\alpha} \,\ud\alpha
+\end{align*}
+where $\beta$ is the positive number that satisfies
+\[
+\cosh\beta= \frac{2}{\cos\alpha}-\cos\alpha
+\]
+
+\end{document}
+
+
+% Check A089165 

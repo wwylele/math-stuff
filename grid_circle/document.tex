@@ -1,0 +1,165 @@
+\documentclass[]{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{mathtools}
+\usepackage{amsthm}
+\usepackage
+[
+left=2cm,
+right=2cm,
+top=2cm,
+bottom=2cm,
+]
+{geometry}
+
+\newcommand{\ud}{\mathrm{d}}
+\theoremstyle{definition}\newtheorem{theorem}{Theorem}
+\theoremstyle{definition}\newtheorem{lemma}{Lemma}
+
+\newenvironment{subproof}[1][\proofname]{%
+  \renewcommand{\qedsymbol}{$\blacksquare$}%
+  \begin{proof}[#1]%
+}{%
+  \end{proof}%
+}
+
+
+\title{Grid circle}
+
+\begin{document}
+\maketitle
+
+Sequence $\{a_n\}_{n=0}^{\infty}$ satisfies
+\[
+a_0 = 1
+\]
+\[
+\sum_{k=0}^{n}a_k a_{n-k} = 1\quad \forall n\ge 0
+\]
+
+\begin{theorem}
+	\[
+	a_n = \frac{(2n-1)!!}{(2n)!!}
+	\]
+\end{theorem}
+\begin{proof}
+\begin{align*}
+\frac{1}{\sqrt{1-x}} &= \sum_{n=0}^{\infty}  \frac{(2n-1)!!}{(2n)!!} x^{n}\\
+\frac{1}{1-x} &= \left(\sum_{n=0}^{\infty}  \frac{(2n-1)!!}{(2n)!!} x^n\right)^2\\
+&=\sum_{n=0}^{\infty} \left(\sum_{k=0}^{n}b_k b_{n-k}\right)x^n\quad\mbox{where } b_n = \frac{(2n-1)!!}{(2n)!!}
+\end{align*}
+However, we also have
+\[
+\frac{1}{1-x} = \sum_{n=0}^{\infty} x^n
+\]
+So
+\[
+\sum_{k=0}^{n}b_k b_{n-k} = 1
+\]
+\[
+a_k = b_k
+\]
+\end{proof}
+
+Sequence $\{x_n\}_{n=1}^{\infty}$ satisfies
+
+\[
+x_n=\sum_{k=0}^{n-1}a_k
+\]
+
+\begin{theorem}
+\[
+x_n = \frac{(2n-1)!!}{(2n-2)!!}
+\]
+\end{theorem}
+\begin{proof}
+By induction.
+\[
+x_1 = a_0 = 1 = \frac{1!!}{0!!}
+\]
+\begin{align*}
+x_{n+1} = x_n + a_n = \frac{(2n-1)!!}{(2n-2)!!} + \frac{(2n-1)!!}{(2n)!!} = \frac{(2n-1)!!(2n) + (2n-1)!!}{(2n)!!} =  \frac{(2n+1)!!}{(2n)!!}
+\end{align*}
+\end{proof}
+
+\begin{theorem}
+For sequence ${x_n}$, if
+\[
+\lim_{n\to\infty} x_{n+1} - x_n = A
+\]
+\[
+\lim_{n\to\infty} (n+1)x_n - nx_{n+1} = B
+\]
+then
+\[
+\lim_{n\to\infty} x_n - (An+B) = 0
+\]
+\end{theorem}
+\begin{proof}
+We denote that
+\[
+A_n = x_{n+1} - x_n
+\]
+\[
+B_n = (n+1)x_n - nx_{n+1}
+\]
+We can also see 
+\[
+A_n = \frac{x_n - B_n}{n}
+\]
+To prove the theorem, we need to prove a lemma first
+\begin{lemma}
+If there exists a (large) integer $M$ such that $x_M = Y$, and for $n\geq M$, $B_n \in B + (-\delta, \delta)$, then for $n\geq M$, we have
+\[
+A_n \in \frac{Y - B}{M} + \left(-\frac{\delta}{M}, \frac{\delta}{M}\right)
+\]
+\[
+x_n \in B + \frac{n(Y - B)}{M} + \left[-\frac{\delta(n-M)}{M}, \frac{\delta(n-M)}{M}\right]
+\]
+\end{lemma}
+\begin{subproof}
+By induction. For the initial condition we have
+\[
+x_M = Y \in B + \frac{M(Y - B)}{M} + \left[-0, 0\right]
+\]
+\[
+A_M = \frac{x_M - B_M}{M} = \frac{Y - B_M}{M} =  \frac{Y - B}{M} + \left(-\frac{\delta}{M}, \frac{\delta}{M}\right)
+\]
+Assuming the statements about $A_n$ and $x_n$ are true for $n = k$, then for $n = k + 1$, we have
+\begin{align*}
+x_{k+1} = x_{k} + A_{k} &\in \frac{Y - B}{M} + \left(-\frac{\delta}{M}, \frac{\delta}{M}\right) + B + \frac{k(Y - B)}{M} + \left[-\frac{\delta(k-M)}{M}, \frac{\delta(k-M)}{M}\right]\\
+ &= B + \frac{(k + 1)(Y - B)}{M} + \left[-\frac{\delta((k+1)-M)}{M}, \frac{\delta((k+1)-M)}{M}\right]
+\end{align*}
+and
+\begin{align*}
+A_{k+1} = \frac{x_{k+1} - B_{k+1}}{k+1} &\in \frac{1}{k+1}\left(B + \frac{(k + 1)(Y - B)}{M} + \left[-\frac{\delta((k+1)-M)}{M}, \frac{\delta((k+1)-M)}{M}\right] - B - (-\delta, \delta)\right)\\
+& = \frac{1}{k+1}\left(\frac{(k + 1)(Y - B)}{M} + \left(-\frac{\delta(k+1)}{M}, \frac{\delta(k+1)}{M}\right)  \right)\\
+& = \frac{Y - B}{M} + \left(-\frac{\delta}{M}, \frac{\delta}{M}\right)
+\end{align*}
+\end{subproof}
+
+With the condition of Lemma 1 and an additional condition that $\lim_{n\to\infty}A_n = A$, we can see that
+\[
+A \in \frac{Y - B}{M} + \left(-\frac{\delta}{M}, \frac{\delta}{M} \right) 
+\]
+and for $n \geq M$
+\[
+|A_n - A| < \frac{2\delta}{M}
+\]
+
+Because $\lim_{n\to\infty}B_n = B$, by the definition of limit, for any (small) positive number $\delta$, there is always a $M$ that satisfy the condition of Lemma 1, and that
+\[
+|A_n - A|  < \frac{2\delta}{M}
+\]
+???的
+
+\end{proof}
+
+\begin{theorem}
+\[
+\lim_{n\to\infty}x_n^2 - \frac{4n-1}{\pi} = 0
+\]
+\end{theorem}
+
+\end{document}

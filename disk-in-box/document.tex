@@ -1,0 +1,231 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{tikz}
+\author{wwylele}
+\title{Problem about a box containing a disk}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\begin{document}
+	\newcommand{\tr}{\operatorname{tr}}
+	\section{Introduction}
+	
+	An air transport is asked to pack a round table, which is with diameter of $3.2$m and without legs, in to a cuboid box. According to the regulations, the two sides length of the box's bottom must be within $2.5$m. In order to pack the table, what height does the box have at least?
+	\section{Mathematical Model}
+	
+	In order to answer the question above, we would like to solve the following general problem: given a box with sides of $a$, $b$ and $c$, and a disk with diameter of $d$. What is the sufficient and necessary condition for it to be possible to contain the disk by the box?
+	
+	In the next section, we will prove the following theorem:
+	\begin{theorem}
+		\label{thr:disk}
+		A disk with diameter of $d$ can be contained in a box with sides of $a$, $b$ and $c$ if and only if
+		\[
+		\min\{a^2+b^2,\, b^2+c^2,\, c^2+a^2\}\geq d^2 \textrm{ and } a^2+b^2+c^2\geq 2d^2\;.
+		\]
+	\end{theorem}
+	\section{Solution}
+	
+	First of all, we know that if a disk contained in a box, its projections perpendicular to each faces of the box are ellipses. These ellipses are with major axis of $d$, the same as the diameter of the disk. The ellipses are contained in faces, meaning that the major axis of them cannot be greater than the diagonal length of the faces. Here we get a necessary condition for packing the disk:
+	\[
+	\min\{a^2+b^2,\, b^2+c^2,\, c^2+a^2\}\geq d^2\;.
+	\]
+	Before the further discussion, we would like to introduce several lemmas:
+	\begin{lemma}
+		\label{lemma:perp}
+		Given an ellipse with semi-axis of $R$ and $r$ share its center with a circle of radius of $\sqrt{R^2+r^2}$, and draw two tangents to the ellipse from one point on the circle, then the two tangents will be perpendicular to each other.
+	\end{lemma}
+		\begin{tikzpicture}[scale=0.9]
+			\draw[thick,->,>=stealth](-6,0)--(6,0)node[right] {$x$};
+			\draw[thick,->,>=stealth](0,-6)--(0,6) node[above] {$y$};
+			\coordinate [label=225:$O$](A) at (0,0); 
+			\draw (A) ellipse (4 and 3);
+			\draw (A) circle (5);
+			\coordinate [label=225:$R$](R) at (4,0); 
+			\coordinate [label=225:$r$](r) at (0,3); 
+			\coordinate [label=45:$\sqrt{R^2+r^2}$](Rr) at (0,5); 
+			\coordinate [label=45:\mbox{$(x_0,y_0)$}](B) at (3,4); 
+			\draw (B)--+(-8,-2.1627931307997765810657680468898);
+			\draw (B)--+(2,-7.3978411398428012881235848688652);
+		\end{tikzpicture}
+
+	\begin{proof}
+		Construct the Cartesian coordinate system from the center of the ellipse, with axis coincided. The equation of the ellipse is
+		\[
+		\frac{x^2}{R^2}+\frac{y^2}{r^2}=1\;.
+		\]
+		Let the point from which the two tangents start is $(x_0,y_0)$, and we have $x_0^2+y_0^2=R^2+r^2$. Let the equation of the tangents is $y-y_0=k_i(x-x_0)$ ($i=1,2$ for each tangent. Here we assume that neither of two tangents is parallel to y-axis). Then the following system have only one solution for $(x,y)$,
+		\[
+		\left\lbrace \begin{array}{ll}
+		\frac{x^2}{R^2}+\frac{y^2}{r^2}=1\\
+		y-y_0=k_i(x-x_0)
+		\end{array}\right. \;,
+		\]
+		which means the following quadratic equation have two identical solutions (substitute the first one by the second one and simplify),
+		\[
+		(k_i^2 R^2+r^2)x^2+2k_iR^2 (y_0-k_i x_0)x+R^2(y_0-k_i x_0)-R^2 r^2=0
+		\]
+		The discriminant is zero,
+		\begin{align*}
+		\Delta &= 4k_i^2R^4(y_0-k_i x_0)^2-4(k_i^2 R^2+r^2)(R^2(y_0-k_i x_0)^2-R^2 r^2) \\
+		&=( 4R^4 r^2-4R^2 r^2x_0^2)k_i^2+8R^2r^2x_0y_0k_i+4R^2r^4-4R^2r^2y_0^2\\
+		&=0\;.
+		\end{align*}
+		
+		If $4R^4 r^2-4R^2 r^2x_0^2\neq 0$, it is a quadratic equation about $k_i$. $k_1$ and $k_2$ are two roots of it, so according to Vieta's formulas, we have
+		\[
+		k_1k_2 =\frac{4R^2r^4-4R^2r^2y_0^2}{4R^4 r^2-4R^2 r^2x_0^2}\\
+		=\frac{r^2-y_0^2}{R^2-x_0^2}\;.
+		\]
+		Then using $x_0^2+y_0^2=R^2+r^2$, we get
+		\[
+		k_1k_2 =-1\;,
+		\]
+		which means two tangents are perpendicular.
+		
+		If  $4R^4 r^2-4R^2 r^2x_0^2= 0$, the equation becomes a linear equation with a single solution, meaning that one tangent is parallel to y-axis. Now the equation is
+		\[
+		2x_0y_0k_i+r^2-y_0^2=0\;.
+		\]
+		Because $r^2-y_0^2=x_0^2-R^2=0$, it has one solution $k_i=0$, meaning that the other tangents is parallel to x-axis. So the two tangents are perpendicular.
+	\end{proof}
+	\begin{lemma}
+		\label{lemma:rect}
+		If an ellipse with semi-axis of $R$ and $r$ inscribed in an rectangle with sides of $a$ and $b$, then $4R^2+4r^2=a^2+b^2$.
+	\end{lemma}
+	\begin{proof}
+		Using lemma~\ref{lemma:perp}, we can prove that the rectangle is circumscribed by the circle mentioned in lemma~\ref{lemma:perp}, so
+		\[
+		a^2+b^2=\textrm{(circle's diameter)} ^2 = 4R^2+4r^2
+		\]
+	\end{proof}
+	
+	Now return to the problem about the disk in the box. The disk projects an ellipse to the $a$-$b$ face of the box (treated as bottom face). The major axis of the ellipse should be $d$, and we denote the minor axis as $g$. As a result from lemma~\ref{lemma:rect}, we have
+	\begin{equation}
+	\label{eqn:botueq}
+	a^2+b^2\geq d^2+g^2\;.
+	\end{equation}
+	Denote the angle between the disk and the bottom face as $\theta$, then we have $\cos \theta =g/d$ and $\sin \theta = h/d $, where $h$ is the distance between the highest and the lowest point of the disk. so we get
+	\begin{equation}
+	\label{eqn:side}
+	g^2+h^2=d^2\;.
+	\end{equation}
+	In order to contain the disk, the hight of the box must larger than the disk's,
+	\begin{equation}
+	\label{eqn:height}
+	c\geq h\;.
+	\end{equation}
+	Combining \eqref{eqn:botueq}, \eqref{eqn:side} and \eqref{eqn:height}, we get another necessary condition:
+	\[
+	a^2+b^2+c^2\geq 2d^2\;.
+	\]
+	
+	Until now, we proved the necessity of the condition. The proof for the sufficiency is quite easier.
+	
+	//TO-DO
+	\section{Extension}
+	
+	If we look back lemma~\ref{lemma:rect}, we will soon think that the 3-dimension version may be also true:
+	\begin{theorem}
+		\label{thr:3d}
+		If an ellipsoid with semi-axis of $r_1$, $r_2$ and $r_3$ inscribed in an cuboid with sides of $a_1$, $a_2$ and $a_3$, then $4r_1^2+4r_2^2+4r_3^2=a_1^2+a_2^2+a_3^2$.
+	\end{theorem}
+	Actually theorem~\ref{thr:3d} is also an extension of theorem~\ref{thr:disk}, since a $d$-diameter disk can be treat as a `ellipsoid' with $r_1=r_2=d/2$ and $r_3=0$.
+
+	Further more, the n-dimension version will soon come up:
+	\begin{theorem}
+		\label{thr:nd}
+		If an $n$-hyper-ellipsoid with semi-axis of $r_1,r_2,\ldots,r_n$ inscribed in an $n$-hyper-cuboid with sides of $a_1,a_2,\ldots,a_n$, then $4r_1^2+4r_2^2+\ldots+4r_n^2=a_1^2+a_2^2+\ldots+a_n^2$.
+	\end{theorem}
+	Here we are going to prove theorem~\ref{thr:nd}, and theorem~\ref{thr:3d} can be derived from it.
+	\begin{proof}[Proof. Method 1]
+		First construct the Cartesian coordinate system. Here we use the notation $x_{|n}$ to present the $n$-th coordinate of point or vector $\mathbf{x}$. The equation of the  hyper-ellipsoid is
+		\[
+		\sum_{k=1}^{n}\frac{x_{|k}^2}{r_k^2}=1\;,
+		\] 
+		and the normal vector at point $\mathbf{x}$ is
+		\[
+		\mathbf{\nabla}\bigg(\sum_{k=1}^{n}\frac{x_{|k}^2}{r_k^2}\bigg)=2\,\bigg(\frac{x_{|1}}{r_1^2},\frac{x_{|2}}{r_2^2},\ldots,\frac{x_{|n}}{r_n^2}\bigg)\;.
+		\]
+		For a pair of opposite `faces' of the hyper-cuboid with unit normal vector of $\mathbf{b_i}$, they touch the hyper-ellipsoid at $\pm\mathbf{x_i}$ such that
+		\[
+		\bigg(\frac{x_{i|1}}{r_1^2},\frac{x_{i|2}}{r_2^2},\ldots,\frac{x_{i|n}}{r_n^2}\bigg)=\lambda_i\,(b_{i|1},b_{i|2},\ldots,b_{i|n})\;,
+		\]
+		meaning that $x_{i|k}=\lambda _i\,r_k^2 \,b_{i|k}$ for each $k$. Substitute the hyper-ellipsoid equation by this, we get
+		\[
+		\sum_{k=1}^{n}\lambda_i^2\,r_k^2 \,b_{i|k}^2=1\;,\quad
+		\lambda_i=\bigg( \sum_{k=1}^{n}r_k^2\,b_{i|k}^2 \bigg)^{-\frac{1}{2}}\;,
+		\]
+		so the tangent point $\mathbf{x_i}$ is
+		\[
+		\mathbf{x_i}=\bigg( \sum_{k=1}^{n}r_k^2\,b_{i|k}^2 \bigg)^{-\frac{1}{2}} (r_1^2b_{i|1},r_2^2b_{i|2},\ldots,r_n^2b_{i|n})\;.
+		\]
+		The distance between two faces (in other words, the side length $a_i$) is
+		\[
+		a_i=2\,\mathbf{x_i}\cdot\mathbf{b_i}=2\,\bigg( \sum_{k=1}^{n}r_k^2\,b_{i|k}^2 \bigg)^{-\frac{1}{2}} \sum_{k=1}^{n}r_k^2\,b_{i|k}^2=2\,\sqrt{ \sum_{k=1}^{n}r_k^2\,b_{i|k}^2 }\;.
+		\]
+		Then the sum of the square of all $a_i$ is
+		\[
+		\sum_{i=1}^{n}a_i^2=4\sum_{i=1}^{n}\sum_{k=1}^{n}r_k^2\,b_{i|k}^2=4\sum_{k=1}^{n}\sum_{i=1}^{n}b_{i|k}^2\,r_k^2\;.\
+		\]
+		Every unit normal vector $\mathbf{b_i}$ are perpendicular to each other (since every faces of the hyper-cuboid are perpendicular), so they formed an orthonormal basis. If we put them into a matrix $\mathbf{B}$ as rows, this matrix is orthogonal, from where we know its columns $\mathbf{d_k}=(b_{1|k},b_{2|k},\ldots,b_{n|k})$ also form an orthonormal basis. So we have
+		\[
+		|\mathbf{d_k}|^2=\sum_{i=1}^{n}b_{i|k}^2=1\qquad\textrm{for each }k.
+		\]
+		Finally, we get
+		\[
+		\sum_{i=1}^{n}a_i^2=4\sum_{k=1}^{n}r_k^2\;.\
+		\]
+	\end{proof}
+	\begin{proof}[Proof. Method 2]
+		Construct the Cartesian coordinate system at the center, but not along the axis of the hyper-ellipsoid, along the sides of the hyper-cuboid instead. In the following proof, we treat all coordinates as column vectors.
+		The hyper-ellipsoid can be written in quadratic form
+		\[
+		f(\mathbf{x})=\mathbf{x}^T \mathbf{M} \mathbf{x}=1\;,
+		\]
+		where $\mathbf{M}$ is a $n\times n$ symmetric matrix. The normal vector at $\mathbf{x}$ is
+		\[
+		\mathbf{\nabla}f=2\mathbf{M}\mathbf{x}
+		\]
+		Let $\mathbf{e_i}$ be the $i$-th unit vector of basis (meaning that all coordinates of $\mathbf{e_i}$ is zero, except that $e_{i|i}=1$).The pair of faces with normal vector $\mathbf{e_i}$ touch the hyper-ellipsoid at $\pm \mathbf{x_i}$, then we have
+		\[
+		\lambda_i\mathbf{M}\mathbf{x_i}=\mathbf{e_i}\;,
+		\]
+		and multiply both sides by $\mathbf{x_i}^T$, using the quadratic form,
+		\[
+		\lambda_i\mathbf{x_i}^T\mathbf{M}\mathbf{x_i}=\lambda_i=\mathbf{x_i}^T\mathbf{e_i}\;.
+		\]
+		Plug this into the former equation,
+		\begin{align*}
+		(\mathbf{x_i}^T\mathbf{e_i})\mathbf{M}\mathbf{x_i}&=\mathbf{e_i}\\
+		 (\mathbf{x_i}^T\mathbf{e_i})\mathbf{x_i}&=\mathbf{M}^{-1}\mathbf{e_i}\\
+		 (\mathbf{x_i}^T\mathbf{e_i})\mathbf{e_i}^T\mathbf{x_i}&=\mathbf{e_i}^T\mathbf{M}^{-1}\mathbf{e_i}\\
+		 (\mathbf{x_i}^T\mathbf{e_i})^2&=(\mathbf{M}^{-1})_{ii}\;.
+		\end{align*}
+		The side length $a_i$ is
+		\[
+		a_i=2\mathbf{x_i}^T\mathbf{e_i}\;.
+		\]
+		So the sum of the square of them is
+		\[
+		\sum_{i=1}^{n}a_i^2=4\sum_{i=1}^{n}(\mathbf{x_i}^T\mathbf{e_i})^2=4\sum_{i=1}^{n}(\mathbf{M}^{-1})_{ii}=4\tr(\mathbf{M}^{-1})\;.
+		\]
+		On the other hand, wa want to find the semi-axis of the hyper-ellipsoid. There exist an orthogonal matrix $\mathbf{P}$ such that it rotate the hyper-ellipsoid to one whose axis coincide with coordinate axis. The equation of the new hyper-ellipsoid is
+		\[
+		\mathbf{x}^T \mathbf{M'} \mathbf{x}=\mathbf{x}^T \mathbf{P} \mathbf{M} \mathbf{P}^{-1}\mathbf{x}=1\;.
+		\]
+		Here $\mathbf{M'}=\mathbf{P} \mathbf{M} \mathbf{P}^{-1}$ is diagonal in order to represent the equation
+		\[
+		\sum_{k=1}^{n} M'_{kk} x_{|k}^2=1\;,
+		\]
+		and now we know that the semi-axis $r_k^2=1/M'_{kk}$. Since $\mathbf{M'}$ is a diagonal matrix similar to $\mathbf{M}$, the values on its diagonal are eigenvalues of $\mathbf{M}$. So their multiplicative inverse $r_k^2$ are eigenvalues of $\mathbf{M}^{-1}$. Finally their sum is
+		\[
+		\sum_{k=1}^{n}r_k^2=\tr(\mathbf{M}^{-1})\;,
+		\]
+		which derive the conclusion
+		\[
+		\sum_{i=1}^{n}a_i^2=4\sum_{k=1}^{n}r_k^2\;.\
+		\]
+	\end{proof}
+\end{document}

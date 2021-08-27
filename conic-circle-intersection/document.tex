@@ -1,0 +1,62 @@
+\documentclass[]{article}
+
+
+\begin{document}
+
+
+\section{The Problem}
+
+A conic intersects with the unit circle $x^2+y^2=1$ at four points. The principal axis of the conic is parallel or perpendicular to x-axis. Prove: the sum of the azimuths relative to x-axis of the four intersections equals $2k\pi$, where $k$ is an integer.
+
+\section{The Solution}
+
+Denote the azimuth of the intersections as $\theta_i$ ($i = 1, 2, 3, 4$), so the coordinates of the intersections are $(\cos \theta_i, \sin \theta_i)$.
+
+The general equation of such conic is of the form
+
+\[
+Ax^2+By^2+Cx+Dy+E=0 \, .
+\]
+
+Substituting in the intersection coordinates, we get
+
+\[
+A\cos^2 \theta_i + B\sin^2 \theta_i + C\cos \theta_i + D\sin \theta_i + E = 0\,.
+\]
+
+Using the tangent half-angle formulas
+\[
+\sin \theta = \frac{2\tan\frac{\theta}{2}}{1+\tan^2\frac{\theta}{2}}
+\]
+\[
+\cos \theta = \frac{1-\tan^2\frac{\theta}{2}}{1+\tan^2\frac{\theta}{2}} \, ,
+\]
+
+we transform the equation in terms of $t = \tan \theta/2$ as
+
+\[
+A (1-t^2)^2 + B(2t)^2 + C(1-t^2)(1+t^2)+D(2t)(1+t^2)+E(1+t^2)^2=0\, .
+\]
+
+This is a quartic equation, whose four solutions correspond to the four intersections.
+
+To prove $\theta_1 + \theta_2 + \theta_3 + \theta_4 = 2k\pi$, we need to prove $\tan(\theta_1/2 + \theta_2/2 +\theta_3/2 +\theta_4/2 ) = 0$, which, using tangent angle sum identity, is equivalent to
+
+\[
+\frac{(t_1 + t_2 + t_3 + t_4) - (t_1t_2t_3 + t_1t_2t_4 + t_1t_3t_4 + t_2t_3t_4)}{1 - (t_1t_2 + t_1t_3 + t_1t_4 + t_2t_3 + t_2t_3+t_3t_4) + t_1t_2t_3t_4} = 0 \, .
+\] 
+
+Using Vieta's formulas, this can be expressed by the coefficients of the quartic equation as
+
+\[
+\frac{-F_3+F_1}{F_4-F_2+F_0} = 0 \, ,
+\]
+where $F_n$ is the coefficient of the $n$-th degree term of the quartic equation.
+
+In the quartic equation, only the term $D(2t)(1+t^2)$ contributes to the first and the third degree terms, so the coefficients are
+\[
+	F_1 = F_3 = 2D \, .
+\]
+using which the previous equation about the coefficients is proven, and therefore the original theorem is proven.
+
+\end{document}

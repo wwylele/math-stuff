@@ -1,0 +1,47 @@
+\documentclass[]{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{mathtools}
+\usepackage
+[
+left=2cm,
+right=2cm,
+top=2cm,
+bottom=2cm,
+]
+{geometry}
+
+\newcommand{\ud}{\mathrm{d}}
+
+\title{Sierpinski Expression}
+
+\begin{document}
+\maketitle
+If we have recursive function 
+\begin{align*}
+f_0^{a,b,u,v}(x, y) &= ax + by\\
+f_{n+1}^{a,b,u,v} (x, y) &= f_n^{a,b,u,v}(f_n^{a,b,u,v}(x, u), f_n^{a,b,u,v}(v, y))\,,
+\end{align*}
+then we have
+\begin{align*}
+f_n^{a,b,u,v}(x, y) &= a^{2^n}x + b^{2^n}y + \frac{u+v}{2}\left( 1 - a^{2^n} - b^{2^n} + (a+b - 1)  \prod_{k=0}^{n-1}(a^{2^k}+b^{2^k}+1) \right)\\
+f_\infty^{a,b,u,v} &=\frac{u+v}{2}\left( 1 + (a+b - 1) \prod_{k=0}^{\infty}(a^{2^k}+b^{2^k}+1)\right)
+\end{align*}
+
+Proof by induction:
+\begin{align*}
+f_0^{a,b,u,v}(x, y) &=  a^{2^0}x + b^{2^0}y + \frac{u+v}{2}\left( 1 - a^{2^0} - b^{2^0} + (a+b - 1)  \prod_{k=0}^{-1}(a^{2^k}+b^{2^k}+1) \right) \\
+ &= ax + by + \frac{u+v}{2}\left( 1 - a - b + (a+b - 1)  \right) \\
+ &= ax + by
+\end{align*}
+
+\begin{align*}
+f_{n+1}^{a,b,u,v} (x, y) &= f_n^{a,b,u,v}(f_n^{a,b,u,v}(x, u), f_n^{a,b,u,v}(v, y)) \\
+&= a^{2^n}\left(a^{2^n}x + b^{2^n}u + \frac{u+v}{2}\left( 1 - a^{2^n} - b^{2^n} + (a+b - 1)  \prod_{k=0}^{n-1}(a^{2^k}+b^{2^k}+1) \right)\right) \\ &+ b^{2^n}\left(a^{2^n}v + b^{2^n}y + \frac{u+v}{2}\left( 1 - a^{2^n} - b^{2^n} + (a+b - 1)  \prod_{k=0}^{n-1}(a^{2^k}+b^{2^k}+1) \right)\right) \\ &+ \frac{u+v}{2}\left( 1 - a^{2^n} - b^{2^n} + (a+b - 1)  \prod_{k=0}^{n-1}(a^{2^k}+b^{2^k}+1) \right)\\
+&= a^{2^{n+1}} x +b^{2^{n+1}} y + a^{2^{n}}b^{2^{n}}(u+v) + \frac{u+v}{2}(a^{2^n} + b^{2^n} + 1)\left( 1 - a^{2^n} - b^{2^n} + (a+b - 1)  \prod_{k=0}^{n-1}(a^{2^k}+b^{2^k}+1) \right) \\
+&= a^{2^{n+1}} x +b^{2^{n+1}} y + a^{2^{n}}b^{2^{n}}(u+v) + \frac{u+v}{2}\left( 1 - a^{2^{n+1}} - b^{2^{n+1}} - 2a^{2^n}b^{2^n} + (a+b - 1)  \prod_{k=0}^{n}(a^{2^k}+b^{2^k}+1) \right) \\
+&= a^{2^{n+1}} x +b^{2^{n+1}} y  + \frac{u+v}{2}\left( 1 - a^{2^{n+1}} - b^{2^{n+1}} + (a+b - 1)  \prod_{k=0}^{n}(a^{2^k}+b^{2^k}+1) \right) \\
+\end{align*}
+ 
+\end{document}

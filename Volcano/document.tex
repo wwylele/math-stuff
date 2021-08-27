@@ -1,0 +1,307 @@
+\documentclass[]{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{mathtools}
+\usepackage
+[
+left=2cm,
+right=2cm,
+top=2cm,
+bottom=2cm,
+]
+{geometry}
+
+\newcommand{\ud}{\mathrm{d}}
+
+\title{Volcano Function}
+
+\begin{document}
+\maketitle
+\section{Definition}
+For an integer $b > 1$, we define the volcano function $M_b(x): (0, 1] \to \mathbb{R}$ as
+\[
+M_b(x) = \sum_{k=0}^\infty b^{-a_k}((b-1)a_k-2k)\,,
+\]
+where the sequence $\{a_k\}_{k=0}^{\infty}$ are positive, non-decreasing integers that satisfies
+\[
+x = \sum_{k=0}^\infty b^{-a_k}
+\]
+and the same value doesn't appear in $a_k$ more than $b-1$ times. This is equivalent to the base-$b$ expansion of $x$, and by mandating an infinite sequence, we guarantee that such expansion is unique.
+
+\section{Finite expansion compatibility}
+For $x$ that has finite expansion in base-$b$, we can find
+\[
+x = \sum_{k=0}^n b^{-a_k'}\,,
+\]
+where the sequence $\{a_k'\}_{k=0}^{n}$ are also positive, non-decreasing integers with the same value appearing no more than $b-1$ times. The relation between $a_k'$ and the infinite expansion $a_k$ has the relation ship
+\[
+a_k = a_k'\quad  \mbox{ for } 0 \le k < n\,,
+\]
+\[
+a_{n + t(b - 1)} = a_{n+ t(b - 1)+1} = ... = a_{n+ t(b - 1) + b - 2} = a_n' + t + 1\quad \mbox{ for } t\ge 0\,.
+\]
+Then the volcano function has value on $x$
+\begin{align*}
+M_b(x) &= \sum_{k=0}^\infty b^{-a_k}((b-1)a_k-2k)\\
+&= \left(\sum_{k=0}^{n-1} b^{-a_k}((b-1)a_k-2k)\right) + \sum_{k=n}^\infty b^{-a_k}((b-1)a_k-2k)\\
+&= \left(\sum_{k=0}^{n-1} b^{-a_k}((b-1)a_k-2k)\right) + \sum_{t=0}^\infty\sum_{i=0}^{b-2} b^{-a_{n + t(b - 1)+i}}((b-1)a_{n + t(b - 1)+i}-2(n + t(b - 1)+i))\\
+&=\left(\sum_{k=0}^{n-1} b^{-a_k'}((b-1)a_k'-2k)\right) + \sum_{t=0}^\infty\sum_{i=0}^{b-2} b^{-(a_n' + t + 1)}((b-1)(a_n' + t + 1)-2(n + t(b - 1)+i))\\
+&= \left(\sum_{k=0}^{n-1} b^{-a_k'}((b-1)a_k'-2k)\right) + \sum_{t=0}^\infty b^{-(a_n' + t + 1)}((b-1)^2(a_n' +t+1) -2(b-1)(n + t(b - 1))-(b-2)(b-1))\\
+&= \left(\sum_{k=0}^{n-1} b^{-a_k'}((b-1)a_k'-2k)\right) + b^{-a_n'}(b-1)\sum_{t=0}^\infty b^{-(t + 1)}((b-1)(a_n' + t + 1)-2(n + t(b - 1))-(b-2))\\
+&=\left(\sum_{k=0}^{n-1} b^{-a_k'}((b-1)a_k'-2k)\right) + b^{-a_n'}(b-1)\sum_{t=0}^\infty b^{-(t + 1)}((b-1)a_n'-2n + 1-  t(b - 1))\\
+&=\left(\sum_{k=0}^{n-1} b^{-a_k'}((b-1)a_k'-2k)\right) + b^{-a_n'}(b-1)\left(\frac{(b-1)a_n'-2n+1}{b-1}-\frac{1}{b-1}\right)\\
+&=\left(\sum_{k=0}^{n-1} b^{-a_k'}((b-1)a_k'-2k)\right) + b^{-a_n'}((b-1)a_n'-2n)\\
+&=\sum_{k=0}^{n} b^{-a_k'}((b-1)a_k'-2k)\,.
+\end{align*}
+This shows that for $x$ that has finite expansion in base-$b$, $M_b(x)$ also has a finite form.
+
+
+\section{Self-similarity}
+If $x\in (0, 1]$ has expansion $\{a_k\}_{k=0}^{\infty}$, then $(i + x) / b$ ($i = 0, 1, ..., b- 1$) has expansion $\{a_k'\}_{k=0}^{\infty}$, where
+\[
+a_0' = a_1' = ... = a_{i - 1}' = 1
+\]
+\[
+a_{i + k}' = a_k + 1\quad \mbox{for } k = 0, 1, ...
+\]
+Then we have
+\begin{align*}
+M_b\left(\frac{i+x}{b}\right) &=  \sum_{k=0}^\infty b^{-a_k'}((b-1)a_k'-2k)\\
+&=\left(\sum_{k=0}^{i-1} b^{-a_k'}((b-1)a_k'-2k)\right) + \sum_{k=i}^\infty b^{-a_k'}((b-1)a_k'-2k)\\
+&=\left(\sum_{k=0}^{i-1} b^{-1}((b-1)-2k)\right) + \sum_{k=0}^\infty b^{-a_k-1}((b-1)(a_k+1)-2(k + i))\\
+&=\left(\sum_{k=0}^{i-1} b^{-1}((b-1)-2k)\right) + \left(b^{-1}\sum_{k=0}^\infty b^{-a_k}((b-1)a_k-2k)\right) + \sum_{k=0}^\infty b^{-a_k-1}(b-1-2i)\\
+\Rightarrow M_b\left(\frac{i+x}{b}\right)&=\frac{i(b-i)}{b} + \frac{M_b(x)}{b} + \frac{b-1-2i}{b} x,\quad \mbox{for } i = 0,1,...,b-1 \mbox{ and }x\in (0, 1]
+\end{align*}
+
+\section{Alternative Expansion, Finite}
+If $x_0$ can be expanded in base-$b$ in finite form $x_0 = \sum_{m=1}^n b^{-m}d_m$, where $d_m$ are integers in $[0, b)$, then we can have
+\[
+x_0 = \frac{d_1+x_1}{b}, x_1= \sum_{m=1}^{n-1} b^{-m}d_{m+1}
+\]
+\[
+x_1 = \frac{d_2+x_2}{b}, x_2= \sum_{m=1}^{n-2} b^{-m}d_{m+2}
+\]
+\[
+...
+\]
+\[
+x_{n-1} = \frac{d_n+x_n}{b}, x_n= 0\,.
+\]
+Using the self-similarity equation, we have
+\begin{align*}
+M_b(x_0) &= \frac{d_1(b-d_1)}{b} + \frac{b-1-2d_1}{b}x_1 + \frac{1}{b}M_b(x_1)\\
+&...\\
+&= \sum_{m=1}^n \frac{d_m(b-d_m)}{b^m} + \frac{b-1-2d_m}{b^m}x_m
+\end{align*}
+
+\section{Non-negativity, Finite}
+We observe that each term $f_m(x_m)$ in the finite alternative expansion is a linear function of $x_m$. At the left side $x_m = 0$ and at the right side $x_m = 1$, the term has value
+\[
+f_m(0) = \frac{d_m(b-d_m)}{b^m} \ge 0\,,
+\]
+\[
+f_m(1) = \frac{d_m(b-d_m)}{b^m} + \frac{b-1-2d_m}{b^m} = \frac{(d_m + 1)(b-d_m - 1)}{b^m} \ge 0\,,
+\]
+so $f_m(x_m) \ge 0$ for $x_m \ in (0, 1]$. Summing them up, we get $M_b(x) \ge 0$ for all $x$ that has finite expansion in base-$b$.
+
+\section{Maximum value}
+
+Consider each term of $M_k(x)$ as a function over real-valued $a_k$
+\[
+g_k(a_k) =  b^{-a_k}((b-1)a_k-2k)\,.
+\]
+This function has derivative
+\[
+g_k'(a_k) =  b^{-a_k}(\ln b((1-b)a_k+2k)+b-1)\,,
+\]
+which is an decreasing function with a single root. This means $g_k(a_k)$ has a single maximum, with function increasing on the left and decreasing on the right. Now consider only integer $a_k$, there must be either a single maximum, or two equal maximum next to each other. Such maximum at $a_k^*$ is an integer that satisfies
+\[
+g_k(a_k^* - 1)\le g_k(a_k^*)\ge g_k(a_k^* + 1)\,.
+\] 
+The left side yields the upper bound for $a_k^*$
+\begin{align*}
+b^{-a_k^* + 1}((b-1)(a_k^* - 1)-2k)&\le b^{-a_k^*}((b-1)a_k^*-2k) \\
+b((b-1)(a_k^* - 1)-2k)&\le (b-1)a_k^*-2k\\
+b(b-1)a_k^* - b(b-1)-2kb&\le (b-1)a_k^*-2k\\
+(b-1)^2a_k^*&\le 2k(b-1) + b(b-1)\\
+a_k^* &\le \frac{ b+2k}{b-1}\,.
+\end{align*}
+Similarly, the right side yields the lower bound for $a_k^*$, by substituting $a_k^*$ and $a_k^* + 1$ and flip the inequality
+\[
+a_k^* \ge \frac{1+2k}{b-1}\,.
+\]
+The lower and upper bounds have the difference of 1, so they always capture one integer inside (or when $(2k +1)/(b-1)$ is an integer, there are two integer maximum point being the lower and the upper bound). Therefore we can write the maximum point as
+\[
+a_k^* = \left\lfloor\frac{b+2k}{b-1}\right\rfloor\,.
+\]
+\paragraph{For odd $b$,} $\{a_k^*\}_{k=0}^{\infty}$ yields
+\[
+\begin{matrix}
+\Big\{&\left\lfloor\dfrac{b}{b-1}\right\rfloor,&\left\lfloor\dfrac{b + 2}{b-1}\right\rfloor, &..., &\left\lfloor\dfrac{b + b - 3}{b-1}\right\rfloor, &\\
+&\left\lfloor\dfrac{b-1 + b}{b-1}\right\rfloor,&\left\lfloor\dfrac{b-1 + b + 2}{b-1}\right\rfloor,&...,&\left\lfloor\dfrac{b-1 + b + b - 3}{b-1}\right\rfloor,&\\
+&\left\lfloor\dfrac{2(b-1) + b}{b-1}\right\rfloor,&\left\lfloor\dfrac{2(b-1) + b + 2}{b-1}\right\rfloor,&...,&\left\lfloor\dfrac{2(b-1) + b + b - 3}{b-1}\right\rfloor,&...\Big\}\,,
+\end{matrix}
+\]
+which contains every positive integers, each for $(b-1)/2$ times. This sequence satisfies the constraints when $\{a_k^*\}_{k=0}^{\infty}$ is the expansion for some $x^*$, so it is the maximum point for $M_k(x^*)$, which is
+\[
+x^* = \sum_{k=0}^\infty b^{-a_k^*} = \sum_{n=1}^\infty b^{-n}*\frac{b-1}{2} = \frac{1}{2}
+\]
+and
+\begin{align*}
+M_b(x^*) &= \sum_{k=0}^\infty b^{-a_k^*}((b-1)a_k^*-2k)\\
+ &= \sum_{n=1}^\infty\sum_{i=0}^{(b-3)/2} b^{-n}\left((b-1)n-2\left((n - 1)\frac{b-1}{2} + i \right)\right)\\
+ &= \sum_{n=1}^\infty\sum_{i=0}^{(b-3)/2} b^{-n}(b-1-2i)\\
+ &= \sum_{n=1}^\infty b^{-n}\left((b-1)\frac{b-1}{2}-\frac{b-3}{2}\frac{b-1}{2}\right)\\
+  &= \sum_{n=1}^\infty b^{-n}\frac{(b-1)(b+1)}{4}\\
+  &=\frac{b+1}{4}
+\end{align*}
+\paragraph{For even $b$,} $\{a_k^*\}_{k=0}^{\infty}$ yields
+\[
+\begin{matrix}
+\Big\{&\left\lfloor\dfrac{b}{b-1}\right\rfloor,&\left\lfloor\dfrac{b + 2}{b-1}\right\rfloor, &...,&\left\lfloor\dfrac{2b - 2}{b-1}\right\rfloor, &...,&\left\lfloor\dfrac{3b - 4}{b-1}\right\rfloor,&\\
+&\left\lfloor\dfrac{2(b-1) + b}{ b-1}\right\rfloor,&\left\lfloor\dfrac{2(b-1) + b + 2}{b-1}\right\rfloor, &...,&\left\lfloor\dfrac{2(b-1) +  2b - 2}{b-1}\right\rfloor, &...,&\left\lfloor\dfrac{2(b-1) + 3b - 4}{b-1}\right\rfloor,&\\
+&\left\lfloor\dfrac{4(b-1) + b}{ b-1}\right\rfloor,&\left\lfloor\dfrac{4(b-1) + b + 2}{b-1}\right\rfloor, &...,&\left\lfloor\dfrac{4(b-1) +  2b - 2}{b-1}\right\rfloor, &...,&\left\lfloor\dfrac{4(b-1) + 3b - 4}{b-1}\right\rfloor,&...\Big\}\,.
+\end{matrix}
+\]
+The first line contains $(b-2)/2$ 1s and $b/2$ 2s, the second line contains $(b-2)/2$ 3s and $b/2$ 4s, and so on. Note that each element in the middle, such as $(2b-2)(b-1)$, is an integer itself, which indicates the case of double maximum, so for the first line we can have $b/2$ 1s and $(b-2)/2$ 2s instead, and the same is for other lines. No matter how we choose among the double maximums, this sequence satisfies the constraints when $\{a_k^*\}_{k=0}^{\infty}$ is the expansion for some $x^*$, so it is the maximum point for $M_k(x^*)$. There are many different $x^*$ that yields the same maximum. One of them is
+\[
+x^* = \sum_{k=0}^\infty b^{-a_k^*} 
+    = \sum_{n=0}^\infty b^{-(2n+1)}\frac{b-2}{2} + b^{-(2n+2)} \frac{b}{2} = \frac{b}{2(b-1)}\,,
+\]
+and the corresponding maximum value is
+\begin{align*}
+M_b(x^*) &= \sum_{k=0}^\infty b^{-a_k^*}((b-1)a_k^*-2k)\\
+&=\sum_{n=0}^\infty \sum_{i=0}^{b-2} b^{-a_{n(b-1)+i}^*}((b-1)a_{n(b-1)+i}^*-2(n(b-1)+i))\\
+&=\sum_{n=0}^\infty \left(\sum_{i=0}^{(b-4)/2} b^{-(2n+1)}((b-1)(2n+1)-2(n(b-1)+i))\right) +\\&\quad \left(\sum_{i=(b-2)/2}^{b-2} b^{-(2n+2)}((b-1)(2n+2)-2(n(b-1)+i))\right)\\
+&=\sum_{n=0}^\infty   b^{-(2 n +1)}\frac{(b - 1) (b + 2)}{4} \\
+&=\frac{b(b+2)}{4(b+1)}
+\end{align*}
+
+\section{Non-negativity, Infinite}
+We will show that $M_b(x) \ge 0$ for $x \in (0, 1]$. Suppose we want to find a non-positive $M_b(x)$, we need to exploit the fact that each tern in $M_b(x)$ can be negative. The first term at $k = 0$, however, is always positive. Note $g_k(a_k)$ is an increasing function in the region it has negative value, so as long as the constraint on sequence $a_n$ allows a negative term, we always wants the lowest $a_k$ possible. Suppose we are given $n$ positive terms at the start and we can control $a_k$ for $k \ge n$, and the term at $k=n$ can be negative. In this case we want to make all terms starting from $k=n$ most negative possible, which means the lowest $a_k$ possible. Given the constraint on sequence $a_k$, we can start filling space in smaller integers and gradually build up. If $a_{k-1}$ is already the $b-1$-th same integer in the sequence, we assign $a_{k-1}+1$ to $a_k,...$ for $b-1$ times, then $a_{k-1}+2$ for $b - 1$ times, and so on; if  $a_{k-1}$ is not yet the $b-1$-th same integer, we start filling from $a_{k-1}$. In either case, we will end up with a number like $x = \underline{0.???\alpha\beta\beta\beta...}_b$ ($\alpha < \beta = b - 1$). From finite expansion compatibility, we know that this number can be folded into the finite form $x = \underline{0.???\gamma}_b$ ($\gamma =\alpha + 1$) (or $x = 1$ in a special case). We already know that $M_b(x) > 0$ for any finite expansion $x$. Since this is the lowest we can get for any $x$, $M_b(x) \ge 0$ for any $x\in (0, 1]$ 
+
+\section{Continuity}
+We will prove that $M_b(x)$ is continuous.
+
+\subsection{Residual Sum}
+For $x$ that has expansion $\{a_k\}_{k=0}^{\infty}$, we define the residual sum starting at $n$ as
+\[
+M_b^{\circ}(x, n) = \sum_{k=n}^\infty b^{-a_k}((b-1)a_k-2k)\,.
+\]
+This function is bounded by
+\begin{align*}
+|M_b^{\circ}(x, n)|=&\ \left|\sum_{k=n}^\infty b^{-a_k}((b-1)a_k-2k)\right| \\
+=&\  \Bigg|b^{-a_{n}+1}\left(\sum_{k=n}^\infty b^{-(a_k-a_{n}+1)}((b-1)(a_k-a_{n}+1)-2(k-n))\right) +\\&\ \sum_{k=n}^\infty b^{-a_k}((b-1)(a_{n}-1)-2n)\Bigg|\\
+=&\ \left|b^{-a_{n}+1}\left(\sum_{k=0}^\infty b^{-a_k'}((b-1)a_k'-2k)\right) + \sum_{k=n}^\infty b^{-a_k}((b-1)(a_{n}-1)-2n)\right|\\
+=&\ \left|b^{-a_{n}+1}M_b\left(\sum_{k=0}^\infty b^{-a_k'}\right) + \sum_{k=n}^\infty b^{-a_k}((b-1)(a_{n}-1)-2n)\right| \\
+\le&\ b^{-a_{n}+1}\left|M_b\left(\sum_{k=0}^\infty b^{-a_k'}\right)\right| + \sum_{k=n}^\infty b^{-a_k}\Big|(b-1)(a_{n}-1)-2n\Big|\\
+\end{align*}
+\paragraph{First term}The first term is bounded by $M_b$'s minimum and maximum value. We already proved that the minimum value is 0, and the maximum is either $(b+1)/4$ or $b(b+2)/(4(b+1))$. We pick the larger maximum value
+\begin{align*}
+b^{-a_{n}+1}\left|M_b\left(\sum_{k=0}^\infty b^{-a_k'}\right)\right| \le&\ b^{-a_{n}+1}\frac{b+1}{4}                                                          
+\end{align*}
+and it can be be further bounded by
+\[
+b^{-a_{n}+1}\frac{b+1}{4} < b^{-\frac{n}{b-1}+1}\frac{b+1}{4}\,.
+\]
+This is because $a_{n}>n/(b-1)$, which can be derived from the constraint on sequence $a_k$. We can see that the first term can be arbitrarily small for a large enough $n$.
+
+\paragraph{Second term} For the second term, we apply the constraint on sequence $a_k$. The maximum sum $\sum_{k=n}^\infty b^{-a_k}$ (corresponding to minimal $a_k$) is when there are $b-1$ times $a_k$ the same as $a_n$, $b-1$ times $a_k$ the same as $a_n +1$ and so on. So $\sum_{k=n}^\infty b^{-a_k} \le b^{-a_n + 1}$. Therefore the second term can be bounded by
+ \[
+ \sum_{k=n}^\infty b^{-a_k}\Big|(b-1)(a_{n}-1)-2n\Big| \le b^{-a_{n}+1}|(b-1)(a_{n}-1)-2n|\,.
+ \]
+Then we consider the function 
+\[
+	h(a) = b^{-a+1}((b-1)(a-1)-2n),\quad a \in \left(\frac{n}{b-1}, \infty\right)
+\]
+Similar to function $g_k$ we studied before, this function has a single peak at
+\[
+a^* = \frac{1}{\ln b} + \frac{2n}{b-1}+1\,,
+\]
+and has the only negative region, which is increasing, at
+\[
+\left(\frac{n}{b-1}, \frac{2n}{b-1}\right)\,.
+\]
+So the function is bounded by
+\[
+|h(a)| \le \max\left(-h\left(\frac{n}{b-1}\right), h\left(\frac{1}{\ln b} + \frac{2n}{b-1}+1\right)\right)
+\]
+The first bound is
+\begin{align*}
+-h\left(\frac{n}{b-1}\right) &=  -b^{-\frac{n}{b-1}+1}\left((b-1)\left(\frac{n}{b-1}-1\right)-2n\right)\\
+&= b^{-\frac{n}{b-1}+1}(n+b-1)\,.
+\end{align*}
+The second bound is
+\begin{align*}
+ h\left(\frac{1}{\ln b} + \frac{2n}{b-1}+1\right) &= b^{-\frac{1}{\ln b} - \frac{2n}{b-1}}\left((b-1)\left(\frac{1}{\ln b} + \frac{2n}{b-1}\right)-2n\right)\\
+  &= \frac{b^{- \frac{2n}{b-1}}}{e}*\frac{b-1}{\ln b}\,.
+\end{align*}
+Both terms can be arbitrarily small for large enough $n$, so the term $h(a_{n})$ can also be arbitrarily small.
+
+\paragraph{Bounded residual sum} In conclusion, the residual sum $M_b^{\circ}(x, n)$ can be arbitrarily small for a large enough $n$. 
+
+%\paragraph{Finite residual sum} For $x$ that also has finite expansion $\{a_k'\}_{k=0}{m}$, due to finite expansion compatibility, we can also defines its finite residual sum $M_b^{\circm}(x, n)$, and it is also bounded to arbitrary small following the same arguments above.
+
+\subsection{Residual Difference}
+If $x_1$ and $x_2$ have the same first $n$ terms in their expansions, and these terms are the finite expansion of $x_0$, then we know the distance between $M_b(x_1)$ and $M_b(x_2)$
+\[
+|M_b(x_1) - M_b(x_2)| \le |M_b(x_1) - M_b(x_0)| + |M_b(x_2) - M_b(x_0)| = |M_b^\circ(x_1, n)| + |M_b^\circ(x_2, n)| 
+\]
+is bounded to arbitrary small for a large enough $n$
+
+Now for a $x$ that does \textit{not} have finite expansion, if we want to bound $|M_b(x') - M_b(x)|$ to arbitrary small, we can always find a large enough $n$ such that $x'$ has the same expansion in the first $n$ terms as $x$. This corresponds to a single interval around $x$ that has both left side and right side (if one side is missing, $x$ would have finite expansion). Therefore we proved that $M_b$ is continuous for such $x$.
+
+For $x$ that has a $n$-term finite expansion, we write $x$ in both finite and infinite forms. The infinite forms provides the left interval needed to bound $|M_b(x') - M_b(x)|$ to arbitrary small. To find a suitable right interval, we consider $x'$ whose infinite expansion has $x$'s finite expansion as prefix (this is an interval right to $x$), and we want to bound $|M_b(x') - M_b(x)| = |M_b^\circ(x', n)|$, but this time by using a large enough $a_n$ (because $n$ is already fixed). Recall the bound 
+\begin{align*}
+|M_b^\circ(x', n)| &\le  b^{-a_{n}+1}\left|M_b\left(\sum_{k=0}^\infty b^{-a_k'}\right)\right| + \sum_{k=n}^\infty b^{-a_k}\Big|(b-1)(a_{n}-1)-2n\Big|\\
+&\le b^{-a_{n}+1}\frac{b+1}{4} + b^{-a_{n}+1}|(b-1)(a_{n}-1)-2n|
+\end{align*}
+Fixing $n$, this indeed can get arbitrarily small for large enough $a_n$. Therefore we proved that $M_b$ is continuous for such $x$.
+
+\section{Alternative Expansion, Infinite}
+If $x_0$ can be expanded in base-$b$ in infinite form $x_0=\sum_{m=1}^\infty b^{-m}d_m$, where $d_m$, are integers in $[0, b)$, we can define $\{x_m'\}_{m = 0}^\infty$ in the same way we did in finite alternate expansion. Then due to continuity, we have infinite alternative expansion
+\begin{align*}
+M_b(x) &= \lim_{x_0\to x} M_b(x_0) \\
+&= \lim_{n\to\infty}M_b\left(\sum_{m=1}^n b^{-m}d_m\right) \\
+&= \lim_{n\to\infty} \sum_{m=1}^n \frac{d_m(b-d_m)}{b^m} + \frac{b-1-2d_m}{b^m}x_m\\
+& = \sum_{m=1}^\infty \frac{d_m(b-d_m)}{b^m} + \frac{b-1-2d_m}{b^m}x_m
+\end{align*}
+
+\section{Symmetry}
+We will prove that $M_b(x) = M_b(x')$ if $x + x' = 1$.
+
+We expand both $x$ and $x'$ for infinite alternative expansion: $x = \sum_{m=1}^n b^{-m}d_m$, $x' = \sum_{m=1}^n b^{-m}d_m'$. If $x$ has finite expansion (and so will be $x'$), we choose to use the infinite expansion for $x$, use the finite expansion for $x'$, and set all $d_m' = 0$ for $x'$ after the last term. This way, we have both infinite $\{d_m\}_m^\infty$ and $\{d_m'\}_m^\infty$ that satisfy $d_m + d_m' = b -1$ for all $m$. We then define $\{x_m\}_{m = 0}^\infty$ and $\{x_m'\}_{m = 0}^\infty$ like we did fore alternative expansion before. Then we can show that 
+\[
+x_m + x_m' = bx_{m-1} - d_m +bx_{m-1}' - d_m' = b(x_{m-1}+x_{m-1}')  - b + 1
+\]
+and starting from $x_{0}+x_{0}' = 1$, we can show by induction that $x_m + x_m' = 1$ for all $m$. And now each term in the alternative expansion
+\begin{align*}
+\frac{d_m(b-d_m)}{b^m} + \frac{b-1-2d_m}{b^m}x_m &= \frac{(b-1-d_m')(b-(b-1-d_m'))}{b^m} + \frac{b-1-2(b-1-d_m')}{b^m}(1-x_m')\\
+&= \frac{d_m'(b-d_m')}{b^m} + \frac{b-1-2d_m'}{b^m}x_m'
+\end{align*}
+is symmetrical for $x$ and $x'$, so their sum $M_b(x)$ and $M_b(x')$ is also symmetrical.
+
+\section{Integral}
+\begin{align*}
+\int_0^1 M_b(x)\,\ud x &= \sum_{i=0}^{b-1}\int_{\frac{i}{b}}^{\frac{i+1}{b}} M_b(x)\,\ud x\\
+&=\sum_{i=0}^{b-1}\int_{0}^{1} \frac{1}{b}M_b\left(\frac{i+x}{b}\right)\,\ud x\\
+&=\sum_{i=0}^{b-1}\int_{0}^{1} \frac{1}{b}\left(\frac{i(b-i)}{b} + \frac{M_b(x)}{b} + \frac{b-1-2i}{b} x\right)\,\ud x\\
+&=\sum_{i=0}^{b-1}\left(\frac{i(b-i)}{b^2}  + \frac{b-1-2i}{2b^2} +  \frac{1}{b^2}\int_{0}^{1} M_b(x)\,\ud x\right)\\
+&=\frac{b^2-1}{6b} + \frac{1}{b}\int_{0}^{1} M_b(x)\,\ud x\\
+\Rightarrow \left(1-\frac{1}{b}\right)\int_0^1 M_b(x)\,\ud x &= \frac{b^2-1}{6b}\\
+\Rightarrow \int_0^1 M_b(x)\,\ud x &= \frac{b+1}{6}
+\end{align*}
+
+
+
+
+
+\section{Limit?}
+
+\[
+\lim_{b\to\infty}\frac{M_b(x)}{b} = x(1-x)
+\]
+
+\end{document}
+

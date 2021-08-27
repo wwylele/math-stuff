@@ -1,0 +1,254 @@
+\documentclass[]{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{mathtools}
+
+\newcommand{\ud}{\mathrm{d}}
+
+\begin{document}
+\section{The problem}
+https://youtu.be/1yaqUI4b974
+
+Put some sands on a square plate, and gives vibration with a constant frequency to the center of the plate. Standing wave forms on the plate, and the sand moves to where the wave amplitude is low, and shows interesting patterns. Can this pattern be computed?
+
+\section{The heuristic}
+Assuming th plate has width of 2 and the center is placed at $(0, 0)$, and wave constant of 1. We start from the general wave equation
+\begin{align}
+\frac{\partial^2 u}{\partial t^2} = \nabla^2 u\,. \label{eq:wave}
+\end{align}
+Assuming perfect standing wave with the same frequency is generated, we can factorize
+\begin{align}
+u(x,y,t) = F(x,y)\sin 2\pi ft\,.\label{eq:factorize}
+\end{align}
+Substituting \eqref{eq:factorize} into \eqref{eq:wave}, we get
+\begin{align}
+(\nabla^2 + 4\pi^2 f^2) F = 0\,.\label{eq:core}
+\end{align}
+The goal is to solve $F(x, y)$. This function stands for the (signed) amplitude at point $(x, y)$. The sand pattern represents where $F(x, y) = 0$.
+We should pay attention to the boundary condition. The system equation should be
+\begin{align}
+\begin{cases}(\nabla^2 + 4\pi^2 f^2) F = 0\,, & (x, y) \in (-1, 1)^2 \backslash \{(0, 0)\}\\
+\frac{\partial F}{\partial x} = 0\,, & x \in \{-1, 1\}\\
+\frac{\partial F}{\partial y} = 0\,, & y \in \{-1, 1\}
+\end{cases}
+\end{align}
+
+The boundary condition on the edge of the plate hints for Fourier series
+\begin{align}
+F(x, y) = \sum_{(j,k)\in\mathbb{Z}^2} c_{jk} \cos j\pi x \cos k\pi y\,. \label{eq:f-fourier}
+\end{align} 
+To make use of the Fourier series, we want to modify the RHS of \eqref{eq:core} such that it can be extended to the missing origin $(0, 0)$. A simple extension is to use the Dirac $\delta$ function 
+\begin{align}
+(\nabla^2 + 4\pi^2 f^2) F = L \delta(x)\delta(y)\,,\quad (x, y) \in (-1, 1)^2\,, \label{eq:core-mod}
+\end{align}
+where $L$ is an arbitrary constant. Now we try to expand the RHS to Fourier series as well
+\begin{align}
+L \delta(x)\delta(y) = \sum_{(j,k)\in\mathbb{Z}^2} b_{jk} \cos \pi j x \cos \pi k y\,.\label{eq:delta-fourier}
+\end{align}
+The Fourier series formula gives us
+\begin{align}
+b_{jk}=\frac{1}{4}\int_{-1}^{1}\int_{-1}^{1}L \delta(x)\delta(y) \cos(-\pi j x) \cos(-\pi ky)\,\ud x\ud y = \frac{L}{4}\,.
+\end{align}
+So the Fourier series \eqref{eq:delta-fourier} becomes
+\begin{align}
+L \delta(x)\delta(y) = \sum_{(j,k)\in\mathbb{Z}^2} \frac{L}{4} \cos j\pi x \cos k\pi y\,.\label{eq:delta-fourier-real}
+\end{align}
+(Note that this doesn't converge anywhere but whatever lol)
+
+Substituting \eqref{eq:delta-fourier-real} and \eqref{eq:f-fourier} into \eqref{eq:core-mod}, computing and comparing the coefficients, we get
+\begin{align}
+(-\pi^2 j^2 - \pi^2 k^2)c_{jk} + 4\pi^2 f^2 c_{jk} = \frac{L}{4}\,,
+\end{align}
+from which we can compute the Fourier coefficient (constants are absorbed into $A$)
+\begin{align}
+c_{jk} = \frac{A}{j^2 + k^2 - 4f^2}\,.
+\end{align}
+So the solution to the standing wave would be
+\begin{align}
+F_f(x, y) = A \sum_{(j,k)\in\mathbb{Z}^2} \frac{\cos j\pi x \cos k\pi y}{j^2 + k^2 - 4f^2}\,. \label{eq:solution}
+\end{align}
+
+\section{The analysis}
+Because the derivation above is heuristic, we need to verify if the solution \eqref{eq:solution} is actually valid. The first obvious problem is that if there is any term with $j^2 + k^2 - 4f^2 = 0$, the expression would be invalidated by divide-by-zero. This corresponds to any frequency $f$ that can be expressed as $\sqrt{j^2 + k^2} / 2$ for some integers $j$ and $k$. We will show later that these frequencies are the ``natural frequencies" of the plate.
+
+\subsection{Convergence}
+
+For unnatural frequencies, the second problem would be the convergence of the series. First of all, we need to formally defines the summation order of the infinite series over grids. We choose to use the most natural order where terms with smaller $j$ and $k$ come first. Strictly speaking, we want to sum infinitely over concentric circles:
+\begin{align}
+\sum_{(j,k)\in\mathbb{Z}^2}\frac{\cos j\pi x \cos k\pi y}{j^2 + k^2 - 4f^2} = \sum_{n=0}^{\infty}\sum_{j^2+k^2=n} \frac{\cos j\pi x \cos k\pi y}{n - 4f^2}\label{eq:order}\,.
+\end{align}
+
+\paragraph{Divergence at center} We first show that the series \eqref{eq:order} diverges at $(0, 0)$. For $x = 0$ and $y = 0$, consider the partial sum
+\begin{align}
+S_R = \sum_{n = 0}^{R^2}\sum_{j^2+k^2=n}\frac{1}{n - 4f^2}\,,
+\end{align}
+and the difference between two partial sums, for a large enough $R > 2f$
+\begin{align*}
+S_{2R} - S_{R} &= \sum_{n = R^2 + 1}^{4R^2}\sum_{j^2+k^2=n}\frac{1}{n - 4f^2} \\
+&>\sum_{n = R^2 + 1}^{4R^2}\sum_{j^2+k^2=n}\frac{1}{4R^2} \\
+&=\frac{N(2R) - N(R)}{4R^2}\,,
+\end{align*}
+where $N(R)$ is the counting function for grid points inside the circle with radius $R$ (inclusive). Gauss proved\cite{cite:gauss} that $N(R)$ has bounds
+\begin{align}
+ \pi R^2 - 2\sqrt{2}\pi R\le N(R) \le \pi R^2 + 2\sqrt{2}\pi R\,,
+\end{align}
+which means
+\begin{align*}
+S_{2R} - S_{R} &> \frac{(4R^2 - 4\sqrt{2}\pi R) - (R^2 + 2\sqrt{2}\pi R)}{4R^2}\\
+&=\frac{3}{4} - \frac{\sqrt{2}}{2R}\\
+&>\frac{1}{2}\quad (\mbox{for }R > 3).
+\end{align*}
+The infinite series would be the sum of difference between partial sums
+\begin{align*}
+ \sum_{n=0}^{\infty}\sum_{j^2+k^2=n} \frac{1}{n - 4f^2} &= S_R + (S_{2R} - S_{R}) + (S_{4R} - S_{2R}) + (S_{8R} - S_{4R}) + \dots\\
+ &>S_R + \frac{1}{2}+ \frac{1}{2}+ \frac{1}{2}+\dots\\
+ &=\infty\,,
+\end{align*}
+and therefore we proved that the series diverges at $(0, 0)$.
+
+The divergence makes little sense in physics, as we expect that the center, where input vibration is given, would have a finite amplitude. We can argue that the infinite result is caused by the assumption that the input point is infinitely small, which leads to our Dirac $\delta$ function assumption. In a real experiment, an input with non-zero area would smooth out the Dirac $\delta$ function and gives finite result at the center.
+
+The divergence at the center makes it harder to ``normalize" the solution: given a finite amplitude of the input vibration, it is impossible to determine the coefficient $A$.
+
+\paragraph{Convergence elsewhere} And now we show that the series \eqref{eq:order} converges for $[-1, 1]^2 \slash {(0, 0)}$. We denote that
+\begin{align}
+a_n &= \frac{1}{n - 4f^2}\,,\\
+b_n &= \sum_{j^2+k^2=n} \cos j\pi x \cos k\pi y\,,
+\end{align}
+so the series can be written as $\sum_{n=0}^\infty a_nb_n$. We want to use a variation of Dirichlet's test to prove the convergence, where we first need to prove that
+\begin{itemize}
+\item $a_n \ge a_{n+1} \ge 0$: trivial for $n>4f^2$,
+\item $a_n \in \mathcal{O}(n^{-1})$ and $a_n - a_{n+1} \in \mathcal{O}(n^{-2})$ as $n\to\infty$: trivial for $n>4f^2$, and
+\item $|\sum_{n=0}^N b_n| \in\mathcal{O}(MN^{1-\epsilon})$  as $N\to\infty$  for some $\epsilon > 0$ and $M > 0$: we prove this below.
+\end{itemize}
+As $x$ and $y$ are not both zero at the same time, we can assume $x\ne0$ without losing generality. Then the sum $|\sum_{n=0}^N b_n|$ can be bounded by
+\begin{align*}
+\left|\sum_{n=0}^{N}\sum_{j^2+k^2=n} \cos j\pi x \cos k\pi y\right| 
+&=\left|\sum_{k=-\lfloor\sqrt{N}\rfloor}^{\lfloor\sqrt{N}\rfloor}\left(\cos k\pi y \sum_{j=-\lfloor\sqrt{N - k^2}\rfloor}^{\lfloor\sqrt{N - k^2}\rfloor} \cos j\pi x \right)\right|\\
+&=\left|\sum_{k=-\lfloor\sqrt{N}\rfloor}^{\lfloor\sqrt{N}\rfloor}\cos k\pi y \frac{\sin\left(\pi x (\sqrt{N - k^2}+\frac{1}{2})\right)}{\sin\frac{\pi x}{2}} \right|\\
+&\le \sum_{k=-\lfloor\sqrt{N}\rfloor}^{\lfloor\sqrt{N}\rfloor}|\cos k\pi y| \frac{|\sin\left(\pi x (\sqrt{N - k^2}+\frac{1}{2})\right)|}{|\sin\frac{\pi x}{2}|}\\
+&\le \sum_{k=-\lfloor\sqrt{N}\rfloor}^{\lfloor\sqrt{N}\rfloor} \frac{1}{|\sin\frac{\pi x}{2}|}\\
+&=\frac{2\lfloor\sqrt{N}\rfloor+1}{|\sin\frac{\pi x}{2}|}\,.
+\end{align*}
+Then one can choose $\epsilon = 1/2$ and $M\gg 2/|\sin\frac{\pi x}{2}|$ to prove the third condition.
+
+Now the series \eqref{eq:order} can be written as
+\begin{align*}
+ \sum_{n=0}^{\infty}\sum_{j^2+k^2=n} \frac{\cos j\pi x \cos k\pi y}{n - 4f^2}&= \lim_{N\to\infty} \sum_{n=0}^{N}a_n b_n\\
+ &=\lim_{N\to\infty} a_N \left(\sum_{n=0}^{N}b_n\right) + \sum_{n=0}^{N}\left((a_n - a_{n+1})\sum_{k=0}^{n}b_k\right)\\
+ &=\lim_{N\to\infty} \mathcal{O}(N^{-1})\mathcal{O}(N^{1-\epsilon}) + \sum_{n=0}^{N}\mathcal{O}(n^{-2})\mathcal{O}(n^{1-\epsilon})\\
+ &=\lim_{N\to\infty} \mathcal{O}(N^{-\epsilon}) + \sum_{n=0}^{N}\mathcal{O}(n^{-1-\epsilon})\\
+ &=\sum_{n=0}^{\infty}\mathcal{O}(n^{-1-\epsilon})\,.
+\end{align*}
+This series can be compared with the expansion of $\zeta(1+\epsilon)$, which converges, so our series \eqref{eq:order} converges as well.
+
+Note that the $M$ we have chosen for the bound depends on $x$, so we have only proved point-wise convergence. However, for any closed subset of $[-1,1]^2\slash\{(x, y)|x = 0\}$, we can always find the largest $2/|\sin\frac{\pi x}{2}|$ to determine $M$ and extend our proof to uniform convergence. Similarly for points on $x = 0$, we can swap the variables and use the largest $2/|\sin\frac{\pi y}{2}|$ instead. This indicates the series is almost uniformly convergent over $(x, y)$, except for the divergent point $(0, 0)$.
+
+\paragraph{Conditionally convergence} We can further show that the series \eqref{eq:order} only converge conditionally, not absolutely. This is equivalent to showing the following series diverges
+\begin{align}
+\sum \left|\frac{\cos j\pi x \cos k\pi y}{n - 4f^2}\right|\,. \label{eq:abs}
+\end{align}
+As usual, we ignore the first few terms where $n-4f^2$ is negative. The numerator has the following inequality
+\begin{align*}
+|\cos j\pi x \cos k\pi y| &\ge \cos^2 j\pi x \cos^2 k\pi y\\
+&=\frac{1}{4}(1 + \cos 2j\pi x + \cos 2k\pi y  + \cos 2j\pi x\cos2 k\pi y)\,.
+\end{align*}
+If the series \eqref{eq:order} were absolutely convergent, this inequality would allow us to break the absolute sum \eqref{eq:abs} into four series
+\begin{align*}
+\sum \left|\frac{\cos j\pi x \cos k\pi y}{n - 4f^2}\right|\ge& \frac{1}{4}\left(\left(\sum \frac{1}{n - 4f^2}\right) + \left(\sum \frac{\cos 2j\pi x}{n - 4f^2}\right)\right.\\
+ &+ \left.\left(\sum \frac{\cos 2k\pi y}{n - 4f^2}\right) + \left(\sum \frac{\cos 2j\pi x\cos2 k\pi y}{n - 4f^2}\right)\right)
+\end{align*}
+
+The four series  are identical to the series \eqref{eq:order} at $(0, 0), (2x, 0), (0, 2y), (2x, 2y)$, respectively. We have shown that the first series diverges, and the rest converges. This means the absolute sum \eqref{eq:abs} cannot converge, which means the series \eqref{eq:order} doesn't convergent absolutely.
+
+\paragraph{Other summation order}
+It can be easily proved that the formal Fourier series of the circular sum \eqref{eq:abs} is the sum itself (without considering the order). It can then be proved \cite{cite:sum} that the cubic sum is also convergent and equivalent
+\begin{align*}
+\sum_{n=0}^{\infty}\sum_{j^2+k^2=n} \frac{\cos j\pi x \cos k\pi y}{n - 4f^2} = \lim_{n\to\infty}\sum_{j=-n}^{n}\sum_{k=-n}^{n}\frac{\cos j\pi x \cos k\pi y}{j^2 + k^2 - 4f^2}\,.
+\end{align*}
+
+\subsection{Natural frequencies}
+We needs special treatment to frequencies that can be expressed as $f = \sqrt{j^2 + k^2} / 2$ for some integers $j$ and $k$. We can immediately recognize that one of the series terms is already a solution to the equation \eqref{eq:core}:
+\begin{align}
+F(x, y) = G_{jk}(x, y) = \cos j\pi x \cos k\pi y\,.\label{eq:solution-natural}
+\end{align}
+One can verify that $G_{jk}$ satisfies the equation \eqref{eq:core} and all boundary conditions. In fact, it satisfy a stronger condition: the solution also satisfies the equation at the center $(0, 0)$. This indicates that even without the input vibration, the plate can vibrate on its own infinitely in the mode described by this solution, assuming no energy loss. This matches the definition of natural frequencies of an object. By enumerating all possible $f = \sqrt{j^2 + k^2} / 2$, we can find all natural frequencies of this plate: 
+\[
+f = 1/2, \sqrt{2}/2, 1, \sqrt{5}/2, \sqrt{2}, 3/2, \sqrt{10}/2, ...\,.
+\]
+One unusual thing about the solution \eqref{eq:solution-natural} is that it is not necessarily symmetrical between $x$ and $y$. This means the pattern it generates breaks the diagonal symmetry that one would expect from a square plate. Moreover, there can be multiple pairs $(j, k)$ that $f = \sqrt{j^2 + k^2} / 2$, and all of these $G_{jk}$, and any linear combinations of them, are solutions to the same frequency. This is very different from solutions for unnatural frequencies, which are symmetrical and unique up to a global coefficient.
+
+The existence of multiple solutions gives some instability to patterns for natural frequencies, which can be seen in the experiment. The experimental result still have higher chance for symmetrical patterns, which correspond to solutions where $G_{jk}$ and $G_{kj}$ have the same coefficients. However, even with this constraint on the symmetry, there can still be multiple solutions with very different patterns. For example, both $G_{3,4}$ and $G_{0, 5}$ are solutions for $f=5/2$. Among these solutions, there is a special one that we would call as the ``normal mode" $F_f^*$ for natural frequency $f$, where all possible base modes contribute evenly:
+\begin{align}
+F_f^*(x, y) = \sum_{j^2+k^2=4f^2} G_{jk}(x, y) = \sum_{j^2+k^2=4f^2} \cos j\pi x \cos k\pi y\,.
+\end{align}
+There is nothing physically special about this solution, but it has a special mathematical property: it can be view as the ``limit" pattern for surrounding unnatural frequency. To put it formally, for a natural frequency $f^*$, the solution $F_f$ for the surrounding frequency $f$ defined by the general solution \eqref{eq:solution} has the following limit:
+\begin{align}
+\lim_{f\rightarrow f^*} 4({f^*}^2 - f^2)F_f(x, y) = A\cdot F_{f^*}^*(x, y)\,.\label{eq:limit}
+\end{align}
+The solution \eqref{eq:solution} for unnatural frequencies can also be rewritten as a combination of all normal modes, with the help of the summation order \eqref{eq:order}:
+\begin{align}
+F_f(x, y) = A\sum_{n=0}^\infty \frac{F_{\sqrt{n}/2}^*(x, y)}{n - 4f^2}\,.
+\end{align}
+(Note that if $\sqrt{n}/2$ is not a natural frequency, we set $F_{\sqrt{n}/2}^*(x, y) = 0$)
+
+\subsection{Normalization}
+The motivation of normalization is that the solution \eqref{eq:solution} doesn't have the same ``strength" for every frequency. Specifically as we have seen, it jumps to infinity for natural frequencies, while goes with small amplitude for some other frequencies. We want to have a better solution that represents vibration modes with the same strength for different frequencies.
+
+\paragraph{Amplitude}
+The first idea is to fix the input amplitude. We expected that the global coefficient $A$ is proportional to the input amplitude, but as we have proved above, the solution doesn't converge on the input point (unless the input is at a natural frequency). We cannot directly infer $A$ from the input amplitude. Therefore normalizing by input amplitude is hard.
+
+\paragraph{Energy}
+A more practical idea is to fix the energy in the plate. Using Parseval's theorem, we can compute the energy (up to some global constant) of the vibrating plate by taking the squared sum of coefficients,
+\begin{align}
+E_f = \sum_{(j, k)\in \mathbb{Z}^2} \frac{A^2}{(j^2+k^2-4f^2)^2}\,.
+\end{align}
+We want to choose an $A$ such that $E_f =1$. The normalized version of solution \eqref{eq:solution}, with a carefully chosen $A$, is
+\begin{align}
+\hat{F}_f(x, y) = (-1)^{P(f)}\left(\sum_{(j, k)\in \mathbb{Z}^2} \frac{1}{(j^2+k^2-4f^2)^2}\right)^{-1/2}\sum_{(j,k)\in\mathbb{Z}^2} \frac{\cos j\pi x \cos k\pi y}{j^2 + k^2 - 4f^2}\,,
+\end{align}
+where $P(f) = \left|\{g\,|\,0 \le g < f \land \,\exists (j, k)\in\mathbb{Z}^2, j^2+k^2=4g^2 \}\right|$. We add this alternating sign so that the function has a smooth connection with normal modes at natural frequencies:
+\begin{align}
+\lim_{f\to f^*}\hat{F}_f(x, y) = \frac{(-1)^{P(f^*)}}{\sqrt{Q(f^*)}} F^*_{f^*}(x, y)\,,
+\end{align}
+where $Q(f^*) = \left|\{(j,k)\in\mathbb{Z}^2\,|\,j^2+k^2=4{f^*}^2\}\right|$.
+We can take this limit as the actual function value for natural frequency $f^*$ to remove the singularity.
+
+\paragraph{Force}
+
+Another approach of normalization is to fix the input force at the center. As the input force is expected to oscillate in time, by "fixing" it we mean fixing the amplitude.
+
+To calculate the force, we make a square hole $[-w, w]^2$ at the center of the plate. To keep the rest of the plate vibrating in the same way as before, force is applied on the edge of the hole. The input force we want to calculate would be the limit net force on the edge when $w \to 0^+$.
+
+On the edge of the square hole, the force $T = u\sin 2\pi f t$ needs to balance out the inner force of the plate, which means
+\begin{align*}
+u\sin 2\pi f t + \frac{\partial F_f}{\partial \mathbf{n}} \sin 2\pi ft = 0\\
+u = -\frac{\partial F_f}{\partial \mathbf{n}}\,,
+\end{align*}
+where $\mathbf{n}$ is the direction normal to the edge. The four sides of the hole should have equal net force by symmetry, so we will just calculate the net force on one side $(w, -w) \mbox{--}(w, w)$, where $
+\mathbf{n} = \mathbf{x}$:
+\begin{align*}
+\lim_{w\to 0^+}\int u\,\ud y  &= -\lim_{w\to 0^+} \int_{-w}^w \left.\frac{\partial F_f}{\partial x}\right|_{x=w}\,\ud y\\
+&= A \lim_{w\to 0^+} \int_{-w}^w \sum_{(j,k)\in\mathbb{Z}^2} \frac{j\pi\sin j\pi w \cos k\pi y}{j^2 + k^2 - 4f^2}\,\ud y\\
+&= 2A \lim_{w\to 0^+} \left[\left( \sum_{j\in\mathbb{Z}} \frac{j\pi w\sin j\pi w}{j^2 - 4f^2}  \right) + \left(\sum_{j\in\mathbb{Z}, k\in\mathbb{Z}\backslash\{0\}} \frac{j}{k}\frac{\sin j\pi w \sin k\pi w}{j^2 + k^2 - 4f^2}\right)\right]\\
+&= 2A \lim_{w\to 0^+}  \sum_{j\in\mathbb{Z}, k\in\mathbb{Z}\backslash\{0\}} \frac{j}{k}\frac{\sin j\pi w \sin k\pi w}{j^2 + k^2 - 4f^2}\\
+&= 8A \lim_{w\to 0^+}  \sum_{j=1}^\infty\sum_{k=1}^\infty \frac{j}{k}\frac{\sin j\pi w \sin k\pi w}{j^2 + k^2 - 4f^2}\\
+&= 4A \lim_{w\to 0^+}  \sum_{j=1}^\infty\sum_{k=1}^\infty \frac{j^2+k^2}{jk}\frac{\sin j\pi w \sin k\pi w}{j^2 + k^2 - 4f^2}\\
+&= 4A \lim_{w\to 0^+}  \sum_{j=1}^\infty\sum_{k=1}^\infty \frac{\sin j\pi w \sin k\pi w}{jk} + \frac{4f^2}{jk}\frac{\sin j\pi w \sin k\pi w}{j^2 + k^2 - 4f^2}\\
+&= 4A \lim_{w\to 0^+}  \sum_{j=1}^\infty\sum_{k=1}^\infty \frac{\sin j\pi w \sin k\pi w}{jk}\\
+&= 4A \lim_{w\to 0^+} \left( \sum_{j=1}^\infty \frac{\sin j\pi w }{j}\right)^2\\
+&= 4A \lim_{w\to 0^+} \left( \frac{\pi-\pi w}{2}\right)^2\\
+&=A\pi^2\,,
+\end{align*}
+which is independent from $f$. If we fix $A$ to a constant, the original solution \eqref{eq:solution} is naturally normalized in terms of force. This however would retain the singularity at every natural frequencies, which is expected as resonance from non-zero input force on natural frequencies would in theory drive the vibration to infinity. 
+
+\begin{thebibliography}{9}
+\bibitem{cite:gauss} 
+G.H. Hardy, \textit{Ramanujan: Twelve Lectures on Subjects Suggested by His Life and Work, 3rd ed.} New York: Chelsea, (1959), p.67.
+
+\bibitem{cite:sum} 
+Ferenc Weisz, \textit{Summability of Multi-Dimensional Trigonometric Fourier Series}, (2012), p.15 Theorem 4.2.
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,172 @@
+
+\documentclass[10pt,a4paper]{article}
+\author{wwylele}
+\title{My First TEX Document}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[pdftex]{hyperref}
+\begin{document}
+	\newcommand{\ud}{\mathrm{d}}
+	\newcommand{\res}{\operatorname{Res}}
+	\newcommand{\zetaf}{\operatorname{\zeta}}
+	\section{The Idea}
+	This is my first \TeX{} document. I would like to introduce a crazy equation:
+	\begin{equation}
+	\sum_{n=-\infty}^{\infty}\prod_{k=1}^{m}(n-a_k ) ^{-p_k}
+	=-\pi\sum_{k=1}^{m}\frac{f_k^{(p_k-1 ) }(a_k )}{( p_k-1) !}  \; ,
+	\label{eqn:main}
+	\end{equation}
+	where $a_k\in\mathbb{C}/\mathbb{Z},\:p_k\in\mathbb{N}^*$ for $k=1,2,\ldots,m$, any two numbers among $a_k$ are different, the sum of all $p_k$ is greater than~$1$, and here $f_k(x)$ is defined as
+	\[
+	f_k(x)= \cot( \pi x)\prod_{j=1,j\neq k}^{m}( x-a_j) ^{-p_j} \; .
+	\]
+	
+	The idea comes from Riemann zeta function, which evaluate all the series in the form $\sum_{n=1}^{\infty}n^{-p}$. I try to generalize the series to where the denominator becomes any polynomials. Unfortunately, such an formula have not been found yet. Instead, the equation above, in a similar forms but with variable ranging from~$-\infty$ to $\infty$, was found.
+	\section{The Proof}
+	For a given set of $a_k$ and $p_k$ that satisfied the conditions mentioned above, we consider the following function in $\mathbb{C}$ field:
+	\[
+	f(x) =\cot(\pi x) \prod_{k=1}^{m}(x-a_k ) ^{-p_k} \; .
+	\]
+	This is a meromorphic function, with poles at $x\in\mathbb{Z}$ (caused by $\cot$) and $x=a_k$ (caused by $(x-a_k ) ^{-p_k}$). Because $a_k\notin\mathbb{Z}$, poles at integer $x$ are with order of~$1$, and their residue is
+	\begin{equation}
+	\res (f,x) =\frac{1}{\pi}\prod_{k=1}^{m}(x-a_k ) ^{-p_k}\qquad\textrm{for all }x \in\mathbb{Z}\;,
+	\label{eqn:resz}
+	\end{equation}
+	and the residue of the $p_k$-order poles at $x=a_k$ is
+	\begin{align}	
+	\res (f,a_k) &= \frac{1}{ (p_k-1) !}\lim_{x\to a_k}\frac{\ud^{p_k-1}}{\ud x^{p_k-1}}\left( ( x-a_k) ^{p_k}f( x) \right){} \nonumber\\
+	&= \frac{f_k^{(p_k-1 ) }(a_k )}{ (p_k-1) !}\qquad\textrm{(according to our helper }f_k\textrm{)}.
+	\label{eqn:resa}
+	\end{align}
+	Now consider a counter-clockwise contour integral with such a rectangle path~$\gamma_r$: it crosses the real axis at~$\pm(r+R+1/2)$, and cross the imaginary axis at~$\pm(r+R)$, where $r$ is a positive integer and $R=\lfloor\max|a_k|\rfloor$ (See \mbox{Figure~\ref{fig:ipath} }).
+	\begin{figure}[!hbt]
+		\caption{Poles and the integral path}
+		\setlength{\unitlength}{1 cm}
+		\label{fig:ipath}
+		\begin{picture}(12,12)(-6,-6)
+		\put(-5.5,0){\vector(1,0){11}}
+		\put(0,-5.5){\vector(0,1){11}}
+		\multiput(-5,0)(1,0){11}{\circle*{0.1}}
+		\put(-5,0){$\,-5$}
+		\put(-4,0){$\,-4$}
+		\put(-3,0){$\,-3$}
+		\put(-2,0){$\,-2$}
+		\put(-1,0){$\,-1$}
+		\put(0,0){$\,0$}
+		\put(1,0){$\,1$}
+		\put(2,0){$\,2$}
+		\put(3,0){$\,3$}
+		\put(4,0){$\,4$}
+		\put(5,0){$\,5$}
+		\put(-2.1,1.7){\circle*{0.1}$a_1$}
+		\put(1.6,0.9){\circle*{0.1}$a_2$}
+		\put(-0.6,-1.4){\circle*{0.1}$a_3$}
+		\put(-4.5,-4){\line(1,0){9}}
+		\put(-4.5,-4){\line(0,1){8}}
+		\put(4.5,4){\line(-1,0){9}}
+		\put(4.5,4){\line(0,-1){8}}
+		\put(4.5,1){ $\gamma_r$}
+		\thicklines
+		\put(4.5,-0.5){\vector(0,1){1}}
+		\put(0.5,4){\vector(-1,0){1}}
+		\put(-4.5,0.5){\vector(0,-1){1}}
+		\put(-0.5,-4){\vector(1,0){1}}
+		\put(5.5,0){$\Re (x)$}
+		\put(0,5.5){$\Im (x)$}
+		\put(0.5,-0.8){\footnotesize Here $m=3$,}
+		\put(0.5,-1.3){\footnotesize $\max |a_k|=|a_1|\approx 2.7$,}
+		\put(0.5,-1.8){\footnotesize so $R=2$.}
+		\put(0.5,-2.3){\footnotesize $\gamma_r$ is the path with $r=2$.}
+		\put(0.5,-2.8){\footnotesize This path encloses all $a_k$.}
+		\end{picture}
+	\end{figure}
+	For any point~$x=u+vi$, we have
+	\[
+	|\cot (\pi x)|^2=\frac{\cos^2(\pi u)+\sinh^2(\pi v)}{\sin^2(\pi u)+\sinh^2(\pi v)}\; .
+	\]
+	For the left and right sides of the rectangle (where $u=\pm (r+R+1/2)$), we get
+	\[
+	|\cot (\pi x)|^2=\frac{\sinh^2(\pi v)}{1+\sinh^2(\pi v)}<1\; ;
+	\]
+	and for the top and bottom sides of the rectangle (where $v=\pm(r+R)$, $|v|\geq1$), we get
+	\[
+	|\cot (\pi x)|^2=\frac{\cos^2(\pi u)+\sinh^2(\pi v)}{\sin^2(\pi u)+\sinh^2(\pi v)}<\frac{1+\sinh^2(\pi v)}{\sinh^2(\pi v)}<\frac{1+\sinh^2(\pi)}{\sinh^2(\pi)}<4 \; .
+	\]
+	In conclusion, $|\cot (\pi x)|<2$ for any~$x$ along the path~$\gamma_r$. So the contour integral:
+	\begin{align*}
+	\left| \oint_{\gamma_r}f(x)\,\ud x\right|&\leq  \oint_{\gamma_r}|f(x)|\,|\ud x|  \\
+	&<  \oint_{\gamma_r}2\prod_{k=1}^{m}|x-a_k | ^{-p_k}\,|\ud x| \\
+	&<  \oint_{\gamma_r}2\prod_{k=1}^{m}\big||x|-|a_k| \big| ^{-p_k}\,|\ud x| \\
+	&<  \oint_{\gamma_r}2\prod_{k=1}^{m}(R+r-\max|a_k| ) ^{-p_k}\,|\ud x| \\
+	&=  (4R+4r+1)\cdot 2\prod_{k=1}^{m}(N+r-\max|a_k| ) ^{-p_k} \\
+	&\leq  \frac{2\,(4R+4r+1)}{(R+r-\max|a_k| )^2}\qquad \left( \sum^m_{k=1} p_k \geq 2\right) \, . 
+	\end{align*}
+	According to the residue theorem,
+	\[
+	\oint_{\gamma_r}f(x)\,\ud x=2\pi i\left( \sum_{n=-r-R}^{r+R}\res(f,n)\:+\:\sum_{k=1}^{m}\res(f,a_k)\right) \; ,
+	\]
+	so we get
+	\[
+	\left| \sum_{n=-r-R}^{r+R}\res(f,n)\:+\:\sum_{k=1}^{m}\res(f,a_k)\right|  \:\leq\: \frac{4R+4r+1}{\pi (R+r-\max|a_k| )^2} \; .
+	\]
+	Now let $r \to \infty $, the right site tends to zero, so the left side
+	\[
+	\left| \sum_{n=-\infty}^{\infty}\res(f,n)\:+\:\sum_{k=1}^{m}\res(f,a_k)\right|\,=\,0\;.
+	\]
+	Combining this with equation~\eqref{eqn:resz} and~\eqref{eqn:resa}, we can easily reach our destination \eqref{eqn:main}.
+	\section{The \ldots More}
+	\paragraph{Polynomial with distinct roots\\}
+	If all the $p_k$ is $1$, which means the denominator polynomial has $m$ distinct roots (here $m$ is at least $2$ in order of the condition), equation~\eqref{eqn:main} comes in a simpler form:
+	\begin{equation}
+	\sum_{n=-\infty}^{\infty}\prod_{k=1}^{m}\frac{1}{n-a_k}
+	=-\pi\sum_{k=1}^{m}f_k(a_k )  \; .
+	\label{eqn:droot}
+	\end{equation}
+	\paragraph{Polynomial with a unique root\\}
+	If $m=1$, which means the denominator polynomial has a unique root with multiplicity of $p=p_1$, equation~\eqref{eqn:main} becomes
+	\begin{equation}
+	\sum_{n=-\infty}^{\infty}\frac{1}{(n-a)^p}
+	=-\frac{\pi^{p}\cot^{(p-1)}(\pi a)}{(p-1)!} \; .
+	\label{eqn:1root}
+	\end{equation}
+	\paragraph{The value of $\zetaf(2k)$\\}
+	Subtract both sides of~\eqref{eqn:1root} by $1/(-a)^p$:
+	\begin{equation}
+	\sum_{n=-\infty,n\neq 0}^{\infty}\frac{1}{(n-a)^p}
+	=-\frac{\pi^{p}\cot^{(p-1)}(\pi a)}{(p-1)!}-\frac{1}{(-a)^p} \; .
+	\label{eqn:1rootsub}
+	\end{equation}
+	Now use the series expansion of $\cot$
+	\[
+	\cot x =\frac{1}{x} +\sum_{n=1}^{\infty}\frac{(-1)^n \, 2^{2n} \, B_{2n} \,x^{2n-1}}{(2n)!} \; ,
+	\]	
+	and the $(p-1)$-th derivative of $\cot$ is
+	\[
+	\cot^{(p-1)} x =\frac{(-1)^{p-1}\,(p-1)!}{x^p} +\sum_{n=\lceil \frac{p}{2} \rceil}^{\infty}\frac{(-1)^n \, 2^{2n} \, B_{2n} \,x^{2n-p}}{2n\,(2n-p)!} \; .
+	\]
+	Apply this on the equation~\eqref{eqn:1rootsub}, we get
+	\[
+	\sum_{n=-\infty,n\neq 0}^{\infty}\frac{1}{(n-a)^p}
+	=-\frac{\pi^p}{(p-1)!}\sum_{n=\lceil \frac{p}{2} \rceil}^{\infty}\frac{(-1)^n \, 2^{2n} \, B_{2n} \,(\pi a)^{2n-p}}{2n\,(2n-p)!} \; .
+	\]
+	Let $p$ be a positive even number $2k$,
+	\[
+	\sum_{n=-\infty,n\neq 0}^{\infty}\frac{1}{(n-a)^{2k}}
+	=-\frac{\pi^{2k}}{(2k-1)!}\sum_{n=k}^{\infty}\frac{(-1)^n \, 2^{2n} \, B_{2n} \,(\pi a)^{2n-2k}}{2n\,(2n-2k)!} \; ,
+	\]
+	and let $a \to 0$, all terms on the right vanish except the term of $n=k$, then we get
+	\begin{align*}
+	\sum_{n=-\infty,n\neq 0}^{\infty}\frac{1}{n^{2k}}
+	&= -\frac{\pi^{2k}}{(2k-1)!}\frac{(-1)^k \, 2^{2k} \, B_{2k}}{2k} \\
+	2\sum_{n=1}^{\infty}\frac{1}{n^{2k}}&= \frac{(-1)^{k+1} B_{2k}(2\pi)^{2k}}{(2k)!} \;.
+	\end{align*}
+	Finally we get
+	\[
+	\zetaf (2k)=\sum_{n=1}^{\infty}\frac{1}{n^{2k}}= \frac{(-1)^{k+1}\, B_{2k}\,(2\pi)^{2k}}{2\,(2k)!} \;.
+	\]
+	
+	
+	
+	
+\end{document}
