@@ -341,7 +341,25 @@ from which we can find the formula for $\varphi$
 \varphi(x_1,\dots,x_n)& = \frac{1}{2(2\pi)^n}\int_0^{2\pi}\dots\int_0^{2\pi}\frac{1-\cos\sum_{k=1}^n\omega_k x_k}{n-\sum_{k=1}^n\cos\omega_k}\,\ud\omega_1\dots\ud\omega_n\\
 & = \frac{1}{2\pi^n}\int_0^{\pi}\dots\int_0^{\pi}\frac{\sin^2\sum_{k=1}^n\theta_k x_k}{\sum_{k=1}^n\sin^2\theta_k}\,\ud\theta_1\dots\ud\theta_n
 \end{align*}
-
+\subsection{Verify on the diagonal}
+We can verify this formula by calculating $\varphi(n,n)$ on the diagonal line in the 2D case again
+\begin{align*}
+\varphi(n,n) &= \frac{1}{8\pi^2}\int_0^{2\pi}\int_0^{2\pi}\frac{1-\cos (n(u+v))}{2-\cos u - \cos v}\,\ud u \ud v\\
+&=  \frac{1}{8\pi^2}\int_0^{2\pi}\int_0^{2\pi}\frac{1-\cos (n(u+v))}{2-2\cos\frac{u+v}{2}\cos\frac{u-v}{2}}\,\ud u \ud v\\
+&=  \frac{1}{16\pi^2}\iint_\diamond\frac{1-\cos (n(u+v))}{2-2\cos\frac{u+v}{2}\cos\frac{u-v}{2}}\,\ud u \ud v
+\end{align*}
+In the last step, we change the integral region from the square to a diamond $(0, 2\pi) - (2\pi, 0) - (0, -2\pi) - (-2\pi, 0)$. This works because the integrand is periodical in both $u$ and $v$ directions. The diamond region covers twice as area as before, so we get an addition factor 2 in the coefficient. We then change the variables with
+\begin{align*}
+\alpha = \frac{u+v}{2}, \quad\beta = \frac{u-v}{2}, \quad \ud u\ud v = 2\ud \alpha \ud \beta
+\end{align*}
+and the integral becomes
+\begin{align*}
+\varphi(n,n) &= \frac{1}{8\pi^2}\int_{-\pi}^{\pi}\int_{-\pi}^{\pi} \frac{1-\cos (2n\alpha)}{2-2\cos\alpha\cos\beta}\,\ud \alpha \ud \beta\\
+&= \frac{1}{8\pi}\int_{-\pi}^{\pi} \frac{1-\cos (2n\alpha)}{\sqrt{1-\cos^2\alpha}}\,\ud \alpha \\
+&= \frac{1}{8\pi}\int_{-\pi}^{\pi} \frac{1-\cos (2n\alpha)}{|\sin\alpha|}\,\ud \alpha \\
+&= \int_0^{\pi} \frac{1-\cos (2n\alpha)}{4\pi\sin\alpha}\,\ud \alpha 
+\end{align*}
+This is the same integral we have calculated for $\varphi_{n,n}$
 
 \section{Triangular grid}
 
