@@ -156,9 +156,9 @@ where $\xi$ is infinitesimal. $\Phi_h^\xi$ represents a circle that is very clos
 \frac{2\sqrt{2\xi}}{\ud \theta} = \frac{1}{\sqrt{C_h-\cos\theta}}\quad (\xi\to 0, \lambda \to 1)
 \]
 If we guess that $\Lambda_h(\Phi^\xi_h) \approx c\sqrt{\xi}$ near $\xi = 0$, then we have
-\[
-\frac{\ud \Gamma_h}{\ud \theta} \propto \frac{1}{\sqrt{C_h-\cos\theta}}
-\]
+\begin{align}
+\frac{\ud \Gamma_h}{\ud \theta} \propto \frac{1}{\sqrt{C_h-\cos\theta}} \label{eq:diff}
+\end{align}
 \[
 \Gamma_h(\cos\theta_0, \sin\theta_0) = \int\ud\Gamma_h \propto\int_0^{\theta_0} \frac{\ud\theta}{\sqrt{C_h-\cos\theta}}\,.
 \]
@@ -508,6 +508,51 @@ Let $C$ be the cubic curve formed by combining $c_1$, $c_2$ and $c_3$, and $D$ b
 
 With all the tools in hand, we finish the last part of the proof: for a starting point $A_0$, if $A_n$ comes back to $A_0$, then the corresponding $P_n = \mathcal{O}$, and this means we can start from any point and comes back after $n$ steps.
 
+\section{Pendulum}
 
+Interestingly, the mapping $\Gamma$ we have found also describes the motion of a pendulum in full swing motion. Indeed, given a pendulum with radius 1, and total energy of $E > g$ (we set the fixed support at the height of 0 potential energy), the angular velocity of the pendulum at a given position is
+\[
+\frac{\ud\theta}{\ud t} = \sqrt{\frac{2}{m}(E - g\cos\theta)} \propto \sqrt{C_h - \cos\theta}
+\]
+where $C_h = E/g$. Here we choose a coordinate system where the gravity is pointing towards $-x$, and $\theta$ is the angle related to $+x$ (hence at the highest point $\theta = 0$). This equation has the same form as \eqref{eq:diff}.
+
+If we apply our theory related to Poncelet's Closure Theorem on a pendulum, we get the following fact: given a pendulum in full swing and a fixed time duration $\Delta T$, pick any two points on the trajectory whose time difference is $\Delta T$, the line between the two points must be tangent to a fixed circle. Specifically, if $\Delta T = T/2$ where $T$ is the period of the circular motion, then the line mast pass through a fixed point.
+
+\subsection{Self-contained proof for the $\Delta T = T/2$ case}
+
+We will assume the radius is 1, and the total energy is $E = g C_h$ (the fix point is at zero potential energy). We assert the fixed point is $H(h, 0)$, such that $C_h = (1+h^2)/(2h)$ (as always).
+
+For a line $y = k(x-h) $ passing through point $H$ and intersect with the trajectory of the pendulum (the unit circle $x^2 + y^2 = 1$) at points $A(x_1, y_1)$, $B(x_2, y_2)$, we have that $x_1$ and $x_2$ are the solutions of the equation
+\[
+x^2 +k^2(x-h)^2=1
+\]
+from which we can derive
+\begin{align*}
+x_1+x_2 = \frac{2hk^2}{k^2+1}\\
+x_1x_2 = \frac{h^2k^2-1}{k^2+1}
+\end{align*}
+
+The pendulum's angular momentum related to point $H$ of a given point $\mathbf{A} = (x,y)=(\cos\theta,\sin\theta)$ on the trajectory is 
+\begin{align*}
+ \omega^H &= \frac{ (\mathbf{A}-\mathbf{H}) \times \mathbf{v} }{|\mathbf{A}-\mathbf{H}|^2}\\
+ & = \frac{  (\cos\theta - h, \sin\theta) \times (-\sin\theta\frac{\ud \theta}{\ud t}, \cos\theta\frac{\ud \theta}{\ud t}) }{(\cos\theta - h)^2 + \sin^2\theta} \\
+ &=\frac{1-h\cos\theta }{1 + h^2 - 2h\cos\theta} \frac{\ud \theta}{\ud t}\\
+ &\propto \frac{1-h\cos\theta }{1 + h^2 - 2h\cos\theta}\sqrt{C_h - \cos\theta}\\
+ &\propto \frac{1-h\cos\theta }{\sqrt{C_h - \cos\theta}}\\
+ &= \frac{1-hx }{\sqrt{C_h - x}}
+\end{align*}
+
+For two points $A$ and $B$ on the trajectory whose connecting line passes through $H$, the difference in their $\omega^H$ is
+\begin{align*}
+\omega^H_1 - \omega^H_2 &\propto  \frac{1-hx_1 }{\sqrt{C_h - x_1}} -  \frac{1-hx_2 }{\sqrt{C_h - x_2}}\\
+& =  \frac{(1-hx_1)\sqrt{C_h - x_2} - (1-hx_2)\sqrt{C_h - x_1}}{\sqrt{C_h - x_1}\sqrt{C_h - x_2}} \\
+& =  \frac{(1-hx_1)^2(C_h - x_2) - (1-hx_2)^2(C_h - x_1)}{\sqrt{C_h - x_1}\sqrt{C_h - x_2}\left((1-hx_1)\sqrt{C_h - x_2} + (1-hx_2)\sqrt{C_h - x_1}\right)}\\
+& =  \frac{h(x_1-x_2)(C_h(x_1+x_2)-x_1x_2-1)}{\sqrt{C_h - x_1}\sqrt{C_h - x_2}\left((1-hx_1)\sqrt{C_h - x_2} + (1-hx_2)\sqrt{C_h - x_1}\right)}
+\end{align*}
+Note that
+\[
+C_h(x_1+x_2)-x_1x_2-1 = \frac{h^2+1}{2h} \frac{2hk^2}{k^2+1} - \frac{h^2k^2-1}{k^2+1} - 1 = 0
+\]
+So we have $\omega^H_1 = \omega^H_2$ for all $A$ and $B$ where $AB$ passes through $H$. If the two identical pendulum starts from $A$ and $B$ respectively, the connecting line between their trajectory will always pass through $H$ due to the the equality relation in the angular velocity. After some time, the pendulum starting from $A$ will reach $B$, and the other one will reach $A$ at the same time, meaning that each completed a half of the period. This proved that $A$ and $B$ are $\Delta T = T/2$ apart in terms of time, thus proving the theorem.
  
 \end{document}
