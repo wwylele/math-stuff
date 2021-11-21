@@ -480,7 +480,7 @@ and the constant $\rho$ is
 We can also express the map in a different way
 
 \[
-\Theta(r) = 2\pi r + \sum_{n=1}^\infty (-1)^n\frac{2 \sin 2\pi nr}{n\cosh n Q }, \mbox{where } Q = \pi\frac{K(k=(1-h)/(1+h)}{K(k=2\sqrt{h}/(1+h))}
+\Theta(r) = 2\pi r + \sum_{n=1}^\infty (-1)^n\frac{2 \sin 2\pi nr}{n\cosh n Q }, \mbox{where } Q = \pi\frac{K(k=(1-h)/(1+h))}{K(k=2\sqrt{h}/(1+h))}
 \]
 
 \[
@@ -554,5 +554,32 @@ Note that
 C_h(x_1+x_2)-x_1x_2-1 = \frac{h^2+1}{2h} \frac{2hk^2}{k^2+1} - \frac{h^2k^2-1}{k^2+1} - 1 = 0
 \]
 So we have $\omega^H_1 = \omega^H_2$ for all $A$ and $B$ where $AB$ passes through $H$. If the two identical pendulum starts from $A$ and $B$ respectively, the connecting line between their trajectory will always pass through $H$ due to the the equality relation in the angular velocity. After some time, the pendulum starting from $A$ will reach $B$, and the other one will reach $A$ at the same time, meaning that each completed a half of the period. This proved that $A$ and $B$ are $\Delta T = T/2$ apart in terms of time, thus proving the theorem.
+
+\section{The shortcut proof}
+With the inspiration from pendulum, we will present a very short proof of Poncelet's Closure Theorem (in the case of two circles). 
+
+As always, we assume the outer circle $\Omega$ is the unit circle, and the inter circle $\Theta$ is somewhere inside. We denote the azimuth of each point $A_0, A_1,\dots,A_n$ as $\theta_0,\theta_1,\dots,\theta_n$. We also denote the tangent point on line $A_0A_1, A_1A_2,\dots,A_{n-1}A_n$ as $T_1, T_2,\dots, T_n$. We can view each $\theta_k$ as a function of the previous element, $\theta_k=\mathfrak{p}(\theta_{k-1})$ (the function $\mathfrak{p}$ is the same for all $\theta_k$ since we do the same operation). We will prove the following statement
+\[
+\frac{\ud \theta_{k}}{\ud \theta_{k-1}} = \frac{A_kT_k}{A_{k-1}T_{k}} = \frac{\mathfrak{T}(\theta_{k})}{\mathfrak{T}(\theta_{k_1})}
+\]
+where $\mathfrak{T}(\theta)$ is a fixed function, representing the length of the tangent from point $(\cos\theta, \sin\theta)$ to $\Theta$. To prove the equality, we slightly rotate the line $A_{k-1} A_k$ around $\Phi$, and the new line intersects with $\Omega$ at $A'_{k-1}$ and $A'_k$. $A_{k-1} A_k$ and $A'_{k-1} A'_k$ intersects at $M$. Then we have
+\[
+\frac{A_k A'_k}{A_{k-1}A'_{k-1}} = \frac{A'_{k}M}{A_{k-1}M}
+\]
+As we rotate $A_{k-1} A_k$ less and less, $A'_k \to A_k$, $A'_{k-1} \to A_{k-1}$, $M\to T_k$, then we have
+\[
+\frac{\angle A_k M  A'_k}{\angle A_{k-1} M A'_{k-1}} \to \frac{A_k A'_k}{A_{k-1}A'_{k-1}} = \frac{A'_{k}M}{A_{k-1}M} \to \frac{A_{k}T_k}{A_{k-1}T_k}
+\]
+At the limit, we have
+\[
+\frac{\ud \theta_{k}}{\ud \theta_{k-1}} = \frac{A_kT_k}{A_{k-1}T_{k}} =  \frac{\mathfrak{T}(\theta_{k})}{\mathfrak{T}(\theta_{k_1})}
+\]
+(We can further show that this quotient is also equal to $A_kH/A_{k-1}H = \sqrt{C_h-\cos\theta_k}/\sqrt{C_h-\cos\theta_{k-1}}$, but it is not needed in this proof)
+
+We then multiply all these equations for $k$ from $1$ to $n$ together, and we get
+\[
+\frac{\ud \theta_{n}}{\ud \theta_{0}}  = \frac{\mathfrak{T}(\theta_{n})}{\mathfrak{T}(\theta_{0})}
+\]
+We can see this as a differential equation for the function $\theta_n = \mathfrak{P}(\theta_0) =\mathfrak{p}^n(\theta_0)$. Given $A_n = A_0$, we got an initial condition for this differential equation: there exists a $\vartheta^\circ$ such that $\mathfrak{P}(\vartheta^\circ) = \vartheta^\circ + 2\pi m$ for some integer $m$. Using the property that $\mathfrak{T}$ is a positive and bounded function with period $2\pi$ (thus also has period $2\pi m$), we can prove that the solution of this differential equation must be $\mathfrak{P}(\vartheta) = \vartheta + 2\pi m$ for all $\vartheta$, thus we proved that the closure forms for any initial point $A_0$.
  
 \end{document}
