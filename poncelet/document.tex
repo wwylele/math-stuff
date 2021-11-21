@@ -560,7 +560,7 @@ With the inspiration from pendulum, we will present a very short proof of Poncel
 
 As always, we assume the outer circle $\Omega$ is the unit circle, and the inter circle $\Theta$ is somewhere inside. We denote the azimuth of each point $A_0, A_1,\dots,A_n$ as $\theta_0,\theta_1,\dots,\theta_n$. We also denote the tangent point on line $A_0A_1, A_1A_2,\dots,A_{n-1}A_n$ as $T_1, T_2,\dots, T_n$. We can view each $\theta_k$ as a function of the previous element, $\theta_k=\mathfrak{p}(\theta_{k-1})$ (the function $\mathfrak{p}$ is the same for all $\theta_k$ since we do the same operation). We will prove the following statement
 \[
-\frac{\ud \theta_{k}}{\ud \theta_{k-1}} = \frac{A_kT_k}{A_{k-1}T_{k}} = \frac{\mathfrak{T}(\theta_{k})}{\mathfrak{T}(\theta_{k_1})}
+\frac{\ud \theta_{k}}{\ud \theta_{k-1}} = \frac{A_kT_k}{A_{k-1}T_{k}} = \frac{\mathfrak{T}(\theta_{k})}{\mathfrak{T}(\theta_{k-1})}
 \]
 where $\mathfrak{T}(\theta)$ is a fixed function, representing the length of the tangent from point $(\cos\theta, \sin\theta)$ to $\Theta$. To prove the equality, we slightly rotate the line $A_{k-1} A_k$ around $\Phi$, and the new line intersects with $\Omega$ at $A'_{k-1}$ and $A'_k$. $A_{k-1} A_k$ and $A'_{k-1} A'_k$ intersects at $M$. Then we have
 \[
@@ -572,7 +572,7 @@ As we rotate $A_{k-1} A_k$ less and less, $A'_k \to A_k$, $A'_{k-1} \to A_{k-1}$
 \]
 At the limit, we have
 \[
-\frac{\ud \theta_{k}}{\ud \theta_{k-1}} = \frac{A_kT_k}{A_{k-1}T_{k}} =  \frac{\mathfrak{T}(\theta_{k})}{\mathfrak{T}(\theta_{k_1})}
+\frac{\ud \theta_{k}}{\ud \theta_{k-1}} = \frac{A_kT_k}{A_{k-1}T_{k}} =  \frac{\mathfrak{T}(\theta_{k})}{\mathfrak{T}(\theta_{k-1})}
 \]
 (We can further show that this quotient is also equal to $A_kH/A_{k-1}H = \sqrt{C_h-\cos\theta_k}/\sqrt{C_h-\cos\theta_{k-1}}$, but it is not needed in this proof)
 
