@@ -1,0 +1,211 @@
+\documentclass[]{article}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{ulem}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{matrix,shapes,arrows,positioning,chains}
+
+\begin{document}
+
+\newtheorem{problem}{Problem}
+\newtheorem{lemma}{Lemma}
+
+\section{The binary search problem, and its variation}
+
+Here is a git repository of a software. It is known that somewhere in the recent N commits, a bug was introduced, and the task is to efficiently find the commit that introduced the bug.
+
+A well-known solution is to use \texttt{git bash}, i.e. the binary search method: checking the commit at the middle of the commit list, and then depending on the result, checking the commit at the middle of one half parts of the commit list. This is the fastest method under normal conditions.
+
+Now we make a small change to the problem: if the commit to check contains the bug (i.e. it is or is after the first commit introducing the bug), the software would crash the entire computer system during the test and the test has to reboot the computer, which takes five minutes. Testing a software without the bug still takes a short time, say, 30 seconds. In this case, what is the best way to implement the binary search?
+
+One might want to test more "good" commits to avoid time spent on "bad" commits as much as possible. Therefore he would tend to test commits before the middle commit, resulting a test sequence "biased" towards the older commits. In an extreme case, where the bad commits take forever to test, he would just test commits one by one from the oldest commit, until he finds the first commit that crashes the system. Similarly, if a bad commit actually takes less time to test, the binary search would bias towards the newer commits.
+
+Under these conditions, the question is, using the binary search idea, what would be the best commit to test in order to minimize the time cost?
+
+\section{Mathematical formalization}
+
+Let's formalize the question in mathematical languages:
+
+\begin{problem}
+	Given a sequence $a_0, a_1, a_2, ..., a_n$, with a number $j$ such that $a_k = 0, \forall k < j$ and $a_k = 1, \forall k \ge j$. $j$ is a random number evenly distributed among integers $1, 2, ..., n$. To get the value of $a_k$, some time is taken. The time cost is $s$ if $a_k = 0$, or $t$ if $a_k = 1$. What is the best method to find $j$ with minimal expectation of total time cost?
+\end{problem}
+
+and with some assumption clarified:
+\begin{itemize}
+	\item The values $a_0 = 0$ and $a_n = 1$ are already known and no need to test. Their existence in the problem is to simplify the numbering system in the solution.
+	\item Testing cannot be done in parallel. One cannot start another test until the previous test is finished.
+	\item Only testing takes time. Other step is assumed done instantly.
+	\item One may get the result by noticing one test takes a longer time before producing the result. However, getting the result in advance does not shorter the time taken by the test, not even for the final step. The total time cost includes the final "rebooting" time even if one already knows the answer.
+\end{itemize}
+
+\section{Testing procedure}
+
+The binary-search-like method is illustrated in the chart below.
+
+\tikzstyle{decision} = [diamond, draw, fill=blue!20, 
+text width=4.5em, text badly centered, node distance=3cm, inner sep=0pt]
+\tikzstyle{block} = [rectangle, draw, fill=blue!20, 
+text width=5em, text centered, minimum height=4em, node distance=3cm]
+\tikzstyle{line} = [draw, -latex']
+\tikzstyle{cloud} = [draw, ellipse,fill=red!20, node distance=2cm,
+minimum height=2em]
+
+\begin{tikzpicture}[auto]
+\node [cloud](start){start};
+\node [block, below of=start](init){set $p = 0$, $q = n$};
+\node [decision, below of=init](exit){$p - q = 1$?};
+\node [block, below of=exit](choose){$(*)$choose integer $x$ such that $p < x < q$};
+\node [decision, below of=choose](test){test $a_x$};
+\node [block, left of=test](a){set $p=x$};
+\node [block, right of=test](b){set $q=x$};
+\node [block, right of=exit](final){set $j=q$};
+\node [cloud, below of=final](end){end};
+
+\path [line] (start) -- (init);
+\path [line] (init) -- (exit);
+\path [line] (exit) -- node {no} (choose);
+\path [line] (choose) -- (test);
+\path [line] (test) -- node {0, $+s$} (a);
+\path [line] (test) -- node {1, $+t$} (b);
+\path [line] (a) |-([xshift=-0.5cm,yshift=-0.5cm]a.south west)|- (exit);
+\path [line] (b) |-([xshift=-0.5cm,yshift=-0.5cm]a.south west)|- (exit);
+\path [line] (exit) -- node{yes} (final);
+\path [line] (final) -- (end);
+
+\end{tikzpicture}
+
+\section{The equation}
+ 
+The step $(*)$ is the only place we need to decide how to do exactly. It can be seen that on each iteration, the algorithm is effectively solving the same problem with a smaller size where $n = p - q$, therefore we can choose x by some function $f(n, s, t)$ as
+\[
+x = f(p - q, s, t) + p \,,
+\]
+and the expectation of total time $F_{s,t}(n)$ can be expressed recursively as
+\begin{equation}
+F_{s,t}(n) = \frac{w}{n}(t + F_{s,t}(w)) + \frac{n-w}{n}(s + F_{s,t}(n-w))\,,
+\end{equation}
+where $w = f(n, s, t)$ represents the offset of the next testing point relative to the start of the current range. The two term represents the two possibility where the next iteration goes to the left or the right. Their probability are $\frac{w}{n}$ and $\frac{n-w}{n}$, respectively, based on the assumption of the uniform distribution. $t$ and $s$ are the time cost of the current iteration, and $F(...)$ are the time cost of the rest iteration.
+
+Our goal is to find the most efficient method, so we want to minimize the value of $F(n)$. Therefore, with an initial value $F(1) = 0$, we can define a calculable function $F(n)$ over $n \in \mathbb{Z}$ as
+\begin{align*}
+F_{s,t}(1) &= 0\,,\\
+F_{s,t}(n) &= \min_{0<w<n}\left\{\frac{w}{n}(t + F_{s,t}(w)) + \frac{n-w}{n}(s + F_{s,t}(n-w))\right\} \textrm{ for } n > 1 \,.
+\end{align*}
+
+Our goal is to analyze the function $F(n)$ and find the corresponding $w$ that minimize the time.
+
+Some observation can reveal some basic properties of the function $F(n)$
+
+\begin{lemma} Homogeneity of coefficients $s$ and $t$ in $F$: 
+	\[
+	F_{ks,kt}(n) = k F_{s,t}(n)
+	\]
+\end{lemma}
+\begin{proof}
+	Proof by induction. 
+	\paragraph{Base case} for $n = 1$, $F_{ks,kt}(1) = 0 = k*0 = kF_{s,t}(1)$
+	\paragraph{Inductive step} Assuming $F_{ks,kt}(m) = k F_{s,t}(m)$ holds for all $0 < m < n$, we can show that $F_{ks,kt}(n) = k F_{s,t}(n)$ by 
+	\begin{align*}
+	F_{ks,kt}(n) &= \min_{0<w<n}\left\{\frac{w}{n}(kt + F_{ks,kt}(w)) + \frac{n-w}{n}(ks + F_{ks,kt}(n-w))\right\}\\
+	&=\min_{0<w<n}\left\{\frac{w}{n}(kt + kF_{s,t}(w)) + \frac{n-w}{n}(ks + kF_{s,t}(n-w))\right\}\\
+	&=k\min_{0<w<n}\left\{\frac{w}{n}(t + F_{s,t}(w)) + \frac{n-w}{n}(s + F_{s,t}(n-w))\right\}\\
+	&=kF_{s,t}(n)\qedhere
+	\end{align*}
+	It can be also seen that the choice of $w$ would not be affected by scaling $s$ and $t$ by a constant $k$. Only the ratio $t/s$ matters.
+\end{proof}	
+
+\section{Back to the classic binary search}
+In the original binary search problem is represented by $s = t = T$. In this case, the recursive equation becomes
+\[
+F_{s,t}(n) = T + \min_{0<w<n}\left\{\frac{w}{n}F_{s,t}(w) + \frac{n-w}{n}F_{s,t}(n-w)\right\}
+\]
+
+TODO
+
+\section{The graph}
+
+The value of $F_{s,t}(n)$ and $w_{s,t}(n)$ can be calculated by computer program
+
+TODO
+
+From the graph, we can see there are three modes in the curve, separated by some critical points related to $n$:
+\begin{itemize}
+	\item mode 1 in $|\ln(t/s)| \leq 0.5\ln n$, where $w$ forms an S-shaped curve, with high tolerance of optimization range.
+	\item mode 2 in $ 0.5\ln n< |\ln(t/s)| < \ln n$, where $w$ forms a logarithm-like curve (i.e. linear to $t/s$ or $s/t$), with little tolerance of optimization range.
+	\item mode 3 in $|\ln(t/s)| \geq \ln n$, where $w$ stays straight on $1$ or $n-1$.
+\end{itemize}
+
+\begin{lemma}
+	$F_{s,t}(n) = \frac{n - 1}{n}t + \frac{n-1}{2}s,\, 1 \in w_{s,t}(n),\, \forall n \leq t/s + 2$
+\end{lemma}
+\begin{proof}
+	Proof by induction. 
+	\paragraph{Base case} for $n = 1$, $w_{s,t}(1) = \{1\}$ is the only possible value, and $F_{s,t}(1) = 0 = \frac{1 - 1}{1}t + \frac{1-1}{2}s$
+	\paragraph{Inductive step} Assuming $F_{s,t}(k) = \frac{k - 1}{n}t + \frac{k-1}{2}s$ for all $k < n$, we can show that $F_{s,t}(n) = \frac{n - 1}{n}t + \frac{n-1}{2}s$ and $w_{s,t}(n) = 1$ by the following step:
+	\begin{align*}
+	F_{s,t}(n) &= \min_{0<w<n}\left\{\frac{w}{n}(t + F_{s,t}(w)) + \frac{n-w}{n}(s + F_{s,t}(n-w))\right\}\\
+	&= \min_{0<w<n}\left\{\frac{w}{n}(t + \frac{w - 1}{w}t + \frac{w-1}{2}s) + \frac{n-w}{n}(s + \frac{n-w - 1}{n-w}t + \frac{n-w-1}{2}s)\right\}\\
+	&=\min_{0<w<n}\left\{\frac{n+w-2}{n}t + \frac{2w^2+n^2-2nw-2w+n}{2n}s\right\}\\
+	&=\min_{0<w<n}\left\{\frac{s}{n}w^2 + \frac{2t-2ns-2s}{2n}w + 
+	\frac{n-2}{n}t + \frac{n-1}{2n}s\right\}
+	\end{align*}
+	As a quadratic function of $w$, the RHS reaches its minimum at the axis
+	\[
+		w_{axis} = -\frac{2t-2ns-2s}{2n}/\frac{2s}{n} = -\frac{t}{2s} + \frac{n}{2} - \frac{1}{2}
+	\]
+	for $n \leq t/s + 2$, we can show that
+	\[
+	w_{axis} \leq -\frac{t}{2s} + \frac{t}{2s} + 1  - \frac{1}{2} = \frac{1}{2}
+	\]
+	It is obvious that when the axis is less than $1/2$, $w = 1$ is the minimal point among all positive integers, so we have $1 \in w_{s,t}(n)$, and
+	\begin{align*}
+	F_{s,t}(n) &=\frac{n+w-2}{n}t + \frac{2w^2+n^2-2nw-2w+n}{2n}s\\
+	&=\frac{n-1}{n}t + \frac{n^2-n}{2n}s\\
+	&=\frac{n-1}{n}t + \frac{n-1}{2}s
+	\end{align*}
+\end{proof}
+
+\begin{lemma}
+	$F_{s,t}(n) = \frac{n - 1}{n}s + \frac{n-1}{2}t,\, n-1 \in w_{s,t}(n),\, \forall n \leq s/t + 2$
+\end{lemma}
+
+\section{Continuous Approximation}
+
+To get analytical solution in mode 1, we change our discrete equation into a continuous form:
+\begin{align*}
+f_{s,t}(x) &= \min_{0<w<x}^{w\in\mathbb{R}}\left\{\frac{w}{x}(t + f_{s,t}(w)) + \frac{x-w}{x}(s + f_{s,t}(x-w))\right\}\,, x \in\mathbb{R}^+ \ \,.
+\end{align*}
+
+We assume that the solution has the form $f_{s,t}(x) = k_{s,t} \ln x$. Substitute in the equation and we get
+
+\[
+k_{s,t} \ln x = \min_{0<w<x}^{w\in\mathbb{R}}\left\{\frac{w}{x}(t + k_{s,t} \ln w) + \frac{x-w}{x}(s + k_{s,t} \ln (x-w))\right\}
+\]
+
+To find the minimal value of RHS, we study its derivative
+
+\begin{align*}
+&\frac{d}{dw}\left\{\frac{w}{x}(t + k_{s,t} \ln w) + \frac{x-w}{x}(s + k_{s,t} \ln (x-w))\right\}\\
+=& \frac{t}{x} + \frac{k_{s,t}}{x}(\ln w + 1) - \frac{s}{x} - \frac{k_{s,t}}{x}(\ln (x-w) + 1)\\
+=&\frac{t-s}{x} + \frac{k_{s,t}}{x}(\ln w - \ln(x-w))
+\end{align*}
+
+The derivative itself is monotonically increasing in $0<w<x$, and approaches $\pm \infty$ when $w$ approaches $0$ or $x$. Therefore the original function has a single minimal point at derivative $= 0$, which means 
+\begin{align*}
+&&\frac{t-s}{x} + \frac{k_{s,t}}{x}(\ln w - \ln(x-w)) &= 0\\
+\Rightarrow&&k_{s,t} = \frac{s-t}{\ln w - \ln(x-w)}
+\end{align*}
+
+Substitute back to TODO and we get
+\begin{align*}
+&&\frac{s-t}{\ln w - \ln(x-w)} \ln x &= \frac{w}{x}(t + \frac{s-t}{\ln w - \ln(x-w)} \ln w) + \frac{x-w}{x}(s + \frac{s-t}{\ln w - \ln(x-w)} \ln (x-w))\\
+\Rightarrow&&x(s-t)\ln x& = w(s\ln w- t\ln (x-w) ) +(x-w)(s\ln w   -t\ln (x-w))\\
+\Rightarrow&&x(s-t)\ln x& = sx\ln w - tx \ln (x-w)\\
+\Rightarrow&&s \ln x - t \ln x &= s \ln w - t \ln (x-w)\\
+\Rightarrow&&t\ln\frac{x-w}{x} &= s\ln\frac{w}{x}\\
+\Rightarrow&&\frac{\ln u }{ \ln (1-u)}&= \frac{t}{s} \qquad (\textrm{let } u = \frac{w}{x})
+\end{align*}
+
+\end{document}
