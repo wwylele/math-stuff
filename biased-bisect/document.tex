@@ -6,11 +6,21 @@
 \usepackage{graphicx}
 \usepackage{tikz}
 \usetikzlibrary{matrix,shapes,arrows,positioning,chains}
+\usepackage{tkz-base}
+\usepackage{tkz-euclide}
+\usepackage
+[
+left=2cm,
+right=2cm,
+top=2cm,
+bottom=2cm,
+]
+{geometry}
 
 \begin{document}
 
 \newtheorem{problem}{Problem}
-\newtheorem{lemma}{Lemma}
+\newtheorem{lemma}{Property}
 
 \section{The binary search problem, and its variation}
 
@@ -78,43 +88,378 @@ minimum height=2em]
 
 \section{The equation}
  
-The step $(*)$ is the only place we need to decide how to do exactly. It can be seen that on each iteration, the algorithm is effectively solving the same problem with a smaller size where $n = p - q$, therefore we can choose x by some function $f(n, s, t)$ as
+The step $(*)$ is the only place we need to decide how to do exactly. It can be seen that on each iteration, the algorithm is effectively solving the same problem with a smaller size where $n = p - q$, therefore we can choose x by some function $w(n, s, t)$ as
 \[
-x = f(p - q, s, t) + p \,,
+x = w(p - q, s, t) + p \,,
 \]
 and the expectation of total time $F_{s,t}(n)$ can be expressed recursively as
 \begin{equation}
 F_{s,t}(n) = \frac{w}{n}(t + F_{s,t}(w)) + \frac{n-w}{n}(s + F_{s,t}(n-w))\,,
 \end{equation}
-where $w = f(n, s, t)$ represents the offset of the next testing point relative to the start of the current range. The two term represents the two possibility where the next iteration goes to the left or the right. Their probability are $\frac{w}{n}$ and $\frac{n-w}{n}$, respectively, based on the assumption of the uniform distribution. $t$ and $s$ are the time cost of the current iteration, and $F(...)$ are the time cost of the rest iteration.
+where $w = w_{s,t}(n)$ represents the offset of the next testing point relative to the start of the current range. The two term represents the two possibility where the next iteration goes to the left or the right. Their probability are $\frac{w}{n}$ and $\frac{n-w}{n}$, respectively, based on the assumption of the uniform distribution. $t$ and $s$ are the time cost of the current iteration, and $F(...)$ are the time cost of the rest iteration.
 
 Our goal is to find the most efficient method, so we want to minimize the value of $F(n)$. Therefore, with an initial value $F(1) = 0$, we can define a calculable function $F(n)$ over $n \in \mathbb{Z}$ as
 \begin{align*}
 F_{s,t}(1) &= 0\,,\\
-F_{s,t}(n) &= \min_{0<w<n}\left\{\frac{w}{n}(t + F_{s,t}(w)) + \frac{n-w}{n}(s + F_{s,t}(n-w))\right\} \textrm{ for } n > 1 \,.
+F_{s,t}(n) &= \min_{0<w<n}^{w\in\mathbb{Z}}\left\{\frac{w}{n}(t + F_{s,t}(w)) + \frac{n-w}{n}(s + F_{s,t}(n-w))\right\} \textrm{ for } n > 1 \,.
 \end{align*}
 
-Our goal is to analyze the function $F(n)$ and find the corresponding $w$ that minimize the time.
+To simplify further analysis, we define the ``normalized" function $E(n) = nF(n)$, which satisfies the following recursive relation
+\begin{align*}
+E_{s,t}(1) &= 0\,,\\
+E_{s,t}(n) &= \min_{0<w<n}^{w\in\mathbb{Z}}\{E_{s,t}(w) + E_{s,t}(n-w) + wt +(n-w)s\} \textrm{ for } n > 1 \,.
+\end{align*}
 
-Some observation can reveal some basic properties of the function $F(n)$
+Now let's analyze the function $E_{s,t}(n)$, which represents the expected time scaled by $n$, and the optimizer $w = w_{s,t}(n)$, which represents which commit you should test next given parameters $(n,s,t)$.
 
-\begin{lemma} Homogeneity of coefficients $s$ and $t$ in $F$: 
-	\[
-	F_{ks,kt}(n) = k F_{s,t}(n)
-	\]
+\section{Properties}
+\hspace{1cm}
+\begin{lemma} Homogeneity of $s$ and $t$. For any $k\in\mathbb{R}^+$ we have
+\[
+	E_{ks,kt}(n) = k E_{s,t}(n)
+\]
+\[
+	w_{ks,kt}(n) = w_{s,t}(n)
+\]
+This means it is only the ratio $s/t$ that affects the bisecting strategy.
 \end{lemma}
 \begin{proof}
-	Proof by induction. 
-	\paragraph{Base case} for $n = 1$, $F_{ks,kt}(1) = 0 = k*0 = kF_{s,t}(1)$
-	\paragraph{Inductive step} Assuming $F_{ks,kt}(m) = k F_{s,t}(m)$ holds for all $0 < m < n$, we can show that $F_{ks,kt}(n) = k F_{s,t}(n)$ by 
+		Proof by induction. 
+	\paragraph{Base case} for $n = 1$, $E_{ks,kt}(1) = 0 = k\cdot0 = kE_{s,t}(1)$
+	\paragraph{Inductive step} Assuming $E_{ks,kt}(m) = k E_{s,t}(m)$ holds for all $m = 1,2,\dots,n-1$, we can show that $E_{ks,kt}(n) = k E_{s,t}(n)$ by 
 	\begin{align*}
-	F_{ks,kt}(n) &= \min_{0<w<n}\left\{\frac{w}{n}(kt + F_{ks,kt}(w)) + \frac{n-w}{n}(ks + F_{ks,kt}(n-w))\right\}\\
-	&=\min_{0<w<n}\left\{\frac{w}{n}(kt + kF_{s,t}(w)) + \frac{n-w}{n}(ks + kF_{s,t}(n-w))\right\}\\
-	&=k\min_{0<w<n}\left\{\frac{w}{n}(t + F_{s,t}(w)) + \frac{n-w}{n}(s + F_{s,t}(n-w))\right\}\\
-	&=kF_{s,t}(n)\qedhere
+	E_{ks,kt}(n) &= \min_{w}\{E_{ks,kt}(w) + E_{ks,kt}(n-w) + wkt +(n-w)kst\}\\
+	  &= \min_{w}\{k E_{s,t}(w) + k E_{s,t}(n-w) + wkt +(n-w)ks\}\\
+	  &= k\min_{w}\{E_{s,t}(w) + E_{s,t}(n-w) + wt +(n-w)s\}\\
+	  &=kE_{s,t}(n)
 	\end{align*}
-	It can be also seen that the choice of $w$ would not be affected by scaling $s$ and $t$ by a constant $k$. Only the ratio $t/s$ matters.
+	and note that the transformation doesn't affect the choice of $w$.
 \end{proof}	
+
+\hspace{1cm}
+\begin{lemma} Symmetry of $s$ and $t$:
+	\[
+		E_{s,t}(n) = E_{t,s}(n)
+	\]
+	\[
+		w_{s,t}(n) + w_{t,s}(n) = n
+	\]
+Together with previous lemma, this means we only needs to study either $s/t \le1$ or $s/t \ge 1$
+\end{lemma}
+\begin{proof}
+	This can be similarly proved by induction. Omitted.
+\end{proof}	
+
+\hspace{1cm}
+\begin{lemma}
+	The optimizer $w_{s,t}(n)$ outputs a set of $w$. It is not necessarily always a single $w$ that minimize the function
+\end{lemma}
+\begin{proof}
+		This is obvious. We haven't really restricted $w$ to be a single value for given $(n,s,t)$. Multiple $w$ can equally give the minimal result in the $E_{s,t}(n)$ equation. In fact, we will see that this is true for most cases. 
+\end{proof}	
+
+\hspace{1cm}
+\begin{lemma}
+$E_{s,t}(n)$ as a function of $n$ is convex
+\end{lemma}
+\begin{lemma}
+	$w_{s,t}(n)$ is always a simple integer interval $[w_{s,t}^{min}(n), w_{s,t}^{max}(n)]$
+\end{lemma}
+\begin{lemma}
+	If $w^*\in w_{s,t}(n)$, then at least one of the following is true: $w^*\in w_{s,t}(n+1)$, or $w^*+1\in w_{s,t}(n+1)$
+\end{lemma}
+\begin{proof}
+(TODO, currently broken)
+we will prove the three properties above together using induction.
+
+First of all, let's formally define the convexity of $E(n)$ which is a discrete function over integer. We define the differential as
+\[  
+\Delta E(n) = E(n+1) - E(n)
+\]
+and we say that $E_{s,t}(n)$ is convex on $[1,n]$ if and only if
+\[
+ \Delta E(m)\le \Delta E(m+1)\quad\forall m = 1,2,\dots,n-2\quad (\text{Proposition } \mathbf{C}_n)
+\]
+
+We denote the property about $w$ as
+\[
+w^*\in w(n) \implies w^* \in w(n+1) \lor w^*+1 \in w(n+1) \quad (\text{Proposition } \mathbf{W}_n)
+\]
+
+We also denote $D^w_{s,t}(n) = E_{s,t}(w) + E_{s,t}(n-w) +wt+(n-w)s$ so we have
+\[
+E(n) = \min_w\{D^w(n)\} = D^{w(n)}(n)
+\]
+\[
+D^{w(n)}(n) \le D^{w(n) - 1}(n)\  (\text{if } w(n) > 1)
+\]
+\[
+D^{w(n)}(n) \le D^{w(n) + 1}(n)\  (\text{if } w(n) < n - 1)
+\]
+We also have 
+\[
+D^{w}(n+1) = D^{w} + \Delta E(n-w) +s
+\]
+\[
+D^{w+1}(n+1) = D^{w} + \Delta E(w) +t
+\]
+
+
+\paragraph{Base case}
+The first few values of $E(n)$ and $w(n)$ are 
+\begin{align*}
+&E(1) = 0,\ &&\\
+&E(2) = s + t, \ &&w(2) = 1,\\
+&E(3) = 2s + 2t + \min\{s, t\}, \ &&w(3) = \{1\}, \{2\},\text{ or }\{1,2\}
+\end{align*}
+It can be seen that proposition $\mathbf{C}_1$ and $\mathbf{W}_2$ hold.
+
+\paragraph{Inductive step} (a) we will show that $\mathbf{C}_n \implies \mathbf{W}_n$ for $n\ge 2$:
+
+If $w(n) >1$, then we have
+\begin{align*}
+D^{w(n)}(n+1) &= D^{w(n)}(n) + \Delta E(n-w(n)) +s\\
+&\le  D^{w(n) - 1}(n) + \Delta E(n-w(n)) +s \quad &(\text{$D^{w(n)}(n)$ is the smallest among $D^{w}(n)$})\\
+&\le  D^{w(n) - 1}(n) + \Delta E(n-(w(n)-1)) +s \quad &(\text{Convexity $\mathbf{C}_{n}$}) \\ 
+&=D^{w(n)-1}(n+1)
+\end{align*}
+
+If $w(n) < n -1$, then we have
+\begin{align*}
+D^{w(n)+1}(n+1) &= D^{w(n)}(n) + \Delta E(w(n)) +t \\
+&\le  D^{w(n) + 1}(n) + \Delta E(w(n)) +t \quad &(\text{$D^{w(n)}(n)$ is the smallest among $D^{w}(n)$})\\
+&\le  D^{w(n) + 1}(n) + \Delta E(w(n) + 1) +t \quad &(\text{Convexity $\mathbf{C}_{n}$}) \\ 
+&= D^{w(n)+2}(n+1)
+\end{align*}
+
+Also notice that $D^w(n+1)$ is convex over $w=1,\dots,n$ due to convexity $\mathbf{C}_{n}$. The inequalities above shows the relations about four consecutive points at the valley of the convex function:
+\[
+D^{w(n)-1}(n+1) \ge D^{w(n)}(n+1) \sim D^{w(n)+1}(n+1) \le D^{w(n)+2}(n+1)
+\]
+
+We can conclude that at least one of $D^{w(n)}(n+1)$ or $D^{w(n)+1}(n+1)$ is the minimum of $D^w(n+1)$, thus $\mathbf{W}_n$ holds
+
+(b) We then show that:
+\[
+\Delta E(n)= \begin{cases}
+	\Delta E(w(n)) + t \quad(w(n+1) = w(n) + 1)\\
+	\Delta E(n-w(n)) + s\quad(w(n+1) = w(n))
+	\end{cases} \quad (\text{Proposition $\mathbf{W}_n$ ehhhhhhhh})
+\]
+
+\end{proof}
+
+
+
+\hspace{1cm}
+\begin{lemma}
+Fixing $n$ and $s$, $E_{s,t}(n)$ as a function of $t$ is concave 
+\end{lemma}
+\begin{proof}
+Proof by induction. The base case $E_{s,t}(1) = 0$ is concave over $t$. In the recursive equation, all the summation components are concave, and the minimal of concave functions is still a concave function.
+\end{proof}
+
+\hspace{1cm}
+\begin{lemma}
+Fixing $n$ and $s$, $E_{s,t}(n)$ is a piecewise linear function of $t$. The nodes are always at rational points.
+\end{lemma}
+\begin{proof}
+	This can be proved by induction. Omitted.
+\end{proof}
+With this property, we can graph the function with a series of segments. For example, the graph of $E_{1,t}(10)$ over $t\in[0,1]$ is 
+
+
+	\begin{tikzpicture}[scale=0.8]
+	\tkzInit[xmin=0,ymin=0,xmax=1.1,ymax=35,xstep=0.1,ystep=5]
+	\tkzDrawX[label={$t$}]
+	\tkzLabelX[step=1]
+	\tkzDrawY[label={$E_{1,t}(10)$}]
+	\tkzLabelY[step=10]
+	\tkzDefPoint(0,9){p1}
+	\tkzDefPoint(1/8,117/8){p2}
+	\tkzDefPoint(1/6,97/6){p3}
+	\tkzDefPoint(1/5,86/5){p4}
+	\tkzDefPoint(1/3,62/3){p5}
+	\tkzDefPoint(1/2,49/2){p6}
+	\tkzDefPoint(1,34){p7}
+	\tkzDefPoint(1.1,35.5){p8}
+	\tkzDrawSegment(p1,p2)
+	\tkzDrawSegment(p2,p3)
+	\tkzDrawSegment(p3,p4)
+	\tkzDrawSegment(p4,p5)
+	\tkzDrawSegment(p5,p6)
+	\tkzDrawSegment(p6,p7)
+	\tkzDrawSegment(p7,p8)
+	\tkzDrawPoints(p1,p2,p3,p4,p5,p6,p7)
+	\tkzLabelPoint[right](p1){\tiny $(0,9)$}
+	\tkzLabelPoint[right](p2){\tiny $(1/8,117/8)$}
+	\tkzLabelPoint[right](p3){\tiny $(1/6,97/6)$}
+	\tkzLabelPoint[right](p4){\tiny $(1/5,86/5)$}
+	\tkzLabelPoint[right](p5){\tiny $(1/3,62/3)$}
+	\tkzLabelPoint[right](p6){\tiny $(1/2,49/2)$}
+	\tkzLabelPoint[right](p7){\tiny $(1,34)$}
+	\end{tikzpicture}
+
+We omitted the graph beyond $t=1$, but remember that it can be derived by $E_{1,t}(n) = t\cdot E_{1,1/t}(n)$ due to symmetry and homogeneity.
+
+It can be seen from the graph that nodes are generally at $t = 1/p$ with some integer $p$. This isn't always true for larger $n$, but computation shows that most nodes are at simple ratios like these.
+
+\hspace{1cm}
+\begin{lemma}
+	Fixing $n$ and $s$, $w_{s,t}(n)$ is a ``piecewise constant" function. Over a single segment of the piecewise function $E_{s,t}(n)$, the same set of $w$ is chosen. However, at node of piecewise function $E_{s,t}(n)$, $w_{s,t}(n)$ can take a unique value that's not equal to either the left segment or the right segment.
+\end{lemma}
+\begin{proof}
+	Remember that $E_{s,t}(n)$ calculated by taking the $t$-pointwise minimum of a sequence of piecewise linear, convex functions $J_w(t) = E_{s,t}(w) + E_{s,t}(n-w) + wt +(n-w)s$ indexed by $w$. If the pointwise minimum results in a simple linear function over an $t$-interval, it must be resulted from the same set of $w$. This is because, if any $J_w(t)$ tries to join or leave $E_{s,t}(n)$ midway in the interval, it must bend down due to convexity, and that would result in  $E_{s,t}(n) \le J_w(t)$ bending down as well, contradicting with the fact that $E_{s,t}(n)$ is a simple linear function in this interval. $J_w(t)$ can only join or leave at the nodes of $E_{s,t}(n)$
+\end{proof}
+
+If we graph $w$ over $t$, we will get a series of ``blocks", separated by vertical lines (marked red) at the nodes of $E$ over $t$. For example, the graph of $w_{1,t}(10)$ over $t\in[0,1]$ is 
+
+\begin{tikzpicture}[xscale=0.8,yscale=0.4]
+\tkzInit[xmin=0,ymin=0,xmax=1.1,ymax=10,xstep=0.1,ystep=1]
+\tkzDrawX[label={$t$}]
+\tkzLabelX[step=1]
+\tkzDrawY[label={$w$},above]
+\tkzLabelY[step=1]
+\tkzDefPoint(0, 8.5){A}\tkzDefPoint(1/8,9.5){C}\tkzDefRectangle(A,C)\tkzGetPoints{B}{D} \tkzDrawPolygon[fill=black](A,...,D)
+\tkzDefPoint(1/8, 7.5){A}\tkzDefPoint(1/6,8.5){C}\tkzDefRectangle(A,C)\tkzGetPoints{B}{D} \tkzDrawPolygon[fill=black](A,...,D)
+\tkzDefPoint(1/6, 6.5){A}\tkzDefPoint(1/5,8.5){C}\tkzDefRectangle(A,C)\tkzGetPoints{B}{D} \tkzDrawPolygon[fill=black](A,...,D)
+\tkzDefPoint(1/5, 6.5){A}\tkzDefPoint(1/3,7.5){C}\tkzDefRectangle(A,C)\tkzGetPoints{B}{D} \tkzDrawPolygon[fill=black](A,...,D)
+\tkzDefPoint(1/3, 5.5){A}\tkzDefPoint(1/2,7.5){C}\tkzDefRectangle(A,C)\tkzGetPoints{B}{D} \tkzDrawPolygon[fill=black](A,...,D)
+\tkzDefPoint(1/2, 4.5){A}\tkzDefPoint(1,6.5){C}\tkzDefRectangle(A,C)\tkzGetPoints{B}{D} \tkzDrawPolygon[fill=black](A,...,D)
+\tkzDefPoint(1, 3.5){A}\tkzDefPoint(1.1,5.5){C}\tkzDefRectangle(A,C)\tkzGetPoints{B}{D} \tkzDrawPolygon[fill=black](A,...,D)
+\tkzDefPoint(1/8, 7.5){A}\tkzDefPoint(1/8,9.5){B}\tkzDrawSegment[color=red,thick](A,B)\tkzLabelPoint[below](A){\tiny $\frac{1}{8}$}
+\tkzDefPoint(1/6, 6.5){A}\tkzDefPoint(1/6,8.5){B}\tkzDrawSegment[color=red,thick](A,B)\tkzLabelPoint[below](A){\tiny $\frac{1}{6}$}
+\tkzDefPoint(1/5, 6.5){A}\tkzDefPoint(1/5,8.5){B}\tkzDrawSegment[color=red,thick](A,B)\tkzLabelPoint[below](A){\tiny $\frac{1}{5}$}
+\tkzDefPoint(1/3, 5.5){A}\tkzDefPoint(1/3,7.5){B}\tkzDrawSegment[color=red,thick](A,B)\tkzLabelPoint[below](A){\tiny $\frac{1}{3}$}
+\tkzDefPoint(1/2, 4.5){A}\tkzDefPoint(1/2,7.5){B}\tkzDrawSegment[color=red,thick](A,B)\tkzLabelPoint[below](A){\tiny $\frac{1}{2}$}
+\tkzDefPoint(1/1, 3.5){A}\tkzDefPoint(1/1,6.5){B}\tkzDrawSegment[color=red,thick](A,B)\tkzLabelPoint[below](A){\tiny $1$}
+
+\end{tikzpicture}
+
+We omitted the graph beyond $t=1$, but remember that it can be derived by $w_{1,t}(n) = n - w_{1,1/t}(n)$ due to symmetry and homogeneity.
+
+In the case of $n=10$, the vertical lines at nodes don't exceed the $w$ range of its adjacent blocks, but this is not always true for larger $n$. Some vertical lines can looks ``spiky", demonstrating a much larger set of $w$ than the adjacent blocks. This also demonstrates the non-monotonicity of $w_{max}$ and $w_{min}$ over $t$, even though the graph generally looks monotonic. 
+
+\hspace{1cm}
+\begin{lemma} (Mode $M_0$) The optimizer degenerates at extreme $s/t$ ratio
+	\begin{align*}
+	E_{s,t}(n) = (n-1)t + \frac{1}{2}n(n-1)s,\quad & w_{s,t}(n) = \{1\},\quad  &\text{for } \frac{t}{s} > n - 2 \\
+	E_{s,t}(n) = (n-1)s + \frac{1}{2}n(n-1)t,\quad & w_{s,t}(n) = \{n-1\},\quad  &\text{for } \frac{t}{s} < \frac{1}{n-2}
+	\end{align*}
+	($w_{s,t}(1)$ isn't well-defined, so we ignore it here)
+\end{lemma}
+\begin{proof}
+	The two statements above are equivalent due to the symmetry property, so we will just prove the first one by induction
+	\paragraph{Base case} For $n=1$, we have
+	\[
+	E_{s,t}(1) = 0 = (1-1)t + \frac{1}{2}\cdot 1 \cdot (1-1) s
+	\]
+	and for $n=2$, $w_{s,t}(2) = 1$ is the only possible choice, and
+	\[
+	E_{s,t}(2) = E_{s,t}(1) + E_{s,t}(1) + t + s = t + s = (2-1)t + \frac{1}{2}\cdot 2 \cdot (2-1) s
+	\]
+	\paragraph{Inductive step} Assuming $E_{s,t}(k) = (k-1)t + \frac{1}{2}k(k-1)s$ holds for all $k = 1,2,\dots n-1$ and $t/s > k - 2$, we can show that, for $t/s > n - 2 > k - 2$:
+	\begin{align*}
+	E_{s,t}(n) &= \min_{0<w<n}\{E_{s,t}(w) + E_{s,t}(n-w)+wt+(n-w)s\} \\
+	&=\min_{0<w<n}\left\{(w-1)t + \frac{1}{2}w(w-1)s + (n-w-1)t + \frac{1}{2}(n-w)(n-w-1)s+wt+(n-w)s\right\}\\
+	&=\min_{0<w<n}\left\{ sw^2 + (t-(n+1)s)w + (n-2)t + \frac{1}{2}n(n+1)s \right\}
+	\end{align*}
+	The function we want to minimize is quadratic, which has the axis 
+	\[
+		w_{axis} = -\frac{t-(n+1)s}{2s} = \frac{1}{2}\left(-\frac{t}{s} + n+1\right) < \frac{3}{2}
+	\]
+	The integer $w$ that's the closest to the axis gets the minimal value. We can see that $w=1$ is always the closest to the axis, therefore it minimize the function to
+	\[
+		E_{s,t}(n)=s + (t-(n+1)s) + (n-2)t + \frac{1}{2}n(n+1)s = (n-1)t + \frac{1}{2}n(n-1)s
+	\]
+\end{proof}
+
+\hspace{1cm}
+\begin{lemma} 
+	(Mode $M_1$) For $k = 1,2,\dots$, the optimizer takes value in the following ranges:
+	
+	\begin{align*}
+	&w_{s,t}(n) = \{k\},\quad &\text{ for } \frac{t}{s} \in \left(n - \left(\frac{1}{2}k(k+1) + 1\right), n - \left(\frac{1}{2}k(k+1) - 1\right)\right)\\
+	&w_{s,t}(n) = \{k, k + 1\},\quad &\text{ for } \frac{t}{s} \in \left[ n - \left(\frac{1}{2}k(k+3)\right), n - \left(\frac{1}{2}k(k+1) + 1\right) \right]
+	\end{align*}
+	
+	The first equation for $k=1$ overlaps with Mode $M_0$, and the value agrees. And then the two equations specifies the optimizer value for each $t/s$ segments alternately.
+
+	This mode ends at (TODO).
+	
+	There is also a symmetrical Mode $M_1$ region for small $\frac{t}{s}$ omitted here.
+	
+\end{lemma}
+\begin{proof}
+	TODO
+\end{proof}
+
+\hspace{1cm}
+\begin{lemma} 
+	The ``normalized" optimizer $g_{s,t}(n) = w_{s,t}(n)/n$ is similar to a function $g_{s,t}$ that's independent from $n$.
+\end{lemma}
+\begin{proof}
+	This is rather a heuristic observation than a concrete theorem. Consider a continuous version of the original problem:
+	\begin{align*}
+		E_{s,t}(1) &= 0, \\
+		E_{s,t}(x) &= \min_{0<w<x}^{w\in\mathbb{R}}\{E_{s,t}(w) + E_{s,t}(x-w) + wt+(x-w)s\}\text{ for } x\in\mathbb{R}^+
+	\end{align*}
+	Remember that the traditional bisect problem has a time complexity of $F(n) = E(n)/n \sim O(\log n)$, we can guess that the solution to the functional equation above is in the form
+	\[
+	E_{s,t}(x) = k_{s,t}x\ln x
+	\]
+	Substitute this in the equation, we get
+	\begin{align*}
+	k_{s,t}x\ln x &= \min_{w}\{ k_{s,t}w\ln w + k_{s,t}(x-w)\ln (x-w)+wt+(x-w)s\}
+	\end{align*}
+	The function to minimize is differentiable, so we can study its derivative
+	\begin{align*}
+	&\frac{d}{dw} \{ k_{s,t}w\ln w + k_{s,t}(x-w)\ln (x-w)+wt+(x-w)s\\
+	&=k_{s,t}(1 + \ln w) - k_{s,t}(1 + \ln(x-w))+t-s\\
+	&=k_{s,t}(\ln w - \ln (x-w)) + t -s
+	\end{align*}
+	The derivative monotonically increases in $0<w<x$ and approaches $\pm \infty$ at each end respectively, so the single minimal value of the original function is at derivative of $0$
+	\begin{align*}
+	k_{s,t}(\ln w - \ln (x-w)) + t -s &= 0\\
+	k_{s,t} &= \frac{s -t }{\ln w - \ln (x-w)}
+	\end{align*}
+	and we substitute this back and remove the $\min$ operator, we get
+	\[
+	\frac{s -t }{\ln w - \ln (x-w)} x\ln x =  \frac{s -t }{\ln w - \ln (x-w)}w\ln w + \frac{s -t }{\ln w - \ln (x-w)}(x-w)\ln (x-w)+wt+(x-w)s\,,
+	\]
+	which can be simplified to 
+	\[
+	\frac{\ln(w/x)}{\ln(1-w/x)} = \frac{t}{s}\,.
+	\]
+	If we define the normalized function $g_{s,t} = w/x$, then it is a function that satisfies
+	\[
+	\frac{\ln g_{s,t}}{\ln(1-g_{s,t})} = \frac{t}{s}\,.
+	\]
+	The solution is unfortunately not easy to express in a closed form, but we do get a normalized optimizer function $g_{s,t}$ independent from $n$. The optimizer for the discrete problem should be similar to this.
+	
+	We can also get the coefficient $k_{s,t}$
+	\[
+	k_{s,t} = \frac{s -t }{\ln w - \ln (x-w)} = \frac{s -t }{\ln g_{s,t} - \ln (1-g_{s,t})} = -\frac{t}{\ln g_{s,t}} = - \frac{s}{\ln(1-g_{s,t})}
+	\]
+	and the time solution to the discrete problem $E_{s,t}(n)$ should also be similar to $E_{s,t}(n) = k_{s,t}n\ln n$.
+
+\end{proof}
+
+\begin{lemma} 
+	The optimizer $w_{s,t}(n)$ forms several regions of ``modes" for different combination of ${n,s,t}$
+\end{lemma}
+\begin{proof}
+	We can plot the graph of real optimizer $w_{s,t}(n)$ against the optimizer for the continuous problem. In the following graph, the horizontal axis from left to right is ratio $r= t/s$ running from $1$ to $10000$ in logarithmic scale, and the vertical axis from up to down is $n$ running from $1$ to $10000$ in logarithmic scale. The color is from the difference $w_{s,t}(n)/n - g_{s,t}$, where $0$ is colored cyan.
+	
+	\includegraphics[scale=0.18]{w-map.png}\,\includegraphics[scale=0.18]{w-map-marked.png}
+	
+	We can see the graph is divided into several regions. We have already discussed mode $M_0$ and $M_1$ above. There are also mode $M_2$, $M_3$ and so on. A new mode $M_{n+1}$ is formed when the "short branch" ($E(w)$ when $w$ is small) falls into mode $M_n$. It is anticipated that there are infinitely many $M_n$ modes, but it is hard to verify as their range of $n$ gets exponentially large.
+	
+	Around $s \approx t$, there is mode $S$, where the graph appears a little bit chaotic.
+\end{proof}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 \section{Back to the classic binary search}
 In the original binary search problem is represented by $s = t = T$. In this case, the recursive equation becomes
@@ -124,88 +469,6 @@ F_{s,t}(n) = T + \min_{0<w<n}\left\{\frac{w}{n}F_{s,t}(w) + \frac{n-w}{n}F_{s,t}
 
 TODO
 
-\section{The graph}
 
-The value of $F_{s,t}(n)$ and $w_{s,t}(n)$ can be calculated by computer program
-
-TODO
-
-From the graph, we can see there are three modes in the curve, separated by some critical points related to $n$:
-\begin{itemize}
-	\item mode 1 in $|\ln(t/s)| \leq 0.5\ln n$, where $w$ forms an S-shaped curve, with high tolerance of optimization range.
-	\item mode 2 in $ 0.5\ln n< |\ln(t/s)| < \ln n$, where $w$ forms a logarithm-like curve (i.e. linear to $t/s$ or $s/t$), with little tolerance of optimization range.
-	\item mode 3 in $|\ln(t/s)| \geq \ln n$, where $w$ stays straight on $1$ or $n-1$.
-\end{itemize}
-
-\begin{lemma}
-	$F_{s,t}(n) = \frac{n - 1}{n}t + \frac{n-1}{2}s,\, 1 \in w_{s,t}(n),\, \forall n \leq t/s + 2$
-\end{lemma}
-\begin{proof}
-	Proof by induction. 
-	\paragraph{Base case} for $n = 1$, $w_{s,t}(1) = \{1\}$ is the only possible value, and $F_{s,t}(1) = 0 = \frac{1 - 1}{1}t + \frac{1-1}{2}s$
-	\paragraph{Inductive step} Assuming $F_{s,t}(k) = \frac{k - 1}{n}t + \frac{k-1}{2}s$ for all $k < n$, we can show that $F_{s,t}(n) = \frac{n - 1}{n}t + \frac{n-1}{2}s$ and $w_{s,t}(n) = 1$ by the following step:
-	\begin{align*}
-	F_{s,t}(n) &= \min_{0<w<n}\left\{\frac{w}{n}(t + F_{s,t}(w)) + \frac{n-w}{n}(s + F_{s,t}(n-w))\right\}\\
-	&= \min_{0<w<n}\left\{\frac{w}{n}(t + \frac{w - 1}{w}t + \frac{w-1}{2}s) + \frac{n-w}{n}(s + \frac{n-w - 1}{n-w}t + \frac{n-w-1}{2}s)\right\}\\
-	&=\min_{0<w<n}\left\{\frac{n+w-2}{n}t + \frac{2w^2+n^2-2nw-2w+n}{2n}s\right\}\\
-	&=\min_{0<w<n}\left\{\frac{s}{n}w^2 + \frac{2t-2ns-2s}{2n}w + 
-	\frac{n-2}{n}t + \frac{n-1}{2n}s\right\}
-	\end{align*}
-	As a quadratic function of $w$, the RHS reaches its minimum at the axis
-	\[
-		w_{axis} = -\frac{2t-2ns-2s}{2n}/\frac{2s}{n} = -\frac{t}{2s} + \frac{n}{2} - \frac{1}{2}
-	\]
-	for $n \leq t/s + 2$, we can show that
-	\[
-	w_{axis} \leq -\frac{t}{2s} + \frac{t}{2s} + 1  - \frac{1}{2} = \frac{1}{2}
-	\]
-	It is obvious that when the axis is less than $1/2$, $w = 1$ is the minimal point among all positive integers, so we have $1 \in w_{s,t}(n)$, and
-	\begin{align*}
-	F_{s,t}(n) &=\frac{n+w-2}{n}t + \frac{2w^2+n^2-2nw-2w+n}{2n}s\\
-	&=\frac{n-1}{n}t + \frac{n^2-n}{2n}s\\
-	&=\frac{n-1}{n}t + \frac{n-1}{2}s
-	\end{align*}
-\end{proof}
-
-\begin{lemma}
-	$F_{s,t}(n) = \frac{n - 1}{n}s + \frac{n-1}{2}t,\, n-1 \in w_{s,t}(n),\, \forall n \leq s/t + 2$
-\end{lemma}
-
-\section{Continuous Approximation}
-
-To get analytical solution in mode 1, we change our discrete equation into a continuous form:
-\begin{align*}
-f_{s,t}(x) &= \min_{0<w<x}^{w\in\mathbb{R}}\left\{\frac{w}{x}(t + f_{s,t}(w)) + \frac{x-w}{x}(s + f_{s,t}(x-w))\right\}\,, x \in\mathbb{R}^+ \ \,.
-\end{align*}
-
-We assume that the solution has the form $f_{s,t}(x) = k_{s,t} \ln x$. Substitute in the equation and we get
-
-\[
-k_{s,t} \ln x = \min_{0<w<x}^{w\in\mathbb{R}}\left\{\frac{w}{x}(t + k_{s,t} \ln w) + \frac{x-w}{x}(s + k_{s,t} \ln (x-w))\right\}
-\]
-
-To find the minimal value of RHS, we study its derivative
-
-\begin{align*}
-&\frac{d}{dw}\left\{\frac{w}{x}(t + k_{s,t} \ln w) + \frac{x-w}{x}(s + k_{s,t} \ln (x-w))\right\}\\
-=& \frac{t}{x} + \frac{k_{s,t}}{x}(\ln w + 1) - \frac{s}{x} - \frac{k_{s,t}}{x}(\ln (x-w) + 1)\\
-=&\frac{t-s}{x} + \frac{k_{s,t}}{x}(\ln w - \ln(x-w))
-\end{align*}
-
-The derivative itself is monotonically increasing in $0<w<x$, and approaches $\pm \infty$ when $w$ approaches $0$ or $x$. Therefore the original function has a single minimal point at derivative $= 0$, which means 
-\begin{align*}
-&&\frac{t-s}{x} + \frac{k_{s,t}}{x}(\ln w - \ln(x-w)) &= 0\\
-\Rightarrow&&k_{s,t} = \frac{s-t}{\ln w - \ln(x-w)}
-\end{align*}
-
-Substitute back to TODO and we get
-\begin{align*}
-&&\frac{s-t}{\ln w - \ln(x-w)} \ln x &= \frac{w}{x}(t + \frac{s-t}{\ln w - \ln(x-w)} \ln w) + \frac{x-w}{x}(s + \frac{s-t}{\ln w - \ln(x-w)} \ln (x-w))\\
-\Rightarrow&&x(s-t)\ln x& = w(s\ln w- t\ln (x-w) ) +(x-w)(s\ln w   -t\ln (x-w))\\
-\Rightarrow&&x(s-t)\ln x& = sx\ln w - tx \ln (x-w)\\
-\Rightarrow&&s \ln x - t \ln x &= s \ln w - t \ln (x-w)\\
-\Rightarrow&&t\ln\frac{x-w}{x} &= s\ln\frac{w}{x}\\
-\Rightarrow&&\frac{\ln u }{ \ln (1-u)}&= \frac{t}{s} \qquad (\textrm{let } u = \frac{w}{x})
-\end{align*}
 
 \end{document}

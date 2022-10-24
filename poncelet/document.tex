@@ -586,5 +586,35 @@ We then multiply all these equations for $k$ from $1$ to $n$ together, and we ge
 \frac{\ud \theta_{n}}{\ud \theta_{0}}  = \frac{\mathfrak{T}(\theta_{n})}{\mathfrak{T}(\theta_{0})}
 \]
 We can see this as a differential equation for the function $\theta_n = \mathfrak{P}(\theta_0) =\mathfrak{p}^n(\theta_0)$. Given $A_n = A_0$, we got an initial condition for this differential equation: there exists a $\vartheta$ such that $\mathfrak{P}(\vartheta) = \vartheta + 2\pi m$ for some integer $m$. Knowing that $\mathfrak{T}$ has a period of $2\pi$, we can verify that $\mathfrak{P}(\theta_0) = \theta_0 + 2\pi m$ is a solution to this differential equation, and is the unique solution given by Cauchy-Lipschitz Theorem. Therefore we proved that the closure forms for any initial point $A_0$.
+
+\section{The sphere and torus}
+
+Let's continue looking at the differential property with a general conic section for the inner curve (with the outer curve still being the unit circle). Similar before, we say that the inner curve is a family of linear interpolated curves:
+\[
+\Phi: \lambda(x^2+y^2 - 1) + E(x, y) = 0
+\]
+where $E$ is a polynomial of degree 2. It can be similarly derived that, for a point $(\cos\theta, \sin\theta)$ on the outer circle, its trajectory respective to the ``time" $t$ would have the derivative
+\[
+\frac{\ud \theta}{\ud t} \propto \sqrt{E(\cos\theta, \sin\theta)}
+\]
+One can also show that this can be expressed in terms of the four intersections $(x_i, y_i)$ of the curve and the circle (the particular equation relating $E(x,y)$ with intersections with the unit circle is true for polynomials of any degree)
+\[
+\frac{\ud \theta}{\ud t} \propto\sqrt[4]{\prod_{k=1}^{4}(\cos\theta - x_i)^2 + (\sin\theta-y_i)^2}
+\]
+We can extend this to complex $\theta$ for curves in $P\mathbb{C}^2$. We can map the points on the (complexified) circle conformally to the complex plane by
+\[
+(\cos\theta, \sin\theta) \mapsto e^{i\theta}
+\]
+which can then be conformally mapped to the Riemann sphere
+\[
+e^{i\theta} = re^{i\vartheta} \mapsto \left(\frac{2r\cos\vartheta}{r^2+1}, \frac{2r\sin\vartheta}{r^2+1}, \frac{r^2-1}{r^+1}\right)
+\]
+The point $(\cos\theta, \sin\theta)$ is mapped to point $A$ on the sphere, and the intersections are mapped to $X_i$. With some careful calculation, we can find the differential of $A$ on the sphere satisfies
+\[
+\left|\frac{\ud A}{\ud t}\right| \propto \sqrt{\prod_{k=1}^{4}||AX_i||}
+\]
+where $||AX_i||$ is simply the distance between $A$ and $X_i$ when the sphere is embedded in the Euclidean $\mathbb{R}^3$. This relation is rotational symmetrical with respect to the sphere.
+
+This essentially defines 2-covering of a torus ($\mathbb{C}/\Lambda$) onto a sphere ($P\mathbb{C}^1$)  with the four intersections being the ramification points.
  
 \end{document}
