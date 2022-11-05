@@ -374,24 +374,143 @@ In the case of $n=10$, the vertical lines at nodes don't exceed the $w$ range of
 	\]
 \end{proof}
 
+
 \hspace{1cm}
 \begin{lemma} 
-	(Mode $M_1$) For $k = 1,2,\dots$, the optimizer takes value in the following ranges:
-	
+	(Mode $M_1$)  For $k = 1,2,\dots,\lfloor t/s\rfloor + 2$ and  $p = 0, 1, \dots k - 1$, and non-integer $t/s > 2$
+	\[
+		R = \left\lfloor\frac{t}{s}\right\rfloor
+	\]
+	\[
+		n_{k,p} = R + \frac{1}{2}k(k-1) + 1 + p
+	\]
 	\begin{align*}
-	&w_{s,t}(n) = \{k\},\quad &\text{ for } \frac{t}{s} \in \left(n - \left(\frac{1}{2}k(k+1) + 1\right), n - \left(\frac{1}{2}k(k+1) - 1\right)\right)\\
-	&w_{s,t}(n) = \{k, k + 1\},\quad &\text{ for } \frac{t}{s} \in \left[ n - \left(\frac{1}{2}k(k+3)\right), n - \left(\frac{1}{2}k(k+1) + 1\right) \right]
+	    w_{s,t}(n_{k, 0}) &= \{k-1\} &\quad(k\geq 2)\\
+	    w_{s,t}(n_{k, p}) &= \{k-1, k\}&\quad (k\geq 3 \text{ and } 1 <p<k-1)\\
+	    w_{s,t}(n_{k, k-1}) &= \{k\}\\
 	\end{align*}
-	
-	The first equation for $k=1$ overlaps with Mode $M_0$, and the value agrees. And then the two equations specifies the optimizer value for each $t/s$ segments alternately.
-
-	This mode ends at (TODO).
-	
-	There is also a symmetrical Mode $M_1$ region for small $\frac{t}{s}$ omitted here.
-	
+	\[
+	E_{s,t}(n_{k, p}) = \left(R+(k-1)^2+2p\right)t + \left( \frac{1}{3}(k^3-3k^2+(3R+5)k+\frac{3}{2}(R+1)(R-2)) + p(k-1) \right) s
+	\]
 \end{lemma}
 \begin{proof}
-	TODO
+
+Mode $M_1$ chops the $(n, E(n))$ curve into $(R + 2)$ segments with increasing size. e.g. The first segment $S_1$ covers $n = \{n_{1,0}\} = \{R + 1\}$, the segment $S_2$ covers $n = \{n_{2,0},n_{2,1}\} = \{R + 2, R + 3\}$, and so on. Note that the first segment $S_1$ is inside mode $M_0$, and the second segment $S_2$ overlaps with the end of $M_0$ at the first $n$.
+
+We will prove the property using induction.
+
+\paragraph{Base case} Since the first segment $S_1$ is inside $M_0$, we can verify using the previous property. Indeed, we have
+\begin{align*}
+w(n_{1,0}) &= w(R + 1) = \{1\} \\
+E(n_{1,0}) &= E(R + 1) = Rt + \frac{1}{2}R(R+1)s\\
+ &= (R+(1-1)^2+2\cdot 0)t + \left( \frac{1}{3}(1^3-3\cdot1^2+(3R+5)\cdot 1+\frac{3}{2}(R+1)(R-2)) + 0\cdot(1-1) \right) s
+\end{align*}
+The value for $w(n)$ is irregular at $k=1$ comparing to the rest in mode $M_1$, but we won't use it in induction, so it doesn't matter. 
+
+The first point of $S_2$ is also the last point of $M_0$, let's verify it:
+\begin{align*}
+w(n_{2,0}) &= w(R + 2) = \{1\}\\
+E(n_{2,0}) &= E(R + 2) = (R+1)t+\frac{1}{2}(R+1)(R+2)s\\
+&= \left(R+1^2+2\cdot0\right)t + \left( \frac{1}{3}(2^3-3\cdot 2^2+(3R+5)\cdot 2+\frac{3}{2}(R+1)(R-2)) + 0\cdot 1 \right) s
+\end{align*}
+
+The second point of $S_2$ is just outside $M_0$. We can continue our previous proof for $M_0$ to find the value of this point. The quadratic function to minimize still holds (because all previous points are still in $M_0$), however its axis is now moved closer to 2:
+\[
+w_{axis} =  \frac{1}{2}\left(-\frac{t}{s} + n+1\right) =  \frac{1}{2}\left(-\frac{t}{s} + R+3 +1\right)\in\left(\frac{3}{2}, 2\right) \implies w(n_{2,1}) = \{2\}
+\]
+\begin{align*}
+E(n_{2,1}) &= E(R + 3) = 4s + 2(t-(R+4)s) + (R+1)t+\frac{1}{2}(R+3)(R+4)s = (R+3)t + \left(\frac{1}{2}R^2+\frac{3}{2}R+2\right)s\\
+&=\left(R+1^2+2\cdot 1\right)t + \left( \frac{1}{3}(2^3-3\cdot 2^2+(3R+5)\cdot 2+\frac{3}{2}(R+1)(R-2)) + 1\cdot 1 \right) s
+\end{align*}
+
+We have verified that the formula for $M_1$ holds for segments $S_1$ and $S_2$. In the inductive step, we will use these base to proof the formula for $S_k$ where $k \geq3$
+
+\paragraph{Inductive step}
+We assume that $E(m)$ for all $m <n$ satisfies the corresponding $M_0$ or $M_1$ formula, and we want to compute the next value $E(n)$ to verify that it also satisfies the formula. Using the property that function $E(n)$ is convex over $n$, we know that as long as we find a local minimum of $E(w)+E(n-w)+wt+(n-w)s$, it will be the global minimum and be the value of $E(n)$.
+
+If you don't want to use the general convexity property [this is not proved yet], here is a proof that mode $M_0$ and $M_1$ are convex. Mode $M_0$ itself is obviously convex, as it is a quadratic function over $n$. Each segment $S_k$ of $M_1$ is also obviously convex, as it is linear over $p$, which in turn is linear over $n$. We only need to prove that the "transition" between segments are also convex. For the transition from $M_0$ to $S_2$ (we skip $S_1$ because it is inside $M_0$), we have
+\begin{align*}
+\Delta E(R+1) &= E(R+2) - E(R+1) = t + (R+1)s\quad&\text{(the last two points of $M_0$)}\\
+\Delta E(R+2) &= E(R+3) - E(R+2) = 2t + s\quad&\text{(the first two points of $S_2$)}\\
+\Delta E(R+1) &< \Delta E(R+2) \quad&\left(R = \left\lfloor\frac{t}{s}\right\rfloor < \frac{t}{s}\right)
+\end{align*}
+thus the transition from $M_0$ to $S_2$ is convex. And then for transition from $S_k$ to $S_{k+1}$, we have
+\begin{align*}
+\Delta E(n_{k,k-2}) &= E(n_{k,k-1}) - E(n_{k,k-2}) = 2t + (k-1)s\quad&\text{(the last two points of $S_k$)}\\
+\Delta E(n_{k,k-1}) &= E(n_{k+1, 0}) - E(n_{k,k-1}) = t + (k+R)s\quad&\text{(the connecting segment)}\\
+\Delta E(n_{k+1,0}) &= E(n_{k+1, 1}) - E(n_{k+1,0}) = 2t + ks\quad&\text{(the first two points of $S_{k+1}$)}\\
+\Delta E(n_{k,k-2}) &<  \Delta E(n_{k,k-1}) < \Delta E(n_{k+1,0}) \quad&\left(\frac{t}{s} -1 < R = \left\lfloor\frac{t}{s}\right\rfloor < \frac{t}{s}\right)
+\end{align*}
+thus the transition from $S_k$ to $S_{k+1}$ is convex. We have shown that $E(m)$ for all $m<n$, assuming the formula is correct, is convex.
+
+Now for $n = n_{k, p}$, lets consider $G(n, w) = E(w) + E(n-w) + wt + (n-w)s$. It has the following differential equation
+\begin{align*}
+\Delta_w G(n, w) &= G(n, w+1)-G(n, w) \\
+&= \Delta E(w) - \Delta E(n-w-1) + t -s
+\end{align*}
+and then let's look at the differentials between $w = k-2, k-1, k, k+1$ (remember we are discussing $k\geq3$ and $n > R + k(k-1)/2 $ so these are all valid $w$):
+\begin{align*}
+\Delta_w G(n_{k,p}, k-2) &=  \Delta E(k-2) - \Delta E(n-k+1) + t -s \\
+&= t+(k-2)s - \begin{cases}
+2t + (k-2)s\ &(0\leq p \leq k-3)\\
+t + (k-1+R)s\ &(p = k-2)\\
+2t + (k-1)s\ &(p = k-1)
+\end{cases} + t-s\\
+&\leq s \\
+&< 0 \\ \\
+\Delta_w G(n_{k,p}, k-1) &=  \Delta E(k-1) - \Delta E(n-k) + t -s \\
+&= t+(k-1)s - \begin{cases}
+t + (k-2+R)s\ &(p =0)\\
+2t + (k-2)s\ &(1\leq p\leq k-2)\\
+t + (k-1+R)s\ &(p = k-1)
+\end{cases} + t-s\\
+&= \begin{cases}
+t -Rs > 0\ &(p =0)\\
+0\ &(1\leq p \leq k-2)\\
+t -(R+1)s < 0\ &(p = k-1)
+\end{cases}\\ \\ 
+\Delta_w G(n_{k,p}, k) &=  \Delta E(k) - \Delta E(n-k-1) + t -s \\
+&= \begin{cases}
+t+ks &(k \leq R + 1)\\
+2t+s&(k = R + 2)
+\end{cases} - \begin{cases}
+2t + (k-3)s\ &(p =0)\\
+t + (k-2+R)s\ &(p =1)\\
+2t + (k-2)s\ &(3\leq p \leq k-2)\\
+\end{cases} + t-s\\
+&\geq \begin{cases}
+s &(k \leq R + 1)\\
+t-Rs&(k = R + 2)
+\end{cases}\\
+&>0
+\end{align*}
+Because $\Delta_w G(n_{k,p}, k-2) < 0 $ and $\Delta_w G(n_{k,p}, k) > 0$, the minimum must be among $G(n_{k,p},k-1)$ and $G(n_{k,p},k)$. This depends on the sign of $\Delta_w G(n_{k,p}, k-1)$:
+\[
+\begin{cases}
+p = 0 &\implies \Delta_w G(n_{k,p}, k-1) > 0 \implies w(n_{k,p})  = \{k-1\}\\
+1\leq p \leq k-2 &\implies \Delta_w G(n_{k,p}, k-1) = 0 \implies w(n_{k,p})  = \{k-1, k\}\\
+p = k-1 &\implies \Delta_w G(n_{k,p}, k-1) < 0 \implies w(n_{k,p})  = \{k\}
+\end{cases}
+\]
+Now we can calculate $E(n_{k,p})$. For $0\leq p \leq k-2$, we have
+\begin{align*}
+E(n_{k,p}) &= G(n_{k,p}, k-1) \\
+&= E(k-1) + E(n_{k,p} - (k-1)) + (k-1)t + (n_{k,p} - (k-1))s\\
+&=E(k-1) + E(n_{k-1,p}) + (k-1)t + n_{k-1,p}s\\
+&=(k-2)t + \frac{1}{2}(k-1)(k-2)s\\ & + \left(R+(k-2)^2+2p\right)t + \left( \frac{1}{3}((k-1)^3-3(k-1)^2+(3R+5)(k-1)+\frac{3}{2}(R+1)(R-2)) + p(k-2) \right) s \\&+ (k-1)t + \left(R + \frac{1}{2}(k-1)(k-2) + 1 + p\right)s\\
+&=\left(R+(k-1)^2+2p\right)t+ \left( \frac{1}{3}(k^3-3k^2+(3R+5)k+\frac{3}{2}(R+1)(R-2)) + p(k-1) \right) s
+\end{align*}
+and for $1\leq p \leq k-1$, we have
+\begin{align*}
+E(n_{k,p}) &= G(n_{k,p}, k) \\
+&= E(k) + E(n_{k,p} - k) + kt + (n_{k,p} - k)s\\
+&=E(k) + E(n_{k-1,p-1}) + kt + n_{k-1,p-1}s\\
+&=(k-1)t + \frac{1}{2}k(k-1)s
+\\&+\left(R+(k-2)^2+2(p-1)\right)t + \left( \frac{1}{3}((k-1)^3-3(k-1)^2+(3R+5)(k-1)+\frac{3}{2}(R+1)(R-2)) + (p-1)(k-2) \right) s
+\\&+kt + \left(R + \frac{1}{2}(k-1)(k-2) + p\right)s
+\\&=\left(R+(k-1)^2+2p\right)t+ \left( \frac{1}{3}(k^3-3k^2+(3R+5)k+\frac{3}{2}(R+1)(R-2)) + p(k-1) \right) s
+\end{align*}
+
 \end{proof}
 
 \hspace{1cm}
