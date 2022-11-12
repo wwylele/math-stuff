@@ -88,9 +88,9 @@ minimum height=2em]
 
 \section{The equation}
  
-The step $(*)$ is the only place we need to decide how to do exactly. It can be seen that on each iteration, the algorithm is effectively solving the same problem with a smaller size where $n = p - q$, therefore we can choose x by some function $w(n, s, t)$ as
+The step $(*)$ is the only place we need to decide how to do exactly. It can be seen that on each iteration, the algorithm is effectively solving the same problem with a smaller size where $n = p - q$, therefore we can choose x by some function $w_{s,t}(n)$ as
 \[
-x = w(p - q, s, t) + p \,,
+x = w_{s,t}(p - q) + p \,,
 \]
 and the expectation of total time $F_{s,t}(n)$ can be expressed recursively as
 \begin{equation}
@@ -107,7 +107,8 @@ F_{s,t}(n) &= \min_{0<w<n}^{w\in\mathbb{Z}}\left\{\frac{w}{n}(t + F_{s,t}(w)) + 
 To simplify further analysis, we define the ``normalized" function $E(n) = nF(n)$, which satisfies the following recursive relation
 \begin{align*}
 E_{s,t}(1) &= 0\,,\\
-E_{s,t}(n) &= \min_{0<w<n}^{w\in\mathbb{Z}}\{E_{s,t}(w) + E_{s,t}(n-w) + wt +(n-w)s\} \textrm{ for } n > 1 \,.
+D^{w}_{s,t}(n) &= E_{s,t}(w) + E_{s,t}(n-w) + wt +(n-w)s,&\textrm{ for } n > 1, w=1,2,\dots,n-1, \\
+E_{s,t}(n) &= \min_{0<w<n}^{w\in\mathbb{Z}}\{D^{w}_{s,t}(n)\} = D^{w_{s,t}(n)}_{s,t}(n) &\textrm{ for } n > 1 \,.
 \end{align*}
 
 Now let's analyze the function $E_{s,t}(n)$, which represents the expected time scaled by $n$, and the optimizer $w = w_{s,t}(n)$, which represents which commit you should test next given parameters $(n,s,t)$.
@@ -338,7 +339,7 @@ If we graph $w$ over $t$, we will get a series of ``blocks", separated by vertic
 
 We omitted the graph beyond $t=1$, but remember that it can be derived by $w_{1,t}(n) = n - w_{1,1/t}(n)$ due to symmetry and homogeneity.
 
-In the case of $n=10$, the vertical lines at nodes don't exceed the $w$ range of its adjacent blocks, but this is not always true for larger $n$. Some vertical lines can looks ``spiky", demonstrating a much larger set of $w$ than the adjacent blocks. This also demonstrates the non-monotonicity of $w_{max}$ and $w_{min}$ over $t$, even though the graph generally looks monotonic. 
+In the case of $n=10$, the vertical lines at nodes don't exceed the $w$ range of its adjacent blocks, but this is not always true for larger $n$. Some vertical lines can looks ``spiky", demonstrating a much larger set of $w$ than the adjacent blocks. This also demonstrates the non-monotonicity of $w^{max}$ and $w^{min}$ over $t$, even though the graph generally looks monotonic. 
 
 \hspace{1cm}
 \begin{lemma} (Mode $M_0$) The optimizer degenerates at extreme $s/t$ ratio
@@ -360,42 +361,41 @@ In the case of $n=10$, the vertical lines at nodes don't exceed the $w$ range of
 	\]
 	\paragraph{Inductive step} Assuming $E_{s,t}(k) = (k-1)t + \frac{1}{2}k(k-1)s$ holds for all $k = 1,2,\dots n-1$ and $t/s > k - 2$, we can show that, for $t/s > n - 2 > k - 2$:
 	\begin{align*}
-	E_{s,t}(n) &= \min_{0<w<n}\{E_{s,t}(w) + E_{s,t}(n-w)+wt+(n-w)s\} \\
-	&=\min_{0<w<n}\left\{(w-1)t + \frac{1}{2}w(w-1)s + (n-w-1)t + \frac{1}{2}(n-w)(n-w-1)s+wt+(n-w)s\right\}\\
-	&=\min_{0<w<n}\left\{ sw^2 + (t-(n+1)s)w + (n-2)t + \frac{1}{2}n(n+1)s \right\}
+	D^w_{s,t}(n) &= E_{s,t}(w) + E_{s,t}(n-w)+wt+(n-w)s \\
+	&=(w-1)t + \frac{1}{2}w(w-1)s + (n-w-1)t + \frac{1}{2}(n-w)(n-w-1)s+wt+(n-w)s\\
+	&= sw^2 + (t-(n+1)s)w + (n-2)t + \frac{1}{2}n(n+1)s 
 	\end{align*}
-	The function we want to minimize is quadratic, which has the axis 
+	The function $D^w_{s,t}(n)$ is quadratic, which has the axis 
 	\[
 		w_{axis} = -\frac{t-(n+1)s}{2s} = \frac{1}{2}\left(-\frac{t}{s} + n+1\right) < \frac{3}{2}
 	\]
 	The integer $w$ that's the closest to the axis gets the minimal value. We can see that $w=1$ is always the closest to the axis, therefore it minimize the function to
 	\[
-		E_{s,t}(n)=s + (t-(n+1)s) + (n-2)t + \frac{1}{2}n(n+1)s = (n-1)t + \frac{1}{2}n(n-1)s
+		E_{s,t}(n) = D^1_{s,t}(n) =s + (t-(n+1)s) + (n-2)t + \frac{1}{2}n(n+1)s = (n-1)t + \frac{1}{2}n(n-1)s
 	\]
 \end{proof}
 
 
 \hspace{1cm}
 \begin{lemma} 
-	(Mode $M_1$)  For $k = 1,2,\dots,\lfloor t/s\rfloor + 2$ and  $p = 0, 1, \dots k - 1$, and non-integer $t/s > 2$
-	\[
-		R = \left\lfloor\frac{t}{s}\right\rfloor
-	\]
+	(Mode $M_1$)  For $R = \lfloor t/s\rfloor \geq 2$, $k = 1,2,\dots,R + 2$ and  $p = 0, 1, \dots k - 1$
 	\[
 		n_{k,p} = R + \frac{1}{2}k(k-1) + 1 + p
 	\]
 	\begin{align*}
-	    w_{s,t}(n_{k, 0}) &= \{k-1\} &\quad(k\geq 2)\\
+	    w_{s,t}(n_{k, 0}) &= \{k-1\} &\quad(k\geq 2, t/s\notin\mathbb{Z})\\
+	    w_{s,t}(n_{k, 0}) &= \{k-1, k\} &\quad(k\geq 2, t/s\in\mathbb{Z})\\
 	    w_{s,t}(n_{k, p}) &= \{k-1, k\}&\quad (k\geq 3 \text{ and } 1 <p<k-1)\\
 	    w_{s,t}(n_{k, k-1}) &= \{k\}\\
 	\end{align*}
+	(However, if $t/s\in\mathbb{Z}$ and $k=R+2$, the $w_{s,t}(n_{k, p})$ set could be a superset of what's listed above )
 	\[
 	E_{s,t}(n_{k, p}) = \left(R+(k-1)^2+2p\right)t + \left( \frac{1}{3}(k^3-3k^2+(3R+5)k+\frac{3}{2}(R+1)(R-2)) + p(k-1) \right) s
 	\]
 \end{lemma}
 \begin{proof}
 
-Mode $M_1$ chops the $(n, E(n))$ curve into $(R + 2)$ segments with increasing size. e.g. The first segment $S_1$ covers $n = \{n_{1,0}\} = \{R + 1\}$, the segment $S_2$ covers $n = \{n_{2,0},n_{2,1}\} = \{R + 2, R + 3\}$, and so on. Note that the first segment $S_1$ is inside mode $M_0$, and the second segment $S_2$ overlaps with the end of $M_0$ at the first $n$.
+Mode $M_1$ chops the $(n, E(n))$ curve into $(R + 2)$ segments with increasing size. e.g. The first segment $S_1$ covers $n = \{n_{1,0}\} = \{R + 1\}$, the segment $S_2$ covers $n = \{n_{2,0},n_{2,1}\} = \{R + 2, R + 3\}$, and so on. Note that the first segment $S_1$ is inside mode $M_0$, and the second segment $S_2$ overlaps with the end of $M_0$ at the first $n$ (except for $t/s\in\mathbb{Z}$).
 
 We will prove the property using induction.
 
@@ -407,16 +407,17 @@ E(n_{1,0}) &= E(R + 1) = Rt + \frac{1}{2}R(R+1)s\\
 \end{align*}
 The value for $w(n)$ is irregular at $k=1$ comparing to the rest in mode $M_1$, but we won't use it in induction, so it doesn't matter. 
 
-The first point of $S_2$ is also the last point of $M_0$, let's verify it:
+If $t/s\notin\mathbb{Z}$, the first point of $S_2$ is also the last point of $M_0$, let's verify it:
 \begin{align*}
 w(n_{2,0}) &= w(R + 2) = \{1\}\\
 E(n_{2,0}) &= E(R + 2) = (R+1)t+\frac{1}{2}(R+1)(R+2)s\\
 &= \left(R+1^2+2\cdot0\right)t + \left( \frac{1}{3}(2^3-3\cdot 2^2+(3R+5)\cdot 2+\frac{3}{2}(R+1)(R-2)) + 0\cdot 1 \right) s
 \end{align*}
+This formula is actually also applicable to $t/s\notin\mathbb{Z}$. However, in that case $w_{axis} = 3/2$, so we have $w(n_{2,0}) = {1, 2}$, but the value for $E(n_{2,0})$ still applies.
 
 The second point of $S_2$ is just outside $M_0$. We can continue our previous proof for $M_0$ to find the value of this point. The quadratic function to minimize still holds (because all previous points are still in $M_0$), however its axis is now moved closer to 2:
 \[
-w_{axis} =  \frac{1}{2}\left(-\frac{t}{s} + n+1\right) =  \frac{1}{2}\left(-\frac{t}{s} + R+3 +1\right)\in\left(\frac{3}{2}, 2\right) \implies w(n_{2,1}) = \{2\}
+w_{axis} =  \frac{1}{2}\left(-\frac{t}{s} + n+1\right) =  \frac{1}{2}\left(-\frac{t}{s} + R+3 +1\right)\in\left(\frac{3}{2}, 2\right] \implies w(n_{2,1}) = \{2\}
 \]
 \begin{align*}
 E(n_{2,1}) &= E(R + 3) = 4s + 2(t-(R+4)s) + (R+1)t+\frac{1}{2}(R+3)(R+4)s = (R+3)t + \left(\frac{1}{2}R^2+\frac{3}{2}R+2\right)s\\
@@ -428,29 +429,32 @@ We have verified that the formula for $M_1$ holds for segments $S_1$ and $S_2$. 
 \paragraph{Inductive step}
 We assume that $E(m)$ for all $m <n$ satisfies the corresponding $M_0$ or $M_1$ formula, and we want to compute the next value $E(n)$ to verify that it also satisfies the formula. Using the property that function $E(n)$ is convex over $n$, we know that as long as we find a local minimum of $E(w)+E(n-w)+wt+(n-w)s$, it will be the global minimum and be the value of $E(n)$.
 
-If you don't want to use the general convexity property [this is not proved yet], here is a proof that mode $M_0$ and $M_1$ are convex. Mode $M_0$ itself is obviously convex, as it is a quadratic function over $n$. Each segment $S_k$ of $M_1$ is also obviously convex, as it is linear over $p$, which in turn is linear over $n$. We only need to prove that the "transition" between segments are also convex. For the transition from $M_0$ to $S_2$ (we skip $S_1$ because it is inside $M_0$), we have
+If you don't want to use the general convexity property [this is not proved yet], here is a proof that mode $M_0$ and $M_1$ are convex. Mode $M_0$ itself is obviously convex, as it is a quadratic function over $n$. Each segment $S_k$ of $M_1$ is also obviously convex, as it is linear over $p$, which in turn is linear over $n$. We only need to prove that the ``transition" between segments are also convex. For the transition from $M_0$ to $S_2$ (we skip $S_1$ because it is inside $M_0$), we have
 \begin{align*}
-\Delta E(R+1) &= E(R+2) - E(R+1) = t + (R+1)s\quad&\text{(the last two points of $M_0$)}\\
+\Delta E(R+1) &= E(R+2) - E(R+1) = t + (R+1)s\quad&\begin{cases}
+\text{(the last two points of $M_0$, $t/s\notin\mathbb{Z}$)}\\
+\text{(the connecting segment between $M_0$ and $S_2$, $t/s\in\mathbb{Z}$)}
+\end{cases}\\
 \Delta E(R+2) &= E(R+3) - E(R+2) = 2t + s\quad&\text{(the first two points of $S_2$)}\\
-\Delta E(R+1) &< \Delta E(R+2) \quad&\left(R = \left\lfloor\frac{t}{s}\right\rfloor < \frac{t}{s}\right)
+\Delta E(R+1) &\leq \Delta E(R+2) \quad&\left(R = \left\lfloor\frac{t}{s}\right\rfloor \leq \frac{t}{s}\right)
 \end{align*}
 thus the transition from $M_0$ to $S_2$ is convex. And then for transition from $S_k$ to $S_{k+1}$, we have
 \begin{align*}
 \Delta E(n_{k,k-2}) &= E(n_{k,k-1}) - E(n_{k,k-2}) = 2t + (k-1)s\quad&\text{(the last two points of $S_k$)}\\
 \Delta E(n_{k,k-1}) &= E(n_{k+1, 0}) - E(n_{k,k-1}) = t + (k+R)s\quad&\text{(the connecting segment)}\\
 \Delta E(n_{k+1,0}) &= E(n_{k+1, 1}) - E(n_{k+1,0}) = 2t + ks\quad&\text{(the first two points of $S_{k+1}$)}\\
-\Delta E(n_{k,k-2}) &<  \Delta E(n_{k,k-1}) < \Delta E(n_{k+1,0}) \quad&\left(\frac{t}{s} -1 < R = \left\lfloor\frac{t}{s}\right\rfloor < \frac{t}{s}\right)
+\Delta E(n_{k,k-2}) &<  \Delta E(n_{k,k-1}) \leq \Delta E(n_{k+1,0}) \quad&\left(\frac{t}{s} -1 < R = \left\lfloor\frac{t}{s}\right\rfloor \leq \frac{t}{s}\right)
 \end{align*}
 thus the transition from $S_k$ to $S_{k+1}$ is convex. We have shown that $E(m)$ for all $m<n$, assuming the formula is correct, is convex.
 
-Now for $n = n_{k, p}$, lets consider $G(n, w) = E(w) + E(n-w) + wt + (n-w)s$. It has the following differential equation
+Now for $n = n_{k, p}$, lets consider $D^w(n) = E(w) + E(n-w) + wt + (n-w)s$. It has the following differential equation
 \begin{align*}
-\Delta_w G(n, w) &= G(n, w+1)-G(n, w) \\
+\Delta_w D^w(n) &= D^{w+1}(n)-D^w(n) \\
 &= \Delta E(w) - \Delta E(n-w-1) + t -s
 \end{align*}
 and then let's look at the differentials between $w = k-2, k-1, k, k+1$ (remember we are discussing $k\geq3$ and $n > R + k(k-1)/2 $ so these are all valid $w$):
 \begin{align*}
-\Delta_w G(n_{k,p}, k-2) &=  \Delta E(k-2) - \Delta E(n-k+1) + t -s \\
+\Delta_w D^{k-2}(n_{k,p}) &=  \Delta E(k-2) - \Delta E(n_{k,p}-k+1) + t -s \\
 &= t+(k-2)s - \begin{cases}
 2t + (k-2)s\ &(0\leq p \leq k-3)\\
 t + (k-1+R)s\ &(p = k-2)\\
@@ -458,43 +462,45 @@ t + (k-1+R)s\ &(p = k-2)\\
 \end{cases} + t-s\\
 &\leq s \\
 &< 0 \\ \\
-\Delta_w G(n_{k,p}, k-1) &=  \Delta E(k-1) - \Delta E(n-k) + t -s \\
+\Delta_w D^{k-1}(n_{k,p}) &=  \Delta E(k-1) - \Delta E(n_{k,p}-k) + t -s \\
 &= t+(k-1)s - \begin{cases}
 t + (k-2+R)s\ &(p =0)\\
 2t + (k-2)s\ &(1\leq p\leq k-2)\\
 t + (k-1+R)s\ &(p = k-1)
 \end{cases} + t-s\\
 &= \begin{cases}
-t -Rs > 0\ &(p =0)\\
+t -Rs \geq 0\ &(p =0)\\
 0\ &(1\leq p \leq k-2)\\
 t -(R+1)s < 0\ &(p = k-1)
 \end{cases}\\ \\ 
-\Delta_w G(n_{k,p}, k) &=  \Delta E(k) - \Delta E(n-k-1) + t -s \\
+\Delta_w D^{k}(n_{k,p}) &=  \Delta E(k) - \Delta E(n_{k,p}-k-1) + t -s \\
 &= \begin{cases}
 t+ks &(k \leq R + 1)\\
 2t+s&(k = R + 2)
 \end{cases} - \begin{cases}
 2t + (k-3)s\ &(p =0)\\
 t + (k-2+R)s\ &(p =1)\\
-2t + (k-2)s\ &(3\leq p \leq k-2)\\
+2t + (k-2)s\ &(2\leq p \leq k-2)\\
 \end{cases} + t-s\\
 &\geq \begin{cases}
 s &(k \leq R + 1)\\
 t-Rs&(k = R + 2)
 \end{cases}\\
-&>0
+&\geq0 \text{ (equality only when $k=R+2$, $p\geq 2$ and $t/s\in\mathbb{Z}$)}
 \end{align*}
-Because $\Delta_w G(n_{k,p}, k-2) < 0 $ and $\Delta_w G(n_{k,p}, k) > 0$, the minimum must be among $G(n_{k,p},k-1)$ and $G(n_{k,p},k)$. This depends on the sign of $\Delta_w G(n_{k,p}, k-1)$:
+Because $\Delta_w D^{k-2}(n_{k,p}) < 0 $ and $\Delta_w D^k(n_{k,p}) > 0$ (excluding $k=R+2$ and $t/s\in\mathbb{Z}$), the minimum must be among $D^{k-1}(n_{k,p})$ and $D^k(n_{k,p})$. This depends on the sign of $\Delta_w D^{k-1}(n_{k,p})$:
 \[
 \begin{cases}
-p = 0 &\implies \Delta_w G(n_{k,p}, k-1) > 0 \implies w(n_{k,p})  = \{k-1\}\\
-1\leq p \leq k-2 &\implies \Delta_w G(n_{k,p}, k-1) = 0 \implies w(n_{k,p})  = \{k-1, k\}\\
-p = k-1 &\implies \Delta_w G(n_{k,p}, k-1) < 0 \implies w(n_{k,p})  = \{k\}
+p = 0 &\implies \Delta_w D^{k-1}(n_{k,p}) \geq 0 \implies w(n_{k,p})  = \begin{cases}\{k-1\} &(t/s\notin\mathbb{Z}) \\ \{k-1, k\} &(t/s\in\mathbb{Z})\end{cases} \\
+1\leq p \leq k-2 &\implies \Delta_w D^{k-1}(n_{k,p}) = 0 \implies w(n_{k,p})  = \{k-1, k\}\\
+p = k-1 &\implies \Delta_w D^{k-1}(n_{k,p}) < 0 \implies w(n_{k,p})  = \{k\}
 \end{cases}
 \]
+For the special case $k=R+2$ and $t/s\in\mathbb{Z}$, the $w$ values above are still valid, but because of the potential $\Delta_w D^k(n_{k,p}) = 0$, there could be more $w$ that minimizes $D^w(n)$.
+
 Now we can calculate $E(n_{k,p})$. For $0\leq p \leq k-2$, we have
 \begin{align*}
-E(n_{k,p}) &= G(n_{k,p}, k-1) \\
+E(n_{k,p}) &= D^{k-1}(n_{k,p}) \\
 &= E(k-1) + E(n_{k,p} - (k-1)) + (k-1)t + (n_{k,p} - (k-1))s\\
 &=E(k-1) + E(n_{k-1,p}) + (k-1)t + n_{k-1,p}s\\
 &=(k-2)t + \frac{1}{2}(k-1)(k-2)s\\ & + \left(R+(k-2)^2+2p\right)t + \left( \frac{1}{3}((k-1)^3-3(k-1)^2+(3R+5)(k-1)+\frac{3}{2}(R+1)(R-2)) + p(k-2) \right) s \\&+ (k-1)t + \left(R + \frac{1}{2}(k-1)(k-2) + 1 + p\right)s\\
@@ -502,7 +508,7 @@ E(n_{k,p}) &= G(n_{k,p}, k-1) \\
 \end{align*}
 and for $1\leq p \leq k-1$, we have
 \begin{align*}
-E(n_{k,p}) &= G(n_{k,p}, k) \\
+E(n_{k,p}) &= D^{k}(n_{k,p}) \\
 &= E(k) + E(n_{k,p} - k) + kt + (n_{k,p} - k)s\\
 &=E(k) + E(n_{k-1,p-1}) + kt + n_{k-1,p-1}s\\
 &=(k-1)t + \frac{1}{2}k(k-1)s
@@ -513,6 +519,16 @@ E(n_{k,p}) &= G(n_{k,p}, k) \\
 
 \end{proof}
 
+
+\hspace{1cm}
+\begin{lemma} 
+	(Fancy mode $M_1$) for $3\leq t/s +1 \leq n \leq \lfloor t/s\rfloor^2/2+5\lfloor t/s\rfloor / 2 +1$
+	\begin{align*}
+		w^{min}_{s,t}(n) &= \left\lceil \sqrt{2\left(n-\frac{t}{s}\right)+\frac{9}{4}}-\frac{3}{2} \right\rceil\\
+		w^{max}_{s,t}(n) &= \left\lfloor \sqrt{2\left(n-\frac{t}{s}\right)-\frac{7}{4}}+\frac{1}{2} \right\rfloor\\
+	\end{align*}
+\end{lemma}
+
 \hspace{1cm}
 \begin{lemma} 
 	The ``normalized" optimizer $g_{s,t}(n) = w_{s,t}(n)/n$ is similar to a function $g_{s,t}$ that's independent from $n$.
@@ -520,12 +536,12 @@ E(n_{k,p}) &= G(n_{k,p}, k) \\
 \begin{proof}
 	This is rather a heuristic observation than a concrete theorem. Consider a continuous version of the original problem:
 	\begin{align*}
-		E_{s,t}(1) &= 0, \\
-		E_{s,t}(x) &= \min_{0<w<x}^{w\in\mathbb{R}}\{E_{s,t}(w) + E_{s,t}(x-w) + wt+(x-w)s\}\text{ for } x\in\mathbb{R}^+
+		\tilde{E}_{s,t}(1) &= 0, \\
+		\tilde{E}_{s,t}(x) &= \min_{0<w<x}^{w\in\mathbb{R}}\{\tilde{E}_{s,t}(w) + \tilde{E}_{s,t}(x-w) + wt+(x-w)s\}\text{ for } x\in\mathbb{R}^+
 	\end{align*}
 	Remember that the traditional bisect problem has a time complexity of $F(n) = E(n)/n \sim O(\log n)$, we can guess that the solution to the functional equation above is in the form
 	\[
-	E_{s,t}(x) = k_{s,t}x\ln x
+	\tilde{E}_{s,t}(x) = k_{s,t}x\ln x
 	\]
 	Substitute this in the equation, we get
 	\begin{align*}
@@ -560,7 +576,11 @@ E(n_{k,p}) &= G(n_{k,p}, k) \\
 	\[
 	k_{s,t} = \frac{s -t }{\ln w - \ln (x-w)} = \frac{s -t }{\ln g_{s,t} - \ln (1-g_{s,t})} = -\frac{t}{\ln g_{s,t}} = - \frac{s}{\ln(1-g_{s,t})}
 	\]
-	and the time solution to the discrete problem $E_{s,t}(n)$ should also be similar to $E_{s,t}(n) = k_{s,t}n\ln n$.
+	and the time solution to the discrete problem $E_{s,t}(n)$ should also be similar to $\tilde{E}_{s,t}(n) = k_{s,t}n\ln n$. We can also prove that the inequality
+	\[
+	E_{s,t}(n) \geq \tilde{E}_{s,t}(n)
+	\]
+	by noticing that the optimizer for $\tilde{E}$ is always in a super set for the one for $E_{s,t}$
 
 \end{proof}
 
@@ -568,13 +588,37 @@ E(n_{k,p}) &= G(n_{k,p}, k) \\
 	The optimizer $w_{s,t}(n)$ forms several regions of ``modes" for different combination of ${n,s,t}$
 \end{lemma}
 \begin{proof}
-	We can plot the graph of real optimizer $w_{s,t}(n)$ against the optimizer for the continuous problem. In the following graph, the horizontal axis from left to right is ratio $r= t/s$ running from $1$ to $10000$ in logarithmic scale, and the vertical axis from up to down is $n$ running from $1$ to $10000$ in logarithmic scale. The color is from the difference $w_{s,t}(n)/n - g_{s,t}$, where $0$ is colored cyan.
+	We can plot the graph of real optimizer $w_{s,t}(n)$ as a map over $n$ and $t/s$. In the following graphs, the horizontal axis from left to right is $n$ running from $2$ to $10,000,000$ in logarithmic scale, and the vertical axis from up to down is ratio $r= t/s$ running from $1$ to $10,000,000$ in logarithmic scale.  All of these graphs are expected to have a perfect mirror for $r= t/s \in (0, 1]$ in logarithmic scale so we omitted that part.
 	
-	\includegraphics[scale=0.18]{w-map.png}\,\includegraphics[scale=0.18]{w-map-marked.png}
+	\includegraphics[scale=0.4]{w.png}\,\includegraphics[scale=0.4]{bias.png}
 	
-	We can see the graph is divided into several regions. We have already discussed mode $M_0$ and $M_1$ above. There are also mode $M_2$, $M_3$ and so on. A new mode $M_{n+1}$ is formed when the "short branch" ($E(w)$ when $w$ is small) falls into mode $M_n$. It is anticipated that there are infinitely many $M_n$ modes, but it is hard to verify as their range of $n$ gets exponentially large.
+	\hspace{1cm}
 	
-	Around $s \approx t$, there is mode $S$, where the graph appears a little bit chaotic.
+	\includegraphics[scale=0.4]{variance.png}\,\includegraphics[scale=0.4]{e-bias.png}
+	
+	\hspace{1cm}
+	
+	\includegraphics[scale=0.4]{mode.png}
+	
+	The first graph id colored using the average relative optimizer $w_{s,t}(n)$, where color gradients runs from 0.0 to 0.5
+	\[
+	c_1 = \frac{w^{max}_{s,t}(n) + w^{min}_{s,t}(n)}{2n}
+	\]
+	The second graph is colored using the relative difference of optimizer $w_{s,t}(n)$ against the continuous optimizer, where 0 difference is light yellow:
+	\[
+	c_2 = \frac{w^{max}_{s,t}(n) + w^{min}_{s,t}(n)}{2n} - g_{s,t}
+	\]  
+	The third graph is colored using the relative variance of optimizer $w_{s,t}(n)$, where 0 is colored dark green
+	\[
+	c_3 = \frac{w^{max}_{s,t}(n) - w^{min}_{s,t}(n)}{n}
+	\]
+	The forth graph is colored using the relative difference between $E(n)$ and its continuous version, where dark blue means little difference, while dark red means $E(n)$ is significantly higher
+	\[
+	c_4 =\frac{E_{s,t}(n)} {\tilde{E}_{s,t}(n)} = \frac{E_{s,t}(n)} {k_{s,t} n \ln n}
+	\]
+	We can see the graph is divided into several regions. We have already discussed mode $M_0$ and $M_1$ above. There are also mode $M_2$, $M_3$ and so on. A new mode $M_{n+1}$ is formed when the ``short branch" ($E(w)$ when $w$ is small) falls into mode $M_n$. For mode beyond $M_4$, they seems to ``fade away" and becomes very close to the continuous optimizer.
+	
+	Around $s \approx t$, there is mode $S$.
 \end{proof}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
