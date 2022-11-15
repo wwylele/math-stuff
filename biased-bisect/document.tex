@@ -26,13 +26,13 @@ bottom=2cm,
 
 Here is a git repository of a software. It is known that somewhere in the recent N commits, a bug was introduced, and the task is to efficiently find the commit that introduced the bug.
 
-A well-known solution is to use \texttt{git bash}, i.e. the binary search method: checking the commit at the middle of the commit list, and then depending on the result, checking the commit at the middle of one half parts of the commit list. This is the fastest method under normal conditions.
+A well-known solution is to use \texttt{git bisect}, i.e. the binary search method: checking the commit at the middle of the commit list, and then depending on the result, checking the commit at the middle of one half parts of the commit list. This is the fastest method under normal conditions.
 
-Now we make a small change to the problem: if the commit to check contains the bug (i.e. it is or is after the first commit introducing the bug), the software would crash the entire computer system during the test and the test has to reboot the computer, which takes five minutes. Testing a software without the bug still takes a short time, say, 30 seconds. In this case, what is the best way to implement the binary search?
+Now we make a change to the problem: if the commit to check contains the bug (i.e. it is or is after the first commit introducing the bug), the software would crash the entire computer system during the test and the tester has to reboot the computer, which takes five minutes. Testing a software without the bug still takes a short time, say, 30 seconds. In this case, what is the best way to implement the binary search?
 
-One might want to test more "good" commits to avoid time spent on "bad" commits as much as possible. Therefore he would tend to test commits before the middle commit, resulting a test sequence "biased" towards the older commits. In an extreme case, where the bad commits take forever to test, he would just test commits one by one from the oldest commit, until he finds the first commit that crashes the system. Similarly, if a bad commit actually takes less time to test, the binary search would bias towards the newer commits.
+One might want to test more ``good" commits to avoid the long time spent on ``bad" commits as much as possible. Therefore they would tend to test commits before the middle commit, resulting a test sequence ``biased" towards the earlier commits. In an extreme case, where the bad commits take forever to test, they would just test commits one by one from the earliest commit, until he finds the first commit that crashes the system. Similarly, if a bad commit actually takes less time to test, the binary search would bias towards the newer commits.
 
-Under these conditions, the question is, using the binary search idea, what would be the best commit to test in order to minimize the time cost?
+Under these conditions, the question is, using the binary search idea, what would be the best commit to test in order to minimize the time cost expectation?
 
 \section{Mathematical formalization}
 
@@ -47,7 +47,7 @@ and with some assumption clarified:
 	\item The values $a_0 = 0$ and $a_n = 1$ are already known and no need to test. Their existence in the problem is to simplify the numbering system in the solution.
 	\item Testing cannot be done in parallel. One cannot start another test until the previous test is finished.
 	\item Only testing takes time. Other step is assumed done instantly.
-	\item One may get the result by noticing one test takes a longer time before producing the result. However, getting the result in advance does not shorter the time taken by the test, not even for the final step. The total time cost includes the final "rebooting" time even if one already knows the answer.
+	\item One may get the result by noticing one test takes a longer time before producing the result. However, getting the result in advance does not shorten the time taken by the test, not even for the final step. The total time cost includes the final ``rebooting" time even if one already knows the answer.
 \end{itemize}
 
 \section{Testing procedure}
@@ -65,7 +65,7 @@ minimum height=2em]
 \begin{tikzpicture}[auto]
 \node [cloud](start){start};
 \node [block, below of=start](init){set $p = 0$, $q = n$};
-\node [decision, below of=init](exit){$p - q = 1$?};
+\node [decision, below of=init](exit){$q-p = 1$?};
 \node [block, below of=exit](choose){$(*)$choose integer $x$ such that $p < x < q$};
 \node [decision, below of=choose](test){test $a_x$};
 \node [block, left of=test](a){set $p=x$};
@@ -88,7 +88,7 @@ minimum height=2em]
 
 \section{The equation}
  
-The step $(*)$ is the only place we need to decide how to do exactly. It can be seen that on each iteration, the algorithm is effectively solving the same problem with a smaller size where $n = p - q$, therefore we can choose x by some function $w_{s,t}(n)$ as
+The step $(*)$ is where we want to find the best best strategy. It can be seen that on each iteration, the algorithm is effectively solving the same problem with a smaller size where $n = p - q$, therefore we can choose x by some function $w_{s,t}(n)$ as
 \[
 x = w_{s,t}(p - q) + p \,,
 \]
@@ -96,15 +96,15 @@ and the expectation of total time $F_{s,t}(n)$ can be expressed recursively as
 \begin{equation}
 F_{s,t}(n) = \frac{w}{n}(t + F_{s,t}(w)) + \frac{n-w}{n}(s + F_{s,t}(n-w))\,,
 \end{equation}
-where $w = w_{s,t}(n)$ represents the offset of the next testing point relative to the start of the current range. The two term represents the two possibility where the next iteration goes to the left or the right. Their probability are $\frac{w}{n}$ and $\frac{n-w}{n}$, respectively, based on the assumption of the uniform distribution. $t$ and $s$ are the time cost of the current iteration, and $F(...)$ are the time cost of the rest iteration.
+where $w = w_{s,t}(n)$ represents the offset of the next testing point relative to the start of the current range. The two term represents the two possibility where the next iteration goes to the left branch or the right branch. Their probability are $\frac{w}{n}$ and $\frac{n-w}{n}$, respectively, based on the assumption of the uniform distribution of the first bad commit $j$. $t$ and $s$ are the time cost of the current iteration, and $F(...)$ is the time cost of the rest of iteration.
 
-Our goal is to find the most efficient method, so we want to minimize the value of $F(n)$. Therefore, with an initial value $F(1) = 0$, we can define a calculable function $F(n)$ over $n \in \mathbb{Z}$ as
+Our goal is to find the most efficient method, so we want to minimize the value of $F(n)$. Therefore, with an initial value $F(1) = 0$, we can define a computable function $F(n)$ over $n \in \mathbb{Z}$ as
 \begin{align*}
 F_{s,t}(1) &= 0\,,\\
 F_{s,t}(n) &= \min_{0<w<n}^{w\in\mathbb{Z}}\left\{\frac{w}{n}(t + F_{s,t}(w)) + \frac{n-w}{n}(s + F_{s,t}(n-w))\right\} \textrm{ for } n > 1 \,.
 \end{align*}
 
-To simplify further analysis, we define the ``normalized" function $E(n) = nF(n)$, which satisfies the following recursive relation
+To simplify further analysis, we define the ``normalized" function $E(n) = nF(n)$, as well as an auxiliary function $D^w(n)$, which satisfies the following recursive relation
 \begin{align*}
 E_{s,t}(1) &= 0\,,\\
 D^{w}_{s,t}(n) &= E_{s,t}(w) + E_{s,t}(n-w) + wt +(n-w)s,&\textrm{ for } n > 1, w=1,2,\dots,n-1, \\
@@ -114,7 +114,15 @@ E_{s,t}(n) &= \min_{0<w<n}^{w\in\mathbb{Z}}\{D^{w}_{s,t}(n)\} = D^{w_{s,t}(n)}_{
 Now let's analyze the function $E_{s,t}(n)$, which represents the expected time scaled by $n$, and the optimizer $w = w_{s,t}(n)$, which represents which commit you should test next given parameters $(n,s,t)$.
 
 \section{Properties}
-\hspace{1cm}
+\vspace{1cm}
+\begin{lemma}
+	The optimizer $w_{s,t}(n)$ outputs a set of $w$. It is not necessarily always a single $w$ that minimize the function
+\end{lemma}
+\begin{proof}
+	This is obvious. We haven't really restricted $w$ to be a single value for given $(n,s,t)$. Multiple $w$ can equally give the minimal result in the $E_{s,t}(n)$ equation. In fact, we will see that this is true for most cases. 
+\end{proof}	
+
+\vspace{1cm}
 \begin{lemma} Homogeneity of $s$ and $t$. For any $k\in\mathbb{R}^+$ we have
 \[
 	E_{ks,kt}(n) = k E_{s,t}(n)
@@ -137,7 +145,7 @@ This means it is only the ratio $s/t$ that affects the bisecting strategy.
 	and note that the transformation doesn't affect the choice of $w$.
 \end{proof}	
 
-\hspace{1cm}
+\vspace{1cm}
 \begin{lemma} Symmetry of $s$ and $t$:
 	\[
 		E_{s,t}(n) = E_{t,s}(n)
@@ -145,32 +153,23 @@ This means it is only the ratio $s/t$ that affects the bisecting strategy.
 	\[
 		w_{s,t}(n) + w_{t,s}(n) = n
 	\]
-Together with previous lemma, this means we only needs to study either $s/t \le1$ or $s/t \ge 1$
+Together with previous lemma, this means we only needs to study either $s/t \le1$ or $s/t \ge 1$.  The equation for $w$ can be understood as a 1-to-1 correspondence between the two sets.
 \end{lemma}
 \begin{proof}
 	This can be similarly proved by induction. Omitted.
 \end{proof}	
 
-\hspace{1cm}
-\begin{lemma}
-	The optimizer $w_{s,t}(n)$ outputs a set of $w$. It is not necessarily always a single $w$ that minimize the function
-\end{lemma}
-\begin{proof}
-		This is obvious. We haven't really restricted $w$ to be a single value for given $(n,s,t)$. Multiple $w$ can equally give the minimal result in the $E_{s,t}(n)$ equation. In fact, we will see that this is true for most cases. 
-\end{proof}	
 
-\hspace{1cm}
+
+\vspace{1cm}
 \begin{lemma}
 $E_{s,t}(n)$ as a function of $n$ is convex
-\end{lemma}
-\begin{lemma}
-	$w_{s,t}(n)$ is always a simple integer interval $[w_{s,t}^{min}(n), w_{s,t}^{max}(n)]$
 \end{lemma}
 \begin{lemma}
 	If $w^*\in w_{s,t}(n)$, then at least one of the following is true: $w^*\in w_{s,t}(n+1)$, or $w^*+1\in w_{s,t}(n+1)$
 \end{lemma}
 \begin{proof}
-we will prove the three properties above together using induction.
+we will prove the two properties above together using induction.
 
 First of all, let's formally define the convexity of $E(n)$ which is a discrete function over integer. We define the differential as
 \[  
@@ -180,26 +179,10 @@ and we say that $E_{s,t}(n)$ is convex on $[1,n]$ if and only if
 \[
  \Delta E(m)\le \Delta E(m+1)\quad\forall m = 1,2,\dots,n-2\quad (\text{Proposition } \mathbf{C}_n)
 \]
-$w_{s,t}(n)$ being a simple interval trivially follows the convexity proposition, so we will focus on proving convexity.
 
 We denote the property about $w$ as
 \[
-w^*\in w(n) \implies w^* \in w(n+1) \lor w^*+1 \in w(n+1) \quad (\text{Proposition } \mathbf{W}_n)
-\]
-
-Using the notation $D^w_{s,t}(n) = E_{s,t}(w) + E_{s,t}(n-w) +wt+(n-w)s$ we have
-\[
-D^{w(n)}(n) \le D^{w(n) - 1}(n)\  (\text{if } w(n) > 1)
-\]
-\[
-D^{w(n)}(n) \le D^{w(n) + 1}(n)\  (\text{if } w(n) < n - 1)
-\]
-We also have 
-\[
-D^{w}(n+1) = D^{w} + \Delta E(n-w) +s
-\]
-\[
-D^{w+1}(n+1) = D^{w} + \Delta E(w) +t
+w^*\in w(n) \implies w^* \in w(n+1) \lor w^*+1 \in w(n+1) \quad (\text{Proposition } \mathbf{W}_n, n\geq 2)
 \]
 
 
@@ -210,74 +193,110 @@ The first few values of $E(n)$ and $w(n)$ are
 &E(2) = s + t, \ &&w(2) = 1,\\
 &E(3) = 2s + 2t + \min\{s, t\}, \ &&w(3) = \{1\}, \{2\},\text{ or }\{1,2\}
 \end{align*}
-It can be seen that proposition $\mathbf{C}_1$ and $\mathbf{W}_2$ hold.
+It can be seen that proposition $\mathbf{C}_1, \mathbf{C}_2, \mathbf{C}_3$ and $\mathbf{W}_2$ hold.
 
 \paragraph{Inductive step} (a) we will show that $\mathbf{C}_n \implies \mathbf{W}_n$ for $n\ge 2$:
 
-If $w(n) >1$, then we have
+For a $w^*\in w(n)$, if $w^* >1$, we have
 \begin{align*}
-D^{w(n)}(n+1) &= D^{w(n)}(n) + \Delta E(n-w(n)) +s\\
-&\le  D^{w(n) - 1}(n) + \Delta E(n-w(n)) +s \quad &(\text{$D^{w(n)}(n)$ is the smallest among $D^{w}(n)$})\\
-&\le  D^{w(n) - 1}(n) + \Delta E(n-(w(n)-1)) +s \quad &(\text{Convexity $\mathbf{C}_{n}$}) \\ 
+D^{w^*}(n+1) &= D^{w^*}(n) + \Delta E(n-w^*) +s\\
+&\le  D^{w^* - 1}(n) + \Delta E(n-w^*) +s \quad &(\text{$D^{w^*}(n)$ is the smallest among $D^{w}(n)$})\\
+&\le  D^{w^* - 1}(n) + \Delta E(n-(w^*-1)) +s \quad &(\text{Convexity $\mathbf{C}_{n}$}) \\ 
 &=D^{w(n)-1}(n+1)
 \end{align*}
-
-If $w(n) < n -1$, then we have
+On the other hand, if $w^* < n -1$, we have
 \begin{align*}
-D^{w(n)+1}(n+1) &= D^{w(n)}(n) + \Delta E(w(n)) +t \\
-&\le  D^{w(n) + 1}(n) + \Delta E(w(n)) +t \quad &(\text{$D^{w(n)}(n)$ is the smallest among $D^{w}(n)$})\\
-&\le  D^{w(n) + 1}(n) + \Delta E(w(n) + 1) +t \quad &(\text{Convexity $\mathbf{C}_{n}$}) \\ 
-&= D^{w(n)+2}(n+1)
+D^{w^*+1}(n+1) &= D^{w^*}(n) + \Delta E(w^*) +t \\
+&\le  D^{w^* + 1}(n) + \Delta E(w^*) +t \quad &(\text{$D^{w^*}(n)$ is the smallest among $D^{w}(n)$})\\
+&\le  D^{w^* + 1}(n) + \Delta E(w^* + 1) +t \quad &(\text{Convexity $\mathbf{C}_{n}$}) \\ 
+&= D^{w^*+2}(n+1)
 \end{align*}
-
 Also notice that $D^w(n+1)$ is convex over $w=1,\dots,n$ due to convexity $\mathbf{C}_{n}$. The inequalities above shows the relations about four consecutive points at the valley of the convex function:
 \[
-D^{w(n)-1}(n+1) \ge D^{w(n)}(n+1) \sim D^{w(n)+1}(n+1) \le D^{w(n)+2}(n+1)
+D^{w^*-1}(n+1) \ge D^{w^*}(n+1) \lesseqgtr D^{w^*+1}(n+1) \le D^{w^*+2}(n+1)
 \]
+(if $w* = 1$ or $w* = n-1$, the valley sits at either end of $D^w(n+1)$ and we can make similar deduction)
 
-We can conclude that at least one of $D^{w(n)}(n+1)$ or $D^{w(n)+1}(n+1)$ is the minimum of $D^w(n+1)$, thus $\mathbf{W}_n$ holds
+We can conclude that at least one of $D^{w^*}(n+1)$ or $D^{w^*+1}(n+1)$ is the minimum of $D^w(n+1)$, thus $\mathbf{W}_n$ holds
 
+\vspace{0.3cm}
 (b) We then show that $\mathbf{C}_{n} \land \mathbf{W}_n \land \mathbf{W}_{n-1} \implies \mathbf{C}_{n+1}$ for $n\ge 2$ :
+First, notice the relation between $\Delta E$
 \begin{align*}
-\Delta E(n)&= \begin{cases}
-	\Delta E(w(n)) + t \quad(w(n+1) = w(n) + 1)\\
-	\Delta E(n-w(n)) + s\quad(w(n+1) = w(n))
+\Delta E(n)&= \min\begin{cases}
+	\Delta E(w(n)) + t \quad(w(n+1) = w(n) + 1 \text{ exists})\\
+	\Delta E(n-w(n)) + s\quad(w(n+1) = w(n) \text{ exists})
 \end{cases} \quad (\text{Proposition $\mathbf{W}_n$}) \\	
-\Delta E(n-1)&= \begin{cases}
-\Delta E(w(n-1)) + t \quad(w(n) = w(n-1) + 1)\\
-\Delta E(n-1-w(n-1)) + s\quad(w(n) = w(n-1))
+\Delta E(n-1)&= \min\begin{cases}
+\Delta E(w(n-1)) + t \quad(w(n) = w(n-1) + 1\text{ exists})\\
+\Delta E(n-1-w(n-1)) + s\quad(w(n) = w(n-1)\text{ exists})
 \end{cases} \quad (\text{Proposition $\mathbf{W}_{n-1}$}) 	
 \end{align*}
-There exists $w(n)\geq w(n-1)$ (Proposition $\mathbf{W}_{n-1}$), so $\Delta E(w(n)) + t \geq  \Delta E(w(n-1)) + t$ (Proposition $\mathbf{C}_n$). Similarly, there exists $n-w(n)\geq n-1-w(n-1)$ (Proposition $\mathbf{W}_{n-1}$), so $\Delta E(n-w(n)) + s \geq \Delta E(n-1-w(n-1)) + s$ (Proposition $\mathbf{C}_n$). Combining these, we have $\Delta E(n-1) < \Delta E(n)$, proving proposition $\mathbf{C}_{n+1}$
+We can also make the following deduction
+\begin{align*}
+	&n > w(n)\geq w(n-1)  \text{ exists}  &(\text{Proposition $\mathbf{W}_{n-1}$})\\
+	\implies& \Delta E(w(n)) + t \geq  \Delta E(w(n-1)) + t &(\text{Proposition $\mathbf{C}_n$})
+\end{align*}
+\begin{align*}
+&n>n-w(n)\geq n-1-w(n-1)  \text{ exists}  &(\text{Proposition $\mathbf{W}_{n-1}$})\\
+\implies& \Delta E(n-w(n)) + s \geq \Delta E(n-1-w(n-1)) + s &(\text{Proposition $\mathbf{C}_n$})
+\end{align*}
+Combining these, we get
+\[
+\Delta E(n)\geq \Delta E(n-1)
+\]
+proving proposition $\mathbf{C}_{n+1}$
 
 \end{proof}
 
+\vspace{1cm}
+\begin{lemma}
+	$w_{s,t}(n)$ is always a simple integer interval $[w_{s,t}^{\min}(n), w_{s,t}^{\max}(n)]$
+\end{lemma}
+\begin{proof}
+	This can be derived from the convexity of $D^w(n)$ over $w$
+\end{proof}
 
-\hspace{1cm}
+\vspace{1cm}
 \begin{lemma} For $n \in \mathbb{Z}^+$
 \begin{align*}
-w^{min}_{s,t}(n+1) &= w^{min}_{s,t}(n)+ \{0, 1\}\\
-w^{max}_{s,t}(n+1) &= w^{max}_{s,t}(n)+ \{0, 1\}
+w^{\min}_{s,t}(n+1) &= w^{\min}_{s,t}(n)+ \{0, 1\}\\
+w^{\max}_{s,t}(n+1) &= w^{\max}_{s,t}(n)+ \{0, 1\}
 \end{align*}
 \end{lemma}
 \begin{proof}
-	First of all, the two statements are equivalent under the symmetry property:
-	\[
-	w^{max}_{s,t}(n+1) = n+1 - w^{min}_{t,s}(n+1) \stackrel{?}{=}  n+1 - w^{min}_{t,s}(n) - \{0, 1\} =  n- w^{min}_{t,s}(n) + \{0, 1\} =  w^{max}_{s,t}(n) + \{0, 1\}
-	\]
+	First of all, the two statements are equivalent due to the symmetry property:
+	\begin{align*}
+	w^{\min}_{t,s}(n+1) &\stackrel{?}{=} w^{\min}_{t,s}(n)+ \{0, 1\} \iff \\ 
+	w^{\max}_{s,t}(n+1) = n+1 - w^{\min}_{t,s}(n+1) &\stackrel{?}{=}  n+1 - w^{\min}_{t,s}(n) - \{0, 1\} =  n- w^{\min}_{t,s}(n) + \{0, 1\} =  w^{\max}_{s,t}(n) + \{0, 1\}
+	\end{align*}
 	so we can just focus on proving the first one. 
 	
-	From previous properties, we know that $w^{min}(n+1) \leq w^{min}(n) + 1$, because otherwise there would be no value $w(n+1)$ that can be either $w^{min}(n)$ or $w^{min}(n) + 1$. Now we only need to prove $w^{min}(n+1)\geq w^{min}(n)$, or in other words, $w^{min}(n) - 1 \notin w(n+1)$. This is obviously true for $w^{min}(n) = 1$, so let's discuss when $w \geq 2$. We have the following differential
+	From previous properties, we know that $w^{\min}(n+1) \leq w^{\min}(n) + 1$, because otherwise there would be no value $w(n+1)$ that can be either $w^{\min}(n)$ or $w^{\min}(n) + 1$. Now we only need to prove $w^{\min}(n+1)\geq w^{\min}(n)$, or in other words, $w^{\min}(n) - 1 \notin w(n+1)$. This is obviously true for $w^{\min}(n) = 1$, so let's discuss when $w \geq 2$. We denote the differential on $D^w(n)$ as 
+	\[
+	\Delta_w D^w(n) = D^{w+1}(n) - D^w(n)
+	\]
+	and we have the following differential
 	\begin{align*}
-	\Delta^w D^{w^{min}(n)-1}(n) &= \Delta E(w^{min}(n)-1) - \Delta E(n-w^{min}(n)) + t - s\\
-	\Delta^w D^{w^{min}(n)-1}(n+1) &= \Delta E(w^{min}(n)-1) - \Delta E(n+1-w^{min}(n)) + t - s
+	\Delta_w D^{w^{\min}(n)-1}(n) &= \Delta E(w^{\min}(n)-1) - \Delta E(n-w^{\min}(n)) + t - s\\
+	\Delta_w D^{w^{\min}(n)-1}(n+1) &= \Delta E(w^{\min}(n)-1) - \Delta E(n+1-w^{\min}(n)) + t - s
 	\end{align*}
-	Due to convexity of $E(n)$, we have $\Delta^w D^{w^{min}(n)-1}(n) \geq 	\Delta^w D^{w^{min}(n)-1}(n+1)$. At the same time, we also have $\Delta^w D^{w^{min}(n)-1}(n) < 0$ (otherwise $w^{min}(n)$ should be smaller due to convexity of $D^w$), so we have $\Delta^w D^{w^{min}(n)-1}(n+1) < 0$, meaning $w^{min}(n) -1$ can't be a minimal point of $D^{w}(n+1)$. Therefore we finished the prove.
+	We can then deduce
+	\begin{align*}
+	&\Delta E(n-w^{\min}(n))\leq \Delta E(n+1-w^{\min}(n)) \quad(\text{Convexity of $E(n)$}) \\
+	\implies &\Delta_w D^{w^{\min}(n)-1}(n)\geq\Delta_w D^{w^{\min}(n)-1}(n+1)
+	\end{align*}
+	\begin{align*}
+	&\Delta_w D^{w^{\min}(n)-1}(n) < 0 \quad(\text{$w^{\min}(n)$ is the smallest minimizer})\\
+	\implies &\Delta_w D^{w^{\min}(n)-1}(n+1) < 0 \\
+	\implies & D^{w^{\min}(n)-1}(n+1) > D^{w^{\min}(n)}(n+1)
+	\end{align*}
+	This means $w^{\min}(n) -1$ can't be a minimal point of $D^{w}(n+1)$.
 \end{proof}
 	This property provides a nice way to quickly calculate $E(n)$ for large $n$: instead of checking all $n-1$ possible values for $w$, we only need to check $w = w^{\{min,max\}}(n-1) + \{0, 1\}$ (at most 4 points)
 
 
-\hspace{1cm}
+\vspace{1cm}
 \begin{lemma}
 Fixing $n$ and $s$, $E_{s,t}(n)$ as a function of $t$ is concave 
 \end{lemma}
@@ -285,102 +304,161 @@ Fixing $n$ and $s$, $E_{s,t}(n)$ as a function of $t$ is concave
 Proof by induction. The base case $E_{s,t}(1) = 0$ is concave over $t$. In the recursive equation, all the summation components are concave, and the minimal of concave functions is still a concave function.
 \end{proof}
 
-\hspace{1cm}
+\vspace{1cm}
 \begin{lemma}
 Fixing $n$ and $s$, $E_{s,t}(n)$ is a piecewise linear function of $t$. The nodes are always at rational points.
 \end{lemma}
 \begin{proof}
 	This can be proved by induction. Omitted.
 \end{proof}
-With this property, we can graph the function with a series of segments. For example, the graph of $E_{1,t}(10)$ over $t\in[0,1]$ is 
+With this property, we can graph the function with a series of segments. For example, the graph of $E_{1,t}(29)$ over $t\in[0,1]$ is 
 
-
-	\begin{tikzpicture}[scale=0.8]
-	\tkzInit[xmin=0,ymin=0,xmax=1.1,ymax=35,xstep=0.1,ystep=5]
+\vspace{0.5cm}
+	\begin{tikzpicture}[yscale=0.8,xscale=1.3]
+	\tkzInit[xmin=0,ymin=0,xmax=1.1,ymax=150,xstep=0.1,ystep=20]
 	\tkzDrawX[label={$t$}]
 	\tkzLabelX[step=1]
-	\tkzDrawY[label={$E_{1,t}(10)$}]
+	\tkzDrawY[label={$E_{1,t}(29)$},above]
 	\tkzLabelY[step=10]
-	\tkzDefPoint(0,9){p1}
-	\tkzDefPoint(1/8,117/8){p2}
-	\tkzDefPoint(1/6,97/6){p3}
-	\tkzDefPoint(1/5,86/5){p4}
-	\tkzDefPoint(1/3,62/3){p5}
-	\tkzDefPoint(1/2,49/2){p6}
-	\tkzDefPoint(1,34){p7}
-	\tkzDefPoint(1.1,35.5){p8}
-	\tkzDrawSegment(p1,p2)
-	\tkzDrawSegment(p2,p3)
-	\tkzDrawSegment(p3,p4)
-	\tkzDrawSegment(p4,p5)
-	\tkzDrawSegment(p5,p6)
-	\tkzDrawSegment(p6,p7)
-	\tkzDrawSegment(p7,p8)
-	\tkzDrawPoints(p1,p2,p3,p4,p5,p6,p7)
-	\tkzLabelPoint[right](p1){\tiny $(0,9)$}
-	\tkzLabelPoint[right](p2){\tiny $(1/8,117/8)$}
-	\tkzLabelPoint[right](p3){\tiny $(1/6,97/6)$}
-	\tkzLabelPoint[right](p4){\tiny $(1/5,86/5)$}
-	\tkzLabelPoint[right](p5){\tiny $(1/3,62/3)$}
-	\tkzLabelPoint[right](p6){\tiny $(1/2,49/2)$}
-	\tkzLabelPoint[right](p7){\tiny $(1,34)$}
+	
+\tkzDefPoint(0,28){p0}
+\tkzDefPoint(1/27,1162/27){p1} \tkzDrawSegment(p0,p1)
+\tkzDefPoint(1/25,1104/25){p2} \tkzDrawSegment(p1,p2)
+\tkzDefPoint(1/24,179/4){p3} \tkzDrawSegment(p2,p3)
+\tkzDefPoint(1/22,46){p4} \tkzDrawSegment(p3,p4)
+\tkzDefPoint(1/21,140/3){p5} \tkzDrawSegment(p4,p5)
+\tkzDefPoint(1/20,947/20){p6} \tkzDrawSegment(p5,p6)
+\tkzDefPoint(1/18,293/6){p7} \tkzDrawSegment(p6,p7)
+\tkzDefPoint(1/17,844/17){p8} \tkzDrawSegment(p7,p8)
+\tkzDefPoint(1/16,101/2){p9} \tkzDrawSegment(p8,p9)
+\tkzDefPoint(1/15,257/5){p10} \tkzDrawSegment(p9,p10)
+\tkzDefPoint(1/13,695/13){p11} \tkzDrawSegment(p10,p11)
+\tkzDefPoint(1/12,164/3){p12} \tkzDrawSegment(p11,p12)
+\tkzDefPoint(1/11,56){p13} \tkzDrawSegment(p12,p13)
+\tkzDefPoint(1/10,115/2){p14} \tkzDrawSegment(p13,p14)
+\tkzDefPoint(1/9,533/9){p15} \tkzDrawSegment(p14,p15)
+\tkzDefPoint(1/7,447/7){p16} \tkzDrawSegment(p15,p16)
+\tkzDefPoint(1/6,403/6){p17} \tkzDrawSegment(p16,p17)
+\tkzDefPoint(1/5,358/5){p18} \tkzDrawSegment(p17,p18)
+\tkzDefPoint(1/4,311/4){p19} \tkzDrawSegment(p18,p19)
+\tkzDefPoint(1/3,260/3){p20} \tkzDrawSegment(p19,p20)
+\tkzDefPoint(2/5,467/5){p21} \tkzDrawSegment(p20,p21)
+\tkzDefPoint(1/2,103){p22} \tkzDrawSegment(p21,p22)
+\tkzDefPoint(2/3,350/3){p23} \tkzDrawSegment(p22,p23)
+\tkzDefPoint(3/4,493/4){p24} \tkzDrawSegment(p23,p24)
+\tkzDefPoint(1,142){p25} \tkzDrawSegment(p24,p25)
+\tkzDefPoint(1.1,148.7){p26} \tkzDrawSegment(p25,p26)
+\tkzLabelPoint[right](p0){\tiny $(0,28)$}
+\tkzDefPoint(1/27,140){p1l}\tkzDrawSegment[color=gray](p1,p1l)\tkzDrawPoints[shape=cross](p1l)\tkzLabelPoint[right](p1l){\tiny $(1/27,1162/27)$}
+\tkzDefPoint(1/25,135){p2l}\tkzDrawSegment[color=gray](p2,p2l)\tkzDrawPoints[shape=cross](p2l)\tkzLabelPoint[right](p2l){\tiny $(1/25,1104/25)$}
+\tkzDefPoint(1/24,130){p3l}\tkzDrawSegment[color=gray](p3,p3l)\tkzDrawPoints[shape=cross](p3l)\tkzLabelPoint[right](p3l){\tiny $(1/24,179/4)$}
+\tkzDefPoint(1/22,125){p4l}\tkzDrawSegment[color=gray](p4,p4l)\tkzDrawPoints[shape=cross](p4l)\tkzLabelPoint[right](p4l){\tiny $(1/22,46)$}
+\tkzDefPoint(1/21,120){p5l}\tkzDrawSegment[color=gray](p5,p5l)\tkzDrawPoints[shape=cross](p5l)\tkzLabelPoint[right](p5l){\tiny $(1/21,140/3)$}
+\tkzDefPoint(1/20,115){p6l}\tkzDrawSegment[color=gray](p6,p6l)\tkzDrawPoints[shape=cross](p6l)\tkzLabelPoint[right](p6l){\tiny $(1/20,947/20)$}
+\tkzDefPoint(1/18,110){p7l}\tkzDrawSegment[color=gray](p7,p7l)\tkzDrawPoints[shape=cross](p7l)\tkzLabelPoint[right](p7l){\tiny $(1/18,293/6)$}
+\tkzDefPoint(1/17,105){p8l}\tkzDrawSegment[color=gray](p8,p8l)\tkzDrawPoints[shape=cross](p8l)\tkzLabelPoint[right](p8l){\tiny $(1/17,844/17)$}
+\tkzDefPoint(1/16,100){p9l}\tkzDrawSegment[color=gray](p9,p9l)\tkzDrawPoints[shape=cross](p9l)\tkzLabelPoint[right](p9l){\tiny $(1/16,101/2)$}
+\tkzDefPoint(1/15,95){p10l}\tkzDrawSegment[color=gray](p10,p10l)\tkzDrawPoints[shape=cross](p10l)\tkzLabelPoint[right](p10l){\tiny $(1/15,257/5)$}
+\tkzDefPoint(1/13,90){p11l}\tkzDrawSegment[color=gray](p11,p11l)\tkzDrawPoints[shape=cross](p11l)\tkzLabelPoint[right](p11l){\tiny $(1/13,695/13)$}
+\tkzDefPoint(1/12,85){p12l}\tkzDrawSegment[color=gray](p12,p12l)\tkzDrawPoints[shape=cross](p12l)\tkzLabelPoint[right](p12l){\tiny $(1/12,164/3)$}
+\tkzDefPoint(1/11,80){p13l}\tkzDrawSegment[color=gray](p13,p13l)\tkzDrawPoints[shape=cross](p13l)\tkzLabelPoint[right](p13l){\tiny $(1/11,56)$}
+\tkzDefPoint(1/10,15){p14l}\tkzDrawSegment[color=gray](p14,p14l)\tkzDrawPoints[shape=cross](p14l)\tkzLabelPoint[right](p14l){\tiny $(1/10,115/2)$}
+\tkzDefPoint(1/9,20){p15l}\tkzDrawSegment[color=gray](p15,p15l)\tkzDrawPoints[shape=cross](p15l)\tkzLabelPoint[right](p15l){\tiny $(1/9,533/9)$}
+\tkzDefPoint(1/7,25){p16l}\tkzDrawSegment[color=gray](p16,p16l)\tkzDrawPoints[shape=cross](p16l)\tkzLabelPoint[right](p16l){\tiny $(1/7,447/7)$}
+\tkzLabelPoint[right,anchor=north west](p17){\tiny $(1/6,403/6)$}
+\tkzLabelPoint[right,anchor=north west](p18){\tiny $(1/5,358/5)$}
+\tkzLabelPoint[right,anchor=north west](p19){\tiny $(1/4,311/4)$}
+\tkzLabelPoint[right,anchor=north west](p20){\tiny $(1/3,260/3)$}
+\tkzLabelPoint[right,anchor=north west](p21){\tiny $(2/5,467/5)$}
+\tkzLabelPoint[right,anchor=north west](p22){\tiny $(1/2,103)$}
+\tkzLabelPoint[right,anchor=north west](p23){\tiny $(2/3,350/3)$}
+\tkzLabelPoint[right,anchor=north west](p24){\tiny $(3/4,493/4)$}
+\tkzLabelPoint[right,anchor=north west](p25){\tiny $(1,142)$}
+\tkzDrawPoints(p0,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12,p13,p14,p15,p16,p17,p18,p19,p20,p21,p22,p23,p24,p25)
+
 	\end{tikzpicture}
 
 We omitted the graph beyond $t=1$, but remember that it can be derived by $E_{1,t}(n) = t\cdot E_{1,1/t}(n)$ due to symmetry and homogeneity.
 
-It can be seen from the graph that nodes are generally at $t = 1/p$ with some integer $p$. This isn't always true for larger $n$, but computation shows that most nodes are at simple ratios like these.
-
-\hspace{1cm}
+It can be seen from the graph that nodes are most at unit fractions $t = 1/p$, but there are also a few nodes at non-unit fractions close to $t=1$.
+\vspace{1cm}
 \begin{lemma}
-	Fixing $n$ and $s$, $w_{s,t}(n)$ is a ``piecewise constant" function. Over a single segment of the piecewise function $E_{s,t}(n)$, the same set of $w$ is chosen. However, at node of piecewise function $E_{s,t}(n)$, $w_{s,t}(n)$ can take a unique value that's not equal to either the left segment or the right segment.
+	Fixing $n$ and $s$, $w_{s,t}(n)$ is a ``piecewise constant" function. Over a single segment of the piecewise function $E_{s,t}(n)$, the same set of $w$ is chosen. However, exactly at a node of piecewise function $E_{s,t}(n)$, $w_{s,t}(n)$ can take a unique value that's not equal to either the one of the left segment or the one of the right segment.
 \end{lemma}
 \begin{proof}
-	Remember that $E_{s,t}(n)$ calculated by taking the $t$-pointwise minimum of a sequence of piecewise linear, convex functions $J_w(t) = E_{s,t}(w) + E_{s,t}(n-w) + wt +(n-w)s$ indexed by $w$. If the pointwise minimum results in a simple linear function over an $t$-interval, it must be resulted from the same set of $w$. This is because, if any $J_w(t)$ tries to join or leave $E_{s,t}(n)$ midway in the interval, it must bend down due to convexity, and that would result in  $E_{s,t}(n) \le J_w(t)$ bending down as well, contradicting with the fact that $E_{s,t}(n)$ is a simple linear function in this interval. $J_w(t)$ can only join or leave at the nodes of $E_{s,t}(n)$
+	Remember that $E_{s,t}(n)$ calculated by taking the $t$-pointwise minimum of a sequence of piecewise linear, convex functions $D^w(t)$ indexed by $w$. If the pointwise minimum results in a simple linear function over a $t$-interval, it must be resulted from the same set of $w$. This is because, if any $D^w_{s,t}(n)$ tries to join or leave $E_{s,t}(n)$ midway in the interval, it must bend down due to convexity, and that would result in  $E_{s,t}(n) \le D^w_{s,t}(n)$ bending down as well, contradicting with the fact that $E_{s,t}(n)$ is a simple linear function in this interval. $D^w_{s,t}(n)$ can only join or leave at the nodes of $E_{s,t}(n)$
 \end{proof}
 
-If we graph $w$ over $t$, we will get a series of ``blocks", separated by vertical lines (marked red) at the nodes of $E$ over $t$. For example, the graph of $w_{1,t}(10)$ over $t\in[0,1]$ is 
+If we graph $w$ over $t$, we will get a series of ``blocks", separated by vertical lines (marked red) at the nodes of $E$ over $t$. For example, the graph of $w_{1,t}(29)$ over $t\in[0,1]$ is 
 
-\begin{tikzpicture}[xscale=0.8,yscale=0.4]
-\tkzInit[xmin=0,ymin=0,xmax=1.1,ymax=10,xstep=0.1,ystep=1]
+\begin{tikzpicture}[yscale=0.3,xscale=1.3]
+\tkzInit[xmin=0,ymin=0,xmax=1.1,ymax=29,xstep=0.1,ystep=1]
 \tkzDrawX[label={$t$}]
 \tkzLabelX[step=1]
-\tkzDrawY[label={$w$},above]
+\tkzDrawY[label={$w_{1,t}(29)$},above]
 \tkzLabelY[step=1]
-\tkzDefPoint(0, 8.5){A}\tkzDefPoint(1/8,9.5){C}\tkzDefRectangle(A,C)\tkzGetPoints{B}{D} \tkzDrawPolygon[fill=black](A,...,D)
-\tkzDefPoint(1/8, 7.5){A}\tkzDefPoint(1/6,8.5){C}\tkzDefRectangle(A,C)\tkzGetPoints{B}{D} \tkzDrawPolygon[fill=black](A,...,D)
-\tkzDefPoint(1/6, 6.5){A}\tkzDefPoint(1/5,8.5){C}\tkzDefRectangle(A,C)\tkzGetPoints{B}{D} \tkzDrawPolygon[fill=black](A,...,D)
-\tkzDefPoint(1/5, 6.5){A}\tkzDefPoint(1/3,7.5){C}\tkzDefRectangle(A,C)\tkzGetPoints{B}{D} \tkzDrawPolygon[fill=black](A,...,D)
-\tkzDefPoint(1/3, 5.5){A}\tkzDefPoint(1/2,7.5){C}\tkzDefRectangle(A,C)\tkzGetPoints{B}{D} \tkzDrawPolygon[fill=black](A,...,D)
-\tkzDefPoint(1/2, 4.5){A}\tkzDefPoint(1,6.5){C}\tkzDefRectangle(A,C)\tkzGetPoints{B}{D} \tkzDrawPolygon[fill=black](A,...,D)
-\tkzDefPoint(1, 3.5){A}\tkzDefPoint(1.1,5.5){C}\tkzDefRectangle(A,C)\tkzGetPoints{B}{D} \tkzDrawPolygon[fill=black](A,...,D)
-\tkzDefPoint(1/8, 7.5){A}\tkzDefPoint(1/8,9.5){B}\tkzDrawSegment[color=red,thick](A,B)\tkzLabelPoint[below](A){\tiny $\frac{1}{8}$}
-\tkzDefPoint(1/6, 6.5){A}\tkzDefPoint(1/6,8.5){B}\tkzDrawSegment[color=red,thick](A,B)\tkzLabelPoint[below](A){\tiny $\frac{1}{6}$}
-\tkzDefPoint(1/5, 6.5){A}\tkzDefPoint(1/5,8.5){B}\tkzDrawSegment[color=red,thick](A,B)\tkzLabelPoint[below](A){\tiny $\frac{1}{5}$}
-\tkzDefPoint(1/3, 5.5){A}\tkzDefPoint(1/3,7.5){B}\tkzDrawSegment[color=red,thick](A,B)\tkzLabelPoint[below](A){\tiny $\frac{1}{3}$}
-\tkzDefPoint(1/2, 4.5){A}\tkzDefPoint(1/2,7.5){B}\tkzDrawSegment[color=red,thick](A,B)\tkzLabelPoint[below](A){\tiny $\frac{1}{2}$}
-\tkzDefPoint(1/1, 3.5){A}\tkzDefPoint(1/1,6.5){B}\tkzDrawSegment[color=red,thick](A,B)\tkzLabelPoint[below](A){\tiny $1$}
+
+\tkzDefPoint(0,27.5){A}\tkzDefPoint(1/27,28.5){C}\tkzDefRectangle(A,C)\tkzGetPoints{B}{D} \tkzDrawPolygon[fill=black](A,...,D)
+\tkzDefPoint(1/27,26.5){A}\tkzDefPoint(1/25,27.5){C}\tkzDefRectangle(A,C)\tkzGetPoints{B}{D} \tkzDrawPolygon[fill=black](A,...,D)
+\tkzDefPoint(1/25,25.5){A}\tkzDefPoint(1/24,27.5){C}\tkzDefRectangle(A,C)\tkzGetPoints{B}{D} \tkzDrawPolygon[fill=black](A,...,D)
+\tkzDefPoint(1/24,25.5){A}\tkzDefPoint(1/22,26.5){C}\tkzDefRectangle(A,C)\tkzGetPoints{B}{D} \tkzDrawPolygon[fill=black](A,...,D)
+\tkzDefPoint(1/22,24.5){A}\tkzDefPoint(1/21,26.5){C}\tkzDefRectangle(A,C)\tkzGetPoints{B}{D} \tkzDrawPolygon[fill=black](A,...,D)
+\tkzDefPoint(1/21,24.5){A}\tkzDefPoint(1/20,26.5){C}\tkzDefRectangle(A,C)\tkzGetPoints{B}{D} \tkzDrawPolygon[fill=black](A,...,D)
+\tkzDefPoint(1/20,24.5){A}\tkzDefPoint(1/18,25.5){C}\tkzDefRectangle(A,C)\tkzGetPoints{B}{D} \tkzDrawPolygon[fill=black](A,...,D)
+\tkzDefPoint(1/18,23.5){A}\tkzDefPoint(1/17,25.5){C}\tkzDefRectangle(A,C)\tkzGetPoints{B}{D} \tkzDrawPolygon[fill=black](A,...,D)
+\tkzDefPoint(1/17,23.5){A}\tkzDefPoint(1/16,25.5){C}\tkzDefRectangle(A,C)\tkzGetPoints{B}{D} \tkzDrawPolygon[fill=black](A,...,D)
+\tkzDefPoint(1/16,23.5){A}\tkzDefPoint(1/15,25.5){C}\tkzDefRectangle(A,C)\tkzGetPoints{B}{D} \tkzDrawPolygon[fill=black](A,...,D)
+\tkzDefPoint(1/15,23.5){A}\tkzDefPoint(1/13,24.5){C}\tkzDefRectangle(A,C)\tkzGetPoints{B}{D} \tkzDrawPolygon[fill=black](A,...,D)
+\tkzDefPoint(1/13,22.5){A}\tkzDefPoint(1/12,24.5){C}\tkzDefRectangle(A,C)\tkzGetPoints{B}{D} \tkzDrawPolygon[fill=black](A,...,D)
+\tkzDefPoint(1/12,22.5){A}\tkzDefPoint(1/11,24.5){C}\tkzDefRectangle(A,C)\tkzGetPoints{B}{D} \tkzDrawPolygon[fill=black](A,...,D)
+\tkzDefPoint(1/11,22.5){A}\tkzDefPoint(1/10,24.5){C}\tkzDefRectangle(A,C)\tkzGetPoints{B}{D} \tkzDrawPolygon[fill=black](A,...,D)
+\tkzDefPoint(1/10,22.5){A}\tkzDefPoint(1/9,24.5){C}\tkzDefRectangle(A,C)\tkzGetPoints{B}{D} \tkzDrawPolygon[fill=black](A,...,D)
+\tkzDefPoint(1/9,22.5){A}\tkzDefPoint(1/7,23.5){C}\tkzDefRectangle(A,C)\tkzGetPoints{B}{D} \tkzDrawPolygon[fill=black](A,...,D)
+\tkzDefPoint(1/7,21.5){A}\tkzDefPoint(1/6,23.5){C}\tkzDefRectangle(A,C)\tkzGetPoints{B}{D} \tkzDrawPolygon[fill=black](A,...,D)
+\tkzDefPoint(1/6,21.5){A}\tkzDefPoint(1/5,23.5){C}\tkzDefRectangle(A,C)\tkzGetPoints{B}{D} \tkzDrawPolygon[fill=black](A,...,D)
+\tkzDefPoint(1/5,20.5){A}\tkzDefPoint(1/4,22.5){C}\tkzDefRectangle(A,C)\tkzGetPoints{B}{D} \tkzDrawPolygon[fill=black](A,...,D)
+\tkzDefPoint(1/4,19.5){A}\tkzDefPoint(1/3,20.5){C}\tkzDefRectangle(A,C)\tkzGetPoints{B}{D} \tkzDrawPolygon[fill=black](A,...,D)
+\tkzDefPoint(1/3,18.5){A}\tkzDefPoint(2/5,20.5){C}\tkzDefRectangle(A,C)\tkzGetPoints{B}{D} \tkzDrawPolygon[fill=black](A,...,D)
+\tkzDefPoint(2/5,17.5){A}\tkzDefPoint(1/2,20.5){C}\tkzDefRectangle(A,C)\tkzGetPoints{B}{D} \tkzDrawPolygon[fill=black](A,...,D)
+\tkzDefPoint(1/2,15.5){A}\tkzDefPoint(2/3,17.5){C}\tkzDefRectangle(A,C)\tkzGetPoints{B}{D} \tkzDrawPolygon[fill=black](A,...,D)
+\tkzDefPoint(2/3,15.5){A}\tkzDefPoint(3/4,17.5){C}\tkzDefRectangle(A,C)\tkzGetPoints{B}{D} \tkzDrawPolygon[fill=black](A,...,D)
+\tkzDefPoint(3/4,14.5){A}\tkzDefPoint(1,16.5){C}\tkzDefRectangle(A,C)\tkzGetPoints{B}{D} \tkzDrawPolygon[fill=black](A,...,D)
+\tkzDefPoint(1,12.5){A}\tkzDefPoint(1.1,14.5){C}\tkzDefRectangle(A,C)\tkzGetPoints{B}{D} \tkzDrawPolygon[fill=black](A,...,D)
+\tkzDefPoint(1/27,26.5){A}\tkzDefPoint(1/27,28.5){B}\tkzDrawSegment[color=red,thick](A,B)\tkzDefPoint(1/27,3){C}\tkzDrawSegment[color=gray](A,C)\tkzDrawPoints[shape=cross](C)\tkzLabelPoint[right](C){\tiny 1/27}
+\tkzDefPoint(1/25,25.5){A}\tkzDefPoint(1/25,27.5){B}\tkzDrawSegment[color=red,thick](A,B)\tkzDefPoint(1/25,4){C}\tkzDrawSegment[color=gray](A,C)\tkzDrawPoints[shape=cross](C)\tkzLabelPoint[right](C){\tiny 1/25}
+\tkzDefPoint(1/24,25.5){A}\tkzDefPoint(1/24,27.5){B}\tkzDrawSegment[color=red,thick](A,B)\tkzDefPoint(1/24,5){C}\tkzDrawSegment[color=gray](A,C)\tkzDrawPoints[shape=cross](C)\tkzLabelPoint[right](C){\tiny 1/24}
+\tkzDefPoint(1/22,24.5){A}\tkzDefPoint(1/22,26.5){B}\tkzDrawSegment[color=red,thick](A,B)\tkzDefPoint(1/22,6){C}\tkzDrawSegment[color=gray](A,C)\tkzDrawPoints[shape=cross](C)\tkzLabelPoint[right](C){\tiny 1/22}
+\tkzDefPoint(1/20,24.5){A}\tkzDefPoint(1/20,26.5){B}\tkzDrawSegment[color=red,thick](A,B)\tkzDefPoint(1/20,7){C}\tkzDrawSegment[color=gray](A,C)\tkzDrawPoints[shape=cross](C)\tkzLabelPoint[right](C){\tiny 1/20}
+\tkzDefPoint(1/18,23.5){A}\tkzDefPoint(1/18,25.5){B}\tkzDrawSegment[color=red,thick](A,B)\tkzDefPoint(1/18,8){C}\tkzDrawSegment[color=gray](A,C)\tkzDrawPoints[shape=cross](C)\tkzLabelPoint[right](C){\tiny 1/18}
+\tkzDefPoint(1/15,23.5){A}\tkzDefPoint(1/15,25.5){B}\tkzDrawSegment[color=red,thick](A,B)\tkzDefPoint(1/15,9){C}\tkzDrawSegment[color=gray](A,C)\tkzDrawPoints[shape=cross](C)\tkzLabelPoint[right](C){\tiny 1/15}
+\tkzDefPoint(1/13,22.5){A}\tkzDefPoint(1/13,24.5){B}\tkzDrawSegment[color=red,thick](A,B)\tkzDefPoint(1/13,10){C}\tkzDrawSegment[color=gray](A,C)\tkzDrawPoints[shape=cross](C)\tkzLabelPoint[right](C){\tiny 1/13}
+\tkzDefPoint(1/9,22.5){A}\tkzDefPoint(1/9,24.5){B}\tkzDrawSegment[color=red,thick](A,B)\tkzLabelPoint[below](A){\tiny 1/9}
+\tkzDefPoint(1/7,21.5){A}\tkzDefPoint(1/7,23.5){B}\tkzDrawSegment[color=red,thick](A,B)\tkzLabelPoint[below](A){\tiny 1/7}
+\tkzDefPoint(1/5,20.5){A}\tkzDefPoint(1/5,23.5){B}\tkzDrawSegment[color=red,thick](A,B)\tkzLabelPoint[below](A){\tiny 1/5}
+\tkzDefPoint(1/4,18.5){A}\tkzDefPoint(1/4,22.5){B}\tkzDrawSegment[color=red,thick](A,B)\tkzLabelPoint[below](A){\tiny 1/4}
+\tkzDefPoint(1/3,18.5){A}\tkzDefPoint(1/3,20.5){B}\tkzDrawSegment[color=red,thick](A,B)\tkzLabelPoint[below](A){\tiny 1/3}
+\tkzDefPoint(2/5,17.5){A}\tkzDefPoint(2/5,20.5){B}\tkzDrawSegment[color=red,thick](A,B)\tkzLabelPoint[below](A){\tiny 2/5}
+\tkzDefPoint(1/2,15.5){A}\tkzDefPoint(1/2,21.5){B}\tkzDrawSegment[color=red,thick](A,B)\tkzLabelPoint[below](A){\tiny 1/2}
+\tkzDefPoint(3/4,14.5){A}\tkzDefPoint(3/4,17.5){B}\tkzDrawSegment[color=red,thick](A,B)\tkzLabelPoint[below](A){\tiny 3/4}
+\tkzDefPoint(1,12.5){A}\tkzDefPoint(1,16.5){B}\tkzDrawSegment[color=red,thick](A,B)\tkzLabelPoint[below](A){\tiny 1}
+
 
 \end{tikzpicture}
 
 We omitted the graph beyond $t=1$, but remember that it can be derived by $w_{1,t}(n) = n - w_{1,1/t}(n)$ due to symmetry and homogeneity.
 
-In the case of $n=10$, the vertical lines at nodes don't exceed the $w$ range of its adjacent blocks, but this is not always true for larger $n$. Some vertical lines can looks ``spiky", demonstrating a much larger set of $w$ than the adjacent blocks. This also demonstrates the non-monotonicity of $w^{max}$ and $w^{min}$ over $t$, even though the graph generally looks monotonic. 
+We can observe from the graph that there are a few red spikes poking out of black boxes. This shows that at certain $(s, t)$ pair, the optimizer $w_{s,t}$ can be a set larger than its neighbor for both sides, even resulting in non-monotonicity in $w^{\min}$ and $w^{\max}$ over $t$ (fixing $s$).
 
-\hspace{1cm}
-\begin{lemma} (Mode $M_0$) The optimizer degenerates at extreme $s/t$ ratio
+\vspace{1cm}
+\begin{lemma} (Mode $M_0$) The optimizer degenerates at extreme $s/t$ ratio. For $n \geq2$
 	\begin{align*}
 	E_{s,t}(n) = (n-1)t + \frac{1}{2}n(n-1)s,\quad & w_{s,t}(n) = \{1\},\quad  &\text{for } \frac{t}{s} > n - 2 \\
 	E_{s,t}(n) = (n-1)s + \frac{1}{2}n(n-1)t,\quad & w_{s,t}(n) = \{n-1\},\quad  &\text{for } \frac{t}{s} < \frac{1}{n-2}
 	\end{align*}
-	($w_{s,t}(1)$ isn't well-defined, so we ignore it here)
 \end{lemma}
 \begin{proof}
 	The two statements above are equivalent due to the symmetry property, so we will just prove the first one by induction
-	\paragraph{Base case} For $n=1$, we have
-	\[
-	E_{s,t}(1) = 0 = (1-1)t + \frac{1}{2}\cdot 1 \cdot (1-1) s
-	\]
-	and for $n=2$, $w_{s,t}(2) = 1$ is the only possible choice, and
+	\paragraph{Base case} For $n=2$, $w_{s,t}(2) = 1$ is the only possible choice, and
 	\[
 	E_{s,t}(2) = E_{s,t}(1) + E_{s,t}(1) + t + s = t + s = (2-1)t + \frac{1}{2}\cdot 2 \cdot (2-1) s
 	\]
@@ -390,18 +468,18 @@ In the case of $n=10$, the vertical lines at nodes don't exceed the $w$ range of
 	&=(w-1)t + \frac{1}{2}w(w-1)s + (n-w-1)t + \frac{1}{2}(n-w)(n-w-1)s+wt+(n-w)s\\
 	&= sw^2 + (t-(n+1)s)w + (n-2)t + \frac{1}{2}n(n+1)s 
 	\end{align*}
-	The function $D^w_{s,t}(n)$ is quadratic, which has the axis 
+	The function $D^w_{s,t}(n)$ is quadratic over $w$, which has the axis 
 	\[
 		w_{axis} = -\frac{t-(n+1)s}{2s} = \frac{1}{2}\left(-\frac{t}{s} + n+1\right) < \frac{3}{2}
 	\]
-	The integer $w$ that's the closest to the axis gets the minimal value. We can see that $w=1$ is always the closest to the axis, therefore it minimize the function to
+	The positive integer $w$ that's the closest to the axis gets the minimal value. We can see that $w=1$ is always the closest to the axis, therefore it minimize the function to
 	\[
 		E_{s,t}(n) = D^1_{s,t}(n) =s + (t-(n+1)s) + (n-2)t + \frac{1}{2}n(n+1)s = (n-1)t + \frac{1}{2}n(n-1)s
 	\]
 \end{proof}
 
 
-\hspace{1cm}
+\vspace{1cm}
 \begin{lemma} 
 	(Mode $M_1$)  For $R = \lfloor t/s\rfloor \geq 2$, $k = 1,2,\dots,R + 2$ and  $p = 0, 1, \dots k - 1$
 	\[
@@ -410,17 +488,17 @@ In the case of $n=10$, the vertical lines at nodes don't exceed the $w$ range of
 	\begin{align*}
 	    w_{s,t}(n_{k, 0}) &= \{k-1\} &\quad(k\geq 2, t/s\notin\mathbb{Z})\\
 	    w_{s,t}(n_{k, 0}) &= \{k-1, k\} &\quad(k\geq 2, t/s\in\mathbb{Z})\\
-	    w_{s,t}(n_{k, p}) &= \{k-1, k\}&\quad (k\geq 3 \text{ and } 1 <p<k-1)\\
+	    w_{s,t}(n_{k, p}) &= \{k-1, k\}&\quad (k\geq 3 \text{ and } 1 \leq p\leq k-2)\\
 	    w_{s,t}(n_{k, k-1}) &= \{k\}\\
 	\end{align*}
-	(However, if $t/s\in\mathbb{Z}$ and $k=R+2$, the $w_{s,t}(n_{k, p})$ set could be a superset of what's listed above )
+	(However, if $t/s\in\mathbb{Z}$, $k=R+2$ and $p \geq 1$, the $w_{s,t}(n_{k, p})$ set could be a superset of what's listed above )
 	\[
 	E_{s,t}(n_{k, p}) = \left(R+(k-1)^2+2p\right)t + \left( \frac{1}{3}(k^3-3k^2+(3R+5)k+\frac{3}{2}(R+1)(R-2)) + p(k-1) \right) s
 	\]
 \end{lemma}
 \begin{proof}
 
-Mode $M_1$ chops the $(n, E(n))$ curve into $(R + 2)$ segments with increasing size. e.g. The first segment $S_1$ covers $n = \{n_{1,0}\} = \{R + 1\}$, the segment $S_2$ covers $n = \{n_{2,0},n_{2,1}\} = \{R + 2, R + 3\}$, and so on. Note that the first segment $S_1$ is inside mode $M_0$, and the second segment $S_2$ overlaps with the end of $M_0$ at the first $n$ (except for $t/s\in\mathbb{Z}$).
+Mode $M_1$ chops the $(n, E(n))$ curve into $(R + 2)$ segments with increasing length. e.g. The first segment $S_1$ covers $n \in \{n_{1,0}\} = \{R + 1\}$, the segment $S_2$ covers $n \in \{n_{2,0},n_{2,1}\} = \{R + 2, R + 3\}$, and so on. Note that the first segment $S_1$ is inside mode $M_0$, and the second segment $S_2$ overlaps with the end of $M_0$ at the first $n$ (except for $t/s\in\mathbb{Z}$).
 
 We will prove the property using induction.
 
@@ -438,9 +516,9 @@ w(n_{2,0}) &= w(R + 2) = \{1\}\\
 E(n_{2,0}) &= E(R + 2) = (R+1)t+\frac{1}{2}(R+1)(R+2)s\\
 &= \left(R+1^2+2\cdot0\right)t + \left( \frac{1}{3}(2^3-3\cdot 2^2+(3R+5)\cdot 2+\frac{3}{2}(R+1)(R-2)) + 0\cdot 1 \right) s
 \end{align*}
-This formula is actually also applicable to $t/s\notin\mathbb{Z}$. However, in that case $w_{axis} = 3/2$, so we have $w(n_{2,0}) = {1, 2}$, but the value for $E(n_{2,0})$ still applies.
+This formula is actually also applicable to $t/s\in\mathbb{Z}$. However, in that case $w_{axis} = 3/2$, so we have $w(n_{2,0}) = \{1, 2\}$, but the formula for $E(n_{2,0})$ still holds.
 
-The second point of $S_2$ is just outside $M_0$. We can continue our previous proof for $M_0$ to find the value of this point. The quadratic function to minimize still holds (because all previous points are still in $M_0$), however its axis is now moved closer to 2:
+The second point of $S_2$ is just outside $M_0$. We can continue our previous proof for $M_0$ to find the value of this point. The quadratic function $D^w(n)$ to minimize still holds (because all previous points are still in $M_0$), however its axis is now moved closer to 2:
 \[
 w_{axis} =  \frac{1}{2}\left(-\frac{t}{s} + n+1\right) =  \frac{1}{2}\left(-\frac{t}{s} + R+3 +1\right)\in\left(\frac{3}{2}, 2\right] \implies w(n_{2,1}) = \{2\}
 \]
@@ -449,10 +527,10 @@ E(n_{2,1}) &= E(R + 3) = 4s + 2(t-(R+4)s) + (R+1)t+\frac{1}{2}(R+3)(R+4)s = (R+3
 &=\left(R+1^2+2\cdot 1\right)t + \left( \frac{1}{3}(2^3-3\cdot 2^2+(3R+5)\cdot 2+\frac{3}{2}(R+1)(R-2)) + 1\cdot 1 \right) s
 \end{align*}
 
-We have verified that the formula for $M_1$ holds for segments $S_1$ and $S_2$. In the inductive step, we will use these base to proof the formula for $S_k$ where $k \geq3$
+We have verified that the formula for $M_1$ holds for segments $S_1$ and $S_2$. In the inductive step, we will use this base to proof the formula for $S_k$ where $k \geq3$
 
 \paragraph{Inductive step}
-We assume that $E(m)$ for all $m <n$ satisfies the corresponding $M_0$ or $M_1$ formula, and we want to compute the next value $E(n)$ to verify that it also satisfies the formula. Using the property that function $E(n)$ is convex over $n$, we know that as long as we find a local minimum of $E(w)+E(n-w)+wt+(n-w)s$, it will be the global minimum and be the value of $E(n)$.
+We assume that $E(m)$ for all $m <n$ satisfies the corresponding $M_0$ or $M_1$ formula, and we want to compute the next value $E(n)$ to verify that it also satisfies the formula. Using the property that function $E(n)$ is convex over $n$, we know that as long as we find a local minimum of $D^w(n)$, it will be the global minimum and be the value of $E(n)$.
 
 If you don't want to use the general convexity property, here is a proof that mode $M_0$ and $M_1$ are convex. Mode $M_0$ itself is obviously convex, as it is a quadratic function over $n$. Each segment $S_k$ of $M_1$ is also obviously convex, as it is linear over $p$, which in turn is linear over $n$. We only need to prove that the ``transition" between segments are also convex. For the transition from $M_0$ to $S_2$ (we skip $S_1$ because it is inside $M_0$), we have
 \begin{align*}
@@ -472,7 +550,7 @@ thus the transition from $M_0$ to $S_2$ is convex. And then for transition from 
 \end{align*}
 thus the transition from $S_k$ to $S_{k+1}$ is convex. We have shown that $E(m)$ for all $m<n$, assuming the formula is correct, is convex.
 
-Now for $n = n_{k, p}$, lets consider $D^w(n) = E(w) + E(n-w) + wt + (n-w)s$. It has the following differential equation
+Now for $n = n_{k, p}$, the function to minimize $D^w(n)$ has the following differential equation
 \begin{align*}
 \Delta_w D^w(n) &= D^{w+1}(n)-D^w(n) \\
 &= \Delta E(w) - \Delta E(n-w-1) + t -s
@@ -511,7 +589,7 @@ t + (k-2+R)s\ &(p =1)\\
 s &(k \leq R + 1)\\
 t-Rs&(k = R + 2)
 \end{cases}\\
-&\geq0 \text{ (equality only when $k=R+2$, $p\geq 2$ and $t/s\in\mathbb{Z}$)}
+&\geq0 \text{ (equality holds only when $k=R+2$, $p\geq 1$ and $t/s\in\mathbb{Z}$)}
 \end{align*}
 Because $\Delta_w D^{k-2}(n_{k,p}) < 0 $ and $\Delta_w D^k(n_{k,p}) > 0$ (excluding $k=R+2$ and $t/s\in\mathbb{Z}$), the minimum must be among $D^{k-1}(n_{k,p})$ and $D^k(n_{k,p})$. This depends on the sign of $\Delta_w D^{k-1}(n_{k,p})$:
 \[
@@ -521,7 +599,7 @@ p = 0 &\implies \Delta_w D^{k-1}(n_{k,p}) \geq 0 \implies w(n_{k,p})  = \begin{c
 p = k-1 &\implies \Delta_w D^{k-1}(n_{k,p}) < 0 \implies w(n_{k,p})  = \{k\}
 \end{cases}
 \]
-For the special case $k=R+2$ and $t/s\in\mathbb{Z}$, the $w$ values above are still valid, but because of the potential $\Delta_w D^k(n_{k,p}) = 0$, there could be more $w$ that minimizes $D^w(n)$.
+For the special case $k=R+2$, $p\geq 1$ and $t/s\in\mathbb{Z}$, the $w$ values above are still valid, but because $\Delta_w D^k(n_{k,p}) = 0$, there could be more $w$ that minimizes $D^w(n)$.
 
 Now we can calculate $E(n_{k,p})$. For $0\leq p \leq k-2$, we have
 \begin{align*}
@@ -545,16 +623,16 @@ E(n_{k,p}) &= D^{k}(n_{k,p}) \\
 \end{proof}
 
 
-\hspace{1cm}
+\vspace{1cm}
 \begin{lemma} 
 	(Fancy mode $M_1$) for $3\leq t/s +1 \leq n \leq \lfloor t/s\rfloor^2/2+5\lfloor t/s\rfloor / 2 +1$
 	\begin{align*}
-		w^{min}_{s,t}(n) &= \left\lceil \sqrt{2\left(n-\frac{t}{s}\right)+\frac{9}{4}}-\frac{3}{2} \right\rceil\\
-		w^{max}_{s,t}(n) &= \left\lfloor \sqrt{2\left(n-\frac{t}{s}\right)-\frac{7}{4}}+\frac{1}{2} \right\rfloor\\
+		w^{\min}_{s,t}(n) &= \left\lceil \sqrt{2\left(n-\frac{t}{s}\right)+\frac{9}{4}}-\frac{3}{2} \right\rceil\\
+		w^{\max}_{s,t}(n) &= \left\lfloor \sqrt{2\left(n-\frac{t}{s}\right)-\frac{7}{4}}+\frac{1}{2} \right\rfloor\\
 	\end{align*}
 \end{lemma}
 
-\hspace{1cm}
+\vspace{1cm}
 \begin{lemma} 
 	The ``normalized" optimizer $g_{s,t}(n) = w_{s,t}(n)/n$ is similar to a function $g_{s,t}$ that's independent from $n$.
 \end{lemma}
@@ -574,7 +652,7 @@ E(n_{k,p}) &= D^{k}(n_{k,p}) \\
 	\end{align*}
 	The function to minimize is differentiable, so we can study its derivative
 	\begin{align*}
-	&\frac{d}{dw} \{ k_{s,t}w\ln w + k_{s,t}(x-w)\ln (x-w)+wt+(x-w)s\\
+	&\frac{d}{dw} ( k_{s,t}w\ln w + k_{s,t}(x-w)\ln (x-w)+wt+(x-w)s )\\
 	&=k_{s,t}(1 + \ln w) - k_{s,t}(1 + \ln(x-w))+t-s\\
 	&=k_{s,t}(\ln w - \ln (x-w)) + t -s
 	\end{align*}
@@ -593,15 +671,19 @@ E(n_{k,p}) &= D^{k}(n_{k,p}) \\
 	\]
 	If we define the normalized function $g_{s,t} = w/x$, then it is a function that satisfies
 	\[
-	\frac{\ln g_{s,t}}{\ln(1-g_{s,t})} = \frac{t}{s}\,.
+	\frac{\ln g}{\ln(1-g)} = \frac{t}{s}\quad\text{ or }\quad g^{s} = (1-g)^t\,.
 	\]
 	The solution is unfortunately not easy to express in a closed form, but we do get a normalized optimizer function $g_{s,t}$ independent from $n$. The optimizer for the discrete problem should be similar to this.
 	
-	We can also get the coefficient $k_{s,t}$
+	We can also get the coefficient $k_{s,t}$ by
 	\[
 	k_{s,t} = \frac{s -t }{\ln w - \ln (x-w)} = \frac{s -t }{\ln g_{s,t} - \ln (1-g_{s,t})} = -\frac{t}{\ln g_{s,t}} = - \frac{s}{\ln(1-g_{s,t})}
 	\]
-	and the time solution to the discrete problem $E_{s,t}(n)$ should also be similar to $\tilde{E}_{s,t}(n) = k_{s,t}n\ln n$. We can also prove that the inequality
+	or equivalently, the $k_{s,t} = k$ is the solution of the equation
+	\[
+	e^{-s/k} + e^{-t/k} = 1
+	\]
+	The time solution to the discrete problem $E_{s,t}(n)$ should also be similar to $\tilde{E}_{s,t}(n) = k_{s,t}n\ln n$. We can also prove the inequality
 	\[
 	E_{s,t}(n) \geq \tilde{E}_{s,t}(n)
 	\]
@@ -613,35 +695,55 @@ E(n_{k,p}) &= D^{k}(n_{k,p}) \\
 	The optimizer $w_{s,t}(n)$ forms several regions of ``modes" for different combination of ${n,s,t}$
 \end{lemma}
 \begin{proof}
-	We can plot the graph of real optimizer $w_{s,t}(n)$ as a map over $n$ and $t/s$. In the following graphs, the horizontal axis from left to right is $n$ running from $2$ to $10,000,000$ in logarithmic scale, and the vertical axis from up to down is ratio $r= t/s$ running from $1$ to $10,000,000$ in logarithmic scale.  All of these graphs are expected to have a perfect mirror for $r= t/s \in (0, 1]$ in logarithmic scale so we omitted that part.
+	We can plot the graph of real optimizer $w_{s,t}(n)$ as a map over $n$ and $t/s$. In the following graphs, the horizontal axis from left to right is $n$ running from $2$ to $10,000,000$ in logarithmic scale, and the vertical axis from up to down is ratio $r= t/s$ running from $1$ to $10,000,000$ in logarithmic scale.  All of these graphs are expected to have a perfect mirror for $r= t/s \in (0, 1]$ in logarithmic scale so we omitted that part. These graphs aren't accurate as they don't show the values when $r$ is an integer or a simple fraction, where $w$ can be a much larger set than its neighbors; nonetheless, they still display interesting properties for most $r$.
 	
 	\includegraphics[scale=0.4]{w.png}\,\includegraphics[scale=0.4]{bias.png}
 	
-	\hspace{1cm}
+	\vspace{0.3cm}
 	
 	\includegraphics[scale=0.4]{variance.png}\,\includegraphics[scale=0.4]{e-bias.png}
 	
-	\hspace{1cm}
+	\vspace{0.3cm}
 	
 	\includegraphics[scale=0.4]{mode.png}
 	
 	The first graph id colored using the average relative optimizer $w_{s,t}(n)$, where color gradients runs from 0.0 to 0.5
 	\[
-	c_1 = \frac{w^{max}_{s,t}(n) + w^{min}_{s,t}(n)}{2n}
+	c_1 = \frac{w^{\max}_{s,t}(n) + w^{\min}_{s,t}(n)}{2n}
 	\]
 	The second graph is colored using the relative difference of optimizer $w_{s,t}(n)$ against the continuous optimizer, where 0 difference is light yellow:
 	\[
-	c_2 = \frac{w^{max}_{s,t}(n) + w^{min}_{s,t}(n)}{2n} - g_{s,t}
+	c_2 = \frac{w^{\max}_{s,t}(n) + w^{\min}_{s,t}(n)}{2n} - g_{s,t}
 	\]  
-	The third graph is colored using the relative variance of optimizer $w_{s,t}(n)$, where 0 is colored dark green
+	The third graph is colored using the relative variance of optimizer $w_{s,t}(n)$, where 0 is colored dark green.
 	\[
-	c_3 = \frac{w^{max}_{s,t}(n) - w^{min}_{s,t}(n)}{n}
+	c_3 = \frac{w^{\max}_{s,t}(n) - w^{\min}_{s,t}(n)}{n}
 	\]
 	The forth graph is colored using the relative difference between $E(n)$ and its continuous version, where dark blue means little difference, while dark red means $E(n)$ is significantly higher
 	\[
 	c_4 =\frac{E_{s,t}(n)} {\tilde{E}_{s,t}(n)} = \frac{E_{s,t}(n)} {k_{s,t} n \ln n}
 	\]
-	We can see the graph is divided into several regions. We have already discussed mode $M_0$ and $M_1$ above. There are also mode $M_2$, $M_3$ and so on. A new mode $M_{n+1}$ is formed when the ``short branch" ($E(w)$ when $w$ is small) falls into mode $M_n$. For mode beyond $M_4$, they seems to ``fade away" and becomes very close to the continuous optimizer.
+	
+	We can see the graph is divided into several regions. We have already discussed mode $M_0$ and $M_1$ above. There are also mode $M_2$, $M_3$ and so on. A new mode $M_{n+1}$ is formed when the ``short branch" ($E(w)$ when $w$ is small) falls into mode $M_n$. For mode beyond $M_4$, they seems to ``fade away" and becomes very close to the continuous optimizer. We can find the approximated boundaries between these modes. As $t/s$ grows very large, and $g$ becomes very small, we have
+	\[
+		-\frac{\ln g}{g}\sim \frac{t}{s}
+	\]
+	\[
+		g \sim \frac{W_0(t/s)}{t/s}
+	\]
+	where $W_0$ is the Lambert W function. We have previously shown that the boundary between $M_0$ and $M_1$ is around
+	\[
+		n_{0|1}\sim \frac{t}{s}
+	\]
+	for large $t/s$. Each further mode transition happens when the small branch also encounters a mode transition. The length of the small branch is approximately $w \sim n\cdot g$, so the mode transition point forms geometric sequence approximately
+	\[
+		n_{k| k+1} \sim n_{k-1| k}/g \sim \left.n_{k-1| k}\middle/\frac{W_0(t/s)}{t/s}\right. \sim \frac{(t/s)^{k+1}}{(W_0(t/s))^{k}}
+	\]
+	On the logarithmic scale, the boundary between $M_k$ and $M_{k+1}$ looks like a line 
+	\[
+		\log n_{k| k+1} \sim (k + 1) \log\frac{t}{s} - k\log W_0\left(\frac{t}{s}\right)
+	\]
+	These lines match what we see in the graphs.
 	
 	Around $s \approx t$, there is mode $S$.
 \end{proof}
