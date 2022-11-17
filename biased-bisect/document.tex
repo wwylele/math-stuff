@@ -113,9 +113,11 @@ E_{s,t}(n) &= \min_{0<w<n}^{w\in\mathbb{Z}}\{D^{w}_{s,t}(n)\} = D^{w_{s,t}(n)}_{
 
 Now let's analyze the function $E_{s,t}(n)$, which represents the expected time scaled by $n$, and the optimizer $w = w_{s,t}(n)$, which represents which commit you should test next given parameters $(n,s,t)$.
 
+We will assume $s > 0 $ and $t > 0$ in general, unless specified otherwise.
+
 \section{Properties}
 \vspace{1cm}
-\begin{lemma}
+\begin{lemma}[$w$-set]
 	The optimizer $w_{s,t}(n)$ outputs a set of $w$. It is not necessarily always a single $w$ that minimize the function
 \end{lemma}
 \begin{proof}
@@ -123,7 +125,7 @@ Now let's analyze the function $E_{s,t}(n)$, which represents the expected time 
 \end{proof}	
 
 \vspace{1cm}
-\begin{lemma} Homogeneity of $s$ and $t$. For any $k\in\mathbb{R}^+$ we have
+\begin{lemma}[Homogeneity] Homogeneity of $s$ and $t$. For any $k\in\mathbb{R}^+$ we have
 \[
 	E_{ks,kt}(n) = k E_{s,t}(n)
 \]
@@ -146,7 +148,7 @@ This means it is only the ratio $s/t$ that affects the bisecting strategy.
 \end{proof}	
 
 \vspace{1cm}
-\begin{lemma} Symmetry of $s$ and $t$:
+\begin{lemma}[Symmetry] Symmetry of $s$ and $t$:
 	\[
 		E_{s,t}(n) = E_{t,s}(n)
 	\]
@@ -162,10 +164,10 @@ Together with previous lemma, this means we only needs to study either $s/t \le1
 
 
 \vspace{1cm}
-\begin{lemma}
+\begin{lemma}[$n$-convexity]
 $E_{s,t}(n)$ as a function of $n$ is convex
 \end{lemma}
-\begin{lemma}
+\begin{lemma}[$w$-induction]
 	If $w^*\in w_{s,t}(n)$, then at least one of the following is true: $w^*\in w_{s,t}(n+1)$, or $w^*+1\in w_{s,t}(n+1)$
 \end{lemma}
 \begin{proof}
@@ -250,7 +252,7 @@ proving proposition $\mathbf{C}_{n+1}$
 \end{proof}
 
 \vspace{1cm}
-\begin{lemma}
+\begin{lemma}[$w$-range]
 	$w_{s,t}(n)$ is always a simple integer interval $[w_{s,t}^{\min}(n), w_{s,t}^{\max}(n)]$
 \end{lemma}
 \begin{proof}
@@ -258,7 +260,8 @@ proving proposition $\mathbf{C}_{n+1}$
 \end{proof}
 
 \vspace{1cm}
-\begin{lemma} For $n \in \mathbb{Z}^+$
+\begin{lemma}[$w$-Lipschitz continuity]
+	For $n \in \mathbb{Z}^+$
 \begin{align*}
 w^{\min}_{s,t}(n+1) &= w^{\min}_{s,t}(n)+ \{0, 1\}\\
 w^{\max}_{s,t}(n+1) &= w^{\max}_{s,t}(n)+ \{0, 1\}
@@ -294,10 +297,104 @@ w^{\max}_{s,t}(n+1) &= w^{\max}_{s,t}(n)+ \{0, 1\}
 	This means $w^{\min}(n) -1$ can't be a minimal point of $D^{w}(n+1)$.
 \end{proof}
 	This property provides a nice way to quickly calculate $E(n)$ for large $n$: instead of checking all $n-1$ possible values for $w$, we only need to check $w = w^{\{min,max\}}(n-1) + \{0, 1\}$ (at most 4 points)
-
+	
 
 \vspace{1cm}
-\begin{lemma}
+\begin{lemma}[$w$-Parallelogram]
+	If for some $n_{\triangleleft}$ we have
+	\begin{align*}
+	w_{s,t}(n_{\triangleleft}) &= \{w_{\triangleleft}\}\\
+	w_{s,t}(n_{\triangleleft} + 1) &= \{w_{\triangleleft}, w_{\triangleleft} + 1\}
+	\end{align*}
+	then there exists $n_{\triangleright} > n_{\triangleleft} + 1$ and $w_{\triangleright} > w_{\triangleleft}$ such that
+	\begin{align*}
+	w_{s,t}(n_{\triangleright}) &= \{w_{\triangleright}\}\\
+	\end{align*}
+	and for $n = n_{\triangleleft}, n_{\triangleleft}+1,\dots,n_{\triangleright}$
+	\begin{align*}
+	w^{\min}_{s,t}(n) &= \max\{w_{\triangleleft}, w_{\triangleright} + n - n_{\triangleright}\}\\
+	w^{\max}_{s,t}(n) &= \min\{w_{\triangleright}, w_{\triangleleft} + n - n_{\triangleleft}\}
+	\end{align*}
+	
+\end{lemma}
+\begin{proof}
+	We first look at $n = n_{\triangleleft} + 1$
+	\begin{align*}
+	&w_{s,t}(n_{\triangleleft} + 1) = \{w_{\triangleleft}, w_{\triangleleft} + 1\} \\
+	\implies& D^{w_{\triangleleft}}(n_{\triangleleft} + 1) = D^{w_{\triangleleft}+1}(n_{\triangleleft} + 1) \\
+	\implies& \Delta E(w_{\triangleleft}) - \Delta E(n_{\triangleleft} - w_{\triangleleft})  = s - t
+	\end{align*}
+	We then look at $n = n_{\triangleleft}$. On the one hand, $w_{\triangleleft}$ is a better optimizer than its left
+	\begin{align*}
+	&w_{s,t}(n_{\triangleleft}) = \{w_{\triangleleft}\} \\
+	\implies& D^{w_{\triangleleft}}(n_{\triangleleft}) < D^{w_{\triangleleft}-1}(n_{\triangleleft}) \\
+	\implies& \Delta E(w_{\triangleleft} - 1) - \Delta E(n_{\triangleleft} - w_{\triangleleft})  < s - t
+	\end{align*}
+	On the other hand, $w_{\triangleleft}$ is also a better optimizer than its right	
+	\begin{align*}
+	&w_{s,t}(n_{\triangleleft}) = \{w_{\triangleleft}\} \\
+	\implies& D^{w_{\triangleleft}}(n_{\triangleleft}) < D^{w_{\triangleleft}+1}(n_{\triangleleft}) \\
+	\implies& \Delta E(w_{\triangleleft} ) - \Delta E(n_{\triangleleft} - w_{\triangleleft}-1) > s - t
+	\end{align*}
+	The three inequalities together give 
+	\begin{align*}
+	\Delta E(w_{\triangleleft}) &> \Delta E(w_{\triangleleft} - 1)\\
+	 \Delta E(n_{\triangleleft} - w_{\triangleleft}) & >  \Delta E(n_{\triangleleft} - w_{\triangleleft}-1)
+	\end{align*}
+	Let $a = \Delta E(w_{\triangleleft})$, and $b = \Delta E(n_{\triangleleft} - w_{\triangleleft})$, and we can say that there exists two positive integers $p$ and $q$ such that
+	\begin{align*}
+	\Delta E(w_{\triangleleft}-1) &< \Delta E(w_{\triangleleft}) = \Delta E(w_{\triangleleft}+1) = \dots &= \Delta E(w_{\triangleleft}+p-1) &= a < \Delta E(w_{\triangleleft}+p) \\
+	\Delta E(n_{\triangleleft} - w_{\triangleleft}-1) &< \Delta E(n_{\triangleleft} - w_{\triangleleft}) = \Delta E(n_{\triangleleft} - w_{\triangleleft} + 1) = \dots &= \Delta E(n_{\triangleleft} - w_{\triangleleft} + q - 1) &= b < \Delta E(n_{\triangleleft} - w_{\triangleleft} + q )
+	\end{align*} 
+	This is saying that $n = w_{\triangleleft}$ starts a segment of length $p$ with constant slope $a$, and similarly $n = n_{\triangleleft} - w_{\triangleleft}$ starts a segment of length $q$ with constant slope $b$. Note that we didn't specify the value of $p$ or $q$, and they can be as small as 1. We are guaranteed that $p$ and $q$ are finite, because neither  $\Delta E(w_{\triangleleft})$ or $\Delta E(n_{\triangleleft} - w_{\triangleleft})$ can be equal to $\Delta E(n_{\triangleleft})$ (thus giving an upper bound to $p$ and $q$):
+	\[
+	\Delta E(n_{\triangleleft}) = \Delta E(w_{\triangleleft}) + t = \Delta E(n_{\triangleleft} - w_{\triangleleft}) + s
+	\]
+	
+	Let 
+	\begin{align*}
+	n_{\triangleright} &= n_{\triangleleft} + p + q\\
+	w_{\triangleright} &= w_{\triangleleft} + p
+	\end{align*}
+	Let's show that $w_{s,t}(n_{\triangleright}) = \{w_{\triangleright}\}$. Consider the differential of $D^w(n_{\triangleright})$ at $w_{\triangleright}$ on both sides
+	\begin{align*}
+	\Delta_w D^{w_{\triangleright} - 1}(n_{\triangleright}) &= \Delta E(w_{\triangleright} - 1) - \Delta E(n_{\triangleright} - w_{\triangleright}) +t - w \\
+	&=\Delta E(w_{\triangleleft} + p - 1) - \Delta E(n_{\triangleleft} - w_{\triangleleft} + q) +t - s\\
+	&<a - b + t - s = 0\\
+	\Delta_w D^{w_{\triangleright}}(n_{\triangleright}) &= \Delta E(w_{\triangleright}) - \Delta E(n_{\triangleright} - w_{\triangleright} - 1) +t - w \\
+	&=\Delta E(w_{\triangleleft} + p) - \Delta E(n_{\triangleleft} - w_{\triangleleft} + q - 1) +t - s\\
+	& > a - b + t - s =0
+	\end{align*}
+	Given the convexity of $D^w(n)$ over $w$, this indicates a single optimizer $w_{s,t}(n_{\triangleright}) = \{w_{\triangleright}\}$.
+	
+	Let's then show that $w_{s,t}^{min}(n_{\triangleleft} + k) = w_{\triangleleft}$ for $k = 1,2,\dots,q$. Again, consider the differential of $D^w(n_{\triangleleft} + k)$ at $w_{\triangleleft}$ on both sides
+	\begin{align*}
+		\Delta_w D^{w_{\triangleleft} - 1}(n_{\triangleleft} + k) &= \Delta E(w_{\triangleleft} - 1) - \Delta E(n_{\triangleleft} + k - w_{\triangleleft}) + t - s\\
+		&< a-b+t-s = 0\\
+		\Delta_w D^{w_{\triangleleft}}(n_{\triangleleft} + k) &= \Delta E(w_{\triangleleft}) - \Delta E(n_{\triangleleft} + k - w_{\triangleleft} - 1) + t - s\\
+		&= a -b +t-s = 0
+	\end{align*}
+	Given the convexity of $D^w(n)$ over $w$, this indicates the smallest optimizer is $w_{s,t}^{min}(n_{\triangleleft} + k) = w_{\triangleleft}$. This also forces that
+	\[
+	w^{\min}_{s,t}(n) = w_{\triangleright} + n - n_{\triangleright} \quad \text{for } n = n_{\triangleleft} + q,\dots,n_{\triangleright}
+	\]
+	because $w^{\min}_{s,t}(n)$ needs to climb the rise of $w_{\triangleright} - w_{\triangleleft} = p$ over the run $n_{\triangleright} - (n_{\triangleleft} + q) = p$, and we have proved that the slope of $w^{\min}_{s,t}(n)$ is 1 at maximum, so this forces a segment of constant slope 1. With this, we have proved the full formula for $w^{\min}_{s,t}(n)$ between $n_{\triangleleft}$ and $n_{\triangleright}$.
+	
+	We can use the same technique for $w^{\max}_{s,t}(n)$. We will first show that  $w_{s,t}^{max}(n_{\triangleright} - k) = w_{\triangleright}$ for $k = 1,2,\dots,q$. Consider the differential
+	\begin{align*}
+		\Delta_w D^{w_{\triangleright} - 1}(n_{\triangleright} - k) &= \Delta E(w_{\triangleright} - 1) - \Delta E(n_{\triangleright} - k - w_{\triangleright}) + t - s \\
+		&=\Delta E(w_{\triangleleft} + p - 1) - \Delta E(n_{\triangleleft} - k - w_{\triangleleft} + q) + t - s\\
+		&=a -b+t-s = 0\\
+		\Delta_w D^{w_{\triangleright}}(n_{\triangleright} - k) &= \Delta E(w_{\triangleright}) - \Delta E(n_{\triangleright} - k - w_{\triangleright} - 1) + t - s \\
+		&=\Delta E(w_{\triangleleft} + p) - \Delta E(n_{\triangleleft} - k - w_{\triangleleft} + q - 1) + t - s\\
+		&>a -b +t-s = 0
+	\end{align*}
+	Given the convexity of $D^w(n)$ over $w$, this indicates the largest optimizer is $w_{s,t}^{max}(n_{\triangleright} - k) = w_{\triangleright}$. Using the same rise-and-run argument, we can then prove the full formula for  $w^{\max}_{s,t}(n)$ between $n_{\triangleleft}$ and $n_{\triangleright}$.
+	
+\end{proof}
+
+\vspace{1cm}
+\begin{lemma}[$s,t$-concavity]
 Fixing $n$ and $s$, $E_{s,t}(n)$ as a function of $t$ is concave 
 \end{lemma}
 \begin{proof}
@@ -305,7 +402,7 @@ Proof by induction. The base case $E_{s,t}(1) = 0$ is concave over $t$. In the r
 \end{proof}
 
 \vspace{1cm}
-\begin{lemma}
+\begin{lemma}[$s,t$-linearity]
 Fixing $n$ and $s$, $E_{s,t}(n)$ is a piecewise linear function of $t$. The nodes are always at rational points.
 \end{lemma}
 \begin{proof}
@@ -382,7 +479,7 @@ We omitted the graph beyond $t=1$, but remember that it can be derived by $E_{1,
 
 It can be seen from the graph that nodes are most at unit fractions $t = 1/p$, but there are also a few nodes at non-unit fractions close to $t=1$.
 \vspace{1cm}
-\begin{lemma}
+\begin{lemma}[$s,t$-range]
 	Fixing $n$ and $s$, $w_{s,t}(n)$ is a ``piecewise constant" function. Over a single segment of the piecewise function $E_{s,t}(n)$, the same set of $w$ is chosen. However, exactly at a node of piecewise function $E_{s,t}(n)$, $w_{s,t}(n)$ can take a unique value that's not equal to either the one of the left segment or the one of the right segment.
 \end{lemma}
 \begin{proof}
@@ -450,7 +547,7 @@ We omitted the graph beyond $t=1$, but remember that it can be derived by $w_{1,
 We can observe from the graph that there are a few red spikes poking out of black boxes. This shows that at certain $(s, t)$ pair, the optimizer $w_{s,t}$ can be a set larger than its neighbor for both sides, even resulting in non-monotonicity in $w^{\min}$ and $w^{\max}$ over $t$ (fixing $s$).
 
 \vspace{1cm}
-\begin{lemma} (Mode $M_0$) The optimizer degenerates at extreme $s/t$ ratio. For $n \geq2$
+\begin{lemma}[Mode $M_0$] The optimizer degenerates at extreme $s/t$ ratio. For $n \geq2$
 	\begin{align*}
 	E_{s,t}(n) = (n-1)t + \frac{1}{2}n(n-1)s,\quad & w_{s,t}(n) = \{1\},\quad  &\text{for } \frac{t}{s} > n - 2 \\
 	E_{s,t}(n) = (n-1)s + \frac{1}{2}n(n-1)t,\quad & w_{s,t}(n) = \{n-1\},\quad  &\text{for } \frac{t}{s} < \frac{1}{n-2}
@@ -480,8 +577,7 @@ We can observe from the graph that there are a few red spikes poking out of blac
 
 
 \vspace{1cm}
-\begin{lemma} 
-	(Mode $M_1$)  For $R = \lfloor t/s\rfloor \geq 2$, $k = 1,2,\dots,R + 2$ and  $p = 0, 1, \dots k - 1$
+\begin{lemma}[Mode $M_1$]  For $R = \lfloor t/s\rfloor \geq 2$, $k = 1,2,\dots,R + 2$ and  $p = 0, 1, \dots k - 1$
 	\[
 		n_{k,p} = R + \frac{1}{2}k(k-1) + 1 + p
 	\]
@@ -624,8 +720,7 @@ E(n_{k,p}) &= D^{k}(n_{k,p}) \\
 
 
 \vspace{1cm}
-\begin{lemma} 
-	(Fancy mode $M_1$) for $3\leq t/s +1 \leq n \leq \lfloor t/s\rfloor^2/2+5\lfloor t/s\rfloor / 2 +1$
+\begin{lemma}[Fancy mode $M_1$] for $3\leq t/s +1 \leq n \leq \lfloor t/s\rfloor^2/2+5\lfloor t/s\rfloor / 2 +1$
 	\begin{align*}
 		w^{\min}_{s,t}(n) &= \left\lceil \sqrt{2\left(n-\frac{t}{s}\right)+\frac{9}{4}}-\frac{3}{2} \right\rceil\\
 		w^{\max}_{s,t}(n) &= \left\lfloor \sqrt{2\left(n-\frac{t}{s}\right)-\frac{7}{4}}+\frac{1}{2} \right\rfloor\\
@@ -633,7 +728,7 @@ E(n_{k,p}) &= D^{k}(n_{k,p}) \\
 \end{lemma}
 
 \vspace{1cm}
-\begin{lemma} 
+\begin{lemma}[Guide]
 	The ``normalized" optimizer $g_{s,t}(n) = w_{s,t}(n)/n$ is similar to a function $g_{s,t}$ that's independent from $n$.
 \end{lemma}
 \begin{proof}
@@ -691,7 +786,7 @@ E(n_{k,p}) &= D^{k}(n_{k,p}) \\
 
 \end{proof}
 
-\begin{lemma} 
+\begin{lemma} [Modes]
 	The optimizer $w_{s,t}(n)$ forms several regions of ``modes" for different combination of ${n,s,t}$
 \end{lemma}
 \begin{proof}
