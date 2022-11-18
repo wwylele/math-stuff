@@ -158,7 +158,19 @@ This means it is only the ratio $s/t$ that affects the bisecting strategy.
 Together with previous lemma, this means we only needs to study either $s/t \le1$ or $s/t \ge 1$.  The equation for $w$ can be understood as a 1-to-1 correspondence between the two sets.
 \end{lemma}
 \begin{proof}
-	This can be similarly proved by induction. Omitted.
+	Let $w' = n - w$, we can rewrite the formula for $D^w_{s,t}(n)$ and $E_{s,t}(n)$ as
+	\begin{align*}
+	D^w_{s,t}(n) &= E_{s,t}(w) + E_{s,t}(n-w) + wt +(n-w)s\\
+	&= E_{s,t}(n-w') + E_{s,t}(w') + (n-w')t +ws\\
+	&=D^{w'}_{t,s}(n)
+	\end{align*}
+	\[
+	E_{s,t}(n) = \min_w\{D^w_{s,t}(n)\} = \min_{w'}\{D^{w'}_{t,s}(n)\} = E_{t,s}(n)
+	\]
+	and the optimizer for $E_{t,s}(n)$ is the set for $w'$, which has a 1-to-1 map to $w$ that satisfies the relationship
+	\[
+	w + w' = n
+	\]
 \end{proof}	
 
 
@@ -392,6 +404,18 @@ w^{\max}_{s,t}(n+1) &= w^{\max}_{s,t}(n)+ \{0, 1\}
 	Given the convexity of $D^w(n)$ over $w$, this indicates the largest optimizer is $w_{s,t}^{max}(n_{\triangleright} - k) = w_{\triangleright}$. Using the same rise-and-run argument, we can then prove the full formula for  $w^{\max}_{s,t}(n)$ between $n_{\triangleleft}$ and $n_{\triangleright}$.
 	
 \end{proof}
+
+\vspace{1cm}
+\begin{lemma}[Beads]
+	For given $s$ and $t$, the graph of $w$ vs $n$ forms beads (parallelograms) threaded by single-element sets
+\end{lemma}
+\begin{proof}
+	Because a single-element set $w(n) = {w^*}$ can only be followed by another single-element set $w(n+1) = {w^*}$ or $w(n+1)={w^*+1}$, or a two-element set $w(n+1) = {w^*, w^*+1}$ (which initiates a parallelogram as per previous property), and $w(2) = {1}$, we can conclude that the $w(n)$ graph consists of multiple (potentially infinite) parallelograms connected by threads (single-element $w$ set). 
+\end{proof}
+
+The following is a graph for $s = 9$, $t = 4$. We set the vertical axis as $w - n/2$ to demonstrate the symmetrical nature.
+
+\includegraphics[scale=0.8]{w-n.png}
 
 \vspace{1cm}
 \begin{lemma}[$s,t$-concavity]
