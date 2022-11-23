@@ -183,13 +183,20 @@ $E_{s,t}(n)$ as a function of $n$ is convex
 	If $w^*\in w_{s,t}(n)$, then at least one of the following is true: $w^*\in w_{s,t}(n+1)$, or $w^*+1\in w_{s,t}(n+1)$
 \end{lemma}
 \begin{proof}
-we will prove the two properties above together using induction.
+We will prove the two properties above together using induction.
 
-First of all, let's formally define the convexity of $E(n)$ which is a discrete function over integer. We define the differential as
+We will start using the notion of ``differential" (partial finite difference of step 1)
+\begin{align*}
+\Delta_x f(x,y,\dots) &= f(x + 1,y,\dots) - f(x,y,\dots)\\
+\nabla_x f(x,y,\dots) &= f(x ,y,\dots) - f(x - 1,y,\dots)
+\end{align*}
+The subscript $x$ indicates the variable the differential is calculated over. When the context is clear, we omit the subscript variable.
+
+We can then formally define the convexity of $E(n)$ in terms of its differential
 \[  
 \Delta E(n) = E(n+1) - E(n)
 \]
-and we say that $E_{s,t}(n)$ is convex on $[1,n]$ if and only if
+and say that $E_{s,t}(n)$ is convex on $[1,n]$ if and only if
 \[
  \Delta E(m)\le \Delta E(m+1)\quad\forall m = 1,2,\dots,n-2\quad (\text{Proposition } \mathbf{C}_n)
 \]
@@ -327,7 +334,10 @@ w^{\max}_{s,t}(n+1) &= w^{\max}_{s,t}(n)+ \{0, 1\}
 	w^{\min}_{s,t}(n) &= \max\{w_{\triangleleft}, w_{\triangleright} + n - n_{\triangleright}\}\\
 	w^{\max}_{s,t}(n) &= \min\{w_{\triangleright}, w_{\triangleleft} + n - n_{\triangleleft}\}
 	\end{align*}
-	
+	We will also show that
+	\[
+	\Delta E_{s,t}(n_{\triangleleft}) = \Delta E_{s,t}(n_{\triangleleft} + 1) = \dots \ \Delta E_{s,t}(n_{\triangleright} - 1)
+	\]
 \end{lemma}
 \begin{proof}
 	We first look at $n = n_{\triangleleft} + 1$
@@ -403,6 +413,26 @@ w^{\max}_{s,t}(n+1) &= w^{\max}_{s,t}(n)+ \{0, 1\}
 	\end{align*}
 	Given the convexity of $D^w(n)$ over $w$, this indicates the largest optimizer is $w_{s,t}^{max}(n_{\triangleright} - k) = w_{\triangleright}$. Using the same rise-and-run argument, we can then prove the full formula for  $w^{\max}_{s,t}(n)$ between $n_{\triangleleft}$ and $n_{\triangleright}$.
 	
+	Finally, let's show the constant differential between $n_{\triangleleft}$ and $n_{\triangleright}$. Considering three consecutive points $n, n+1, n+2$ ($n_{\triangleleft} \le n \le n_{\triangleright} - 2$), we can always find a $w^*$ such that
+	\begin{align*}
+	w^* &\in w(n)\\
+	\{w^*, w^*+1\} &\subseteq w(n+1)\\
+	w^*+1 &\in w(n+2)
+	\end{align*}
+	Because each two neighboring points share a $w$, we can express the differential
+	\begin{align*}
+	\Delta E(n) &= \Delta E(n - w^*) + s\\
+	\Delta E(n+1) &= \Delta E((n+1) - (w^*+1)) + s
+	\end{align*}
+	which implies
+	\[
+	\Delta E(n) = \Delta E(n+1)
+	\]
+	which proves 
+	\[
+	\Delta E_{s,t}(n_{\triangleleft}) = \Delta E_{s,t}(n_{\triangleleft} + 1) = \dots \ \Delta E_{s,t}(n_{\triangleright} - 1)
+	\]
+		
 \end{proof}
 
 \vspace{1cm}
@@ -413,10 +443,129 @@ w^{\max}_{s,t}(n+1) &= w^{\max}_{s,t}(n)+ \{0, 1\}
 	Because a single-element set $w(n) = {w^*}$ can only be followed by another single-element set $w(n+1) = {w^*}$ or $w(n+1)={w^*+1}$, or a two-element set $w(n+1) = {w^*, w^*+1}$ (which initiates a parallelogram as per previous property), and $w(2) = {1}$, we can conclude that the $w(n)$ graph consists of multiple (potentially infinite) parallelograms connected by threads (single-element $w$ set). 
 \end{proof}
 
+There is more to say about the size of beads. In the previous property, we showed that two segments with constant slope, of length $p$ and $q$ respectively, will generate a bead also with constant slope of length $p + q$. This implies more beads with larger size will be generated, and the bead size $B(n)$ has the following relation
+\[
+	B(n) = B(w) + B(n-w)
+\]
+This hints the linear growth in bead size $B(n) \sim O(n)$.
+
 The following is a graph for $s = 9$, $t = 4$. We set the vertical axis as $w - n/2$ to demonstrate the symmetrical nature.
 
 \includegraphics[scale=0.8]{w-n.png}
 
+\vspace{1cm}
+\begin{lemma}[Fibonacci]
+	Given positive integer $s$ and $t$, define the non-decreasing sequence $\{n_i\}_{i=1}^\infty$ as
+	\[
+		n_1 = \dots = n_{s + t} = 1
+	\]
+	\[
+		n_{i} = n_{i - s} + n_{i - t} , \quad i > s + t
+	\]
+	Then we have ,when $n_i \neq n_{i+1}$ 
+	\[
+		\Delta E_{s,t}(n) = i,\quad n_i \le n < n_{i+1}
+	\]
+\end{lemma}
+\begin{proof}
+	Proof by induction
+	\paragraph{Base case}
+	The first no-empty $n$-interval is $n_{s+t} \le n <n_{s+t+1}$, which is exactly $n = 1$. We have shown that $\Delta E(1) = s + t$ so the base case satisfies.
+	
+	
+	\paragraph{Inductive step} For all other non-empty $n$ interval $[n_i, n_{i+1})$ ($i > s + t$), both end satisfies the iteration formula
+	\begin{align*}
+	n_{i} &= n_{i - s} + n_{i - t} \\
+	n_{i + 1} &= n_{i- s + 1 } + n_{i - t + 1 } 
+	\end{align*}
+	Let's look at $E(n_{i})$ around $w = n_{i - t}$ (We will omit the special case for $n_{i-t} = 1$ or $n_{i-t} = n_{i} - 1$, as one side of the $w$-differential doesn't exist, but the argument for the minimal value is the same)
+	\begin{align*}
+	\Delta_w D^{n_{i - t} - 1}(n_{i}) &= \Delta E(n_{i - t} - 1) - \Delta E(n_{i} - n_{i - t}) + t - s \\ 
+	&= \Delta E(n_{i - t} - 1) - \Delta E(n_{i - s}) + t - s \\ 
+	&<  (i - t) - (i - s) + t - s  
+	=0\\
+	&\quad (\text{$[n_{i - s},n_{i - s} + 1)$ may be empty, but $\Delta E(n_{i - s})\geq i-s$}) \\
+	\end{align*}
+	\begin{align*}
+	\Delta_w D^{n_{i - t}}(n_{i}) &= \Delta E(n_{i - t}) - \Delta E(n_{i} - n_{i - t} - 1) + t - s \\ 
+	&= \Delta E(n_{i - t}) - \Delta E(n_{i - s} - 1) + t - s \\ 
+	&> (i - t) - (i - s) + t - s 
+	=0
+	\end{align*}
+	So $w(n_{i}) = \{n_{i - t}\}$ (due to convexity), and 
+	\begin{align*}
+	E(n_i) &= E(n_{i - t}) + E(n_{i - s}) + n_{i - t} t + n_{i - s} s 
+	\end{align*}
+	With the same argument, at $E(n_{i + 1})$ we have  $w(n_{i + 1}) = \{n_{i - t + 1}\}$, and 
+	\begin{align*}
+	E(n_{i+1}) &= E(n_{i - t+1}) + E(n_{i - s+1}) + n_{i - t+1} t + n_{i - s+1} s 
+	\end{align*}
+	The total difference between the two is
+	\begin{align*}
+	E(n_{i+1}) - E(n_i) &= E(n_{i - t+1}) - E(n_{i - t}) + E(n_{i - s+1}) - E(n_{i - s}) + (n_{i - t+1} - n_{i-t}) t+ (n_{i - s+1} - n_{i-s}) s\\
+	&= (n_{i - t+1} - n_{i-t})(i-t) + (n_{i - s+1} - n_{i-s})(i-s) + (n_{i - t+1} - n_{i-t}) t+ (n_{i - s+1} - n_{i-s}) s\\
+	&=(n_{i - t+1} - n_{i-t} + n_{i - s+1} - n_{i-s})i\\
+	&=(n_{i+1} - n_{i})i
+	\end{align*}
+	If $n_{i+1} - n_{i}$ = 1, then $E(n_{i+1}) - E(n_i) = \Delta E(n_i) = i$ and thus the formula is proved. Otherwise, let's look at $E(n_{i} + 1)$ around $w = n_{i - t}$ and $w = n_{i - t} + 1$ (again, ignore one side of the $w$-differential if it doesn't exist)
+	\begin{align*}
+	\Delta_w D^{n_{i - t} - 1}(n_{i} +1) &= \Delta E(n_{i - t} - 1) - \Delta E(n_{i} - n_{i - t} + 1) + t - s \\ 
+	&= \Delta E(n_{i - t} - 1) - \Delta E(n_{i - s}  + 1) + t - s \\ 
+	&< (i - t) - (i - s) + t - s 
+	=0
+	\end{align*}
+	\begin{align*}
+	\Delta_w D^{n_{i - t} + 1}(n_{i} +1) &= \Delta E(n_{i - t} + 1) - \Delta E(n_{i} - n_{i - t} -1) + t - s \\ 
+	&= \Delta E(n_{i - t} + 1) - \Delta E(n_{i - s}  -1) + t - s \\ 
+	&> (i - t) - (i - s) + t - s 
+	=0
+	\end{align*}
+	So the optimizer is among $w\in\{n_{i - t}, n_{i - t} + 1\}$ (or potentially both). Let's calculate their $D^w(n_{i}+1)$
+	\begin{align*}
+	D^{n_{i - t}}(n_{i}+1) &= E(n_{i - t}) + E(n_{i-s}+1) + n_{i - t} t + (n_{i-s}+1)s\\
+	D^{n_{i - t} + 1}(n_{i}+1) &= E(n_{i - t}+1) + E(n_{i-s}) + (n_{i - t} + 1) t + n_{i-s}s\\
+	\end{align*}
+	So the differential at $E(n_{i})$ is
+	\begin{align*}
+	\Delta E(n_{i}) &= \min\{D^{n_{i - t}}(n_{i}+1) - E(n_i),D^{n_{i - t} + 1}(n_{i}+1)- E(n_i) \} \\
+	&=\min\{\Delta E(n_{i-s}) + s, \Delta E(n_{i-t}) + t\}
+	\end{align*}
+	Remember $\Delta E(n_{i-s}) \ge i -s$, $ \Delta E(n_{i-t}) \ge i - t$, and at least one of them has equality, otherwise both $n_{i-s} = n_{i-s+1}$ and $n_{i-t} = n_{i-t+1}$, which means $[n_i, n_{i+1})$ is empty. So we have 
+	\[
+	\Delta E(n_{i}) = i
+	\]
+	Remember $E(n_{i+1}) - E(n_i) = (n_{i+1} - n_{i})i$, then we have
+	\begin{align*}
+	(n_{i+1} - n_{i})i &= E(n_{i+1}) - E(n_i) \\
+		&= \Delta E(n_{i}) + \Delta E(n_{i} + 1) + \dots + \Delta E(n_{i+1} -1)\\
+		&\le \Delta E(n_{i}) + \Delta E(n_{i}) +\dots +\Delta E(n_{i})\\
+		&=(n_{i+1} - n_{i})i
+	\end{align*}
+	The equality must holds, so we have locked $\Delta E(n) = i$ for all $ n_i \le n < n_{i+1}$
+	
+\end{proof}	
+
+This property provides a way to iteratively generate intervals of constant differential for $E(n)$. For example, for $s = t = 1$ (balanced bisection), we have the following
+\begin{align*}
+\Delta E_{1,1}(1) &= 2 \\
+\Delta E_{1,1}(2) = \Delta E_{1,1}(3) &= 3\\
+\Delta E_{1,1}(4) =\dots = \Delta E_{1,1}(7) &= 4\\
+\Delta E_{1,1}(2^{i-2}) =\dots = \Delta E_{1,1}(2^{i-1}-1) &= i
+\end{align*}
+This forms a nice geometric progression.
+
+Similarly, for $s = 1$ and $t = 2$, we have 
+\begin{align*}
+\Delta E_{1,2}(1) &= 3 \\
+\Delta E_{1,2}(2) &= 4\\
+\Delta E_{1,2}(3)  = \Delta E_{1,2}(4) &= 5\\
+\Delta E_{1,2}(5) =\dots = \Delta E_{1,2}(7) &= 6\\
+\Delta E_{1,2}(8) =\dots = \Delta E_{1,2}(12) &= 7\\
+\Delta E_{1,2}(\phi_{i -1}) =\dots = \Delta E_{1,1}(\phi_{i} - 1) &= i
+\end{align*}
+where $\phi_i$ is the $i$th Fibonacci number.
+
+	
 \vspace{1cm}
 \begin{lemma}[$s,t$-concavity]
 Fixing $n$ and $s$, $E_{s,t}(n)$ as a function of $t$ is concave 
@@ -611,7 +760,7 @@ We can observe from the graph that there are a few red spikes poking out of blac
 	    w_{s,t}(n_{k, p}) &= \{k-1, k\}&\quad (k\geq 3 \text{ and } 1 \leq p\leq k-2)\\
 	    w_{s,t}(n_{k, k-1}) &= \{k\}\\
 	\end{align*}
-	(However, if $t/s\in\mathbb{Z}$, $k=R+2$ and $p \geq 1$, the $w_{s,t}(n_{k, p})$ set could be a superset of what's listed above )
+	(However, if $t/s\in\mathbb{Z}$, $k=R+2$ and $p \geq 1$, the $w_{s,t}(n_{k, p})$ set could be a superset of what's listed above)
 	\[
 	E_{s,t}(n_{k, p}) = \left(R+(k-1)^2+2p\right)t + \left( \frac{1}{3}(k^3-3k^2+(3R+5)k+\frac{3}{2}(R+1)(R-2)) + p(k-1) \right) s
 	\]
@@ -744,7 +893,7 @@ E(n_{k,p}) &= D^{k}(n_{k,p}) \\
 
 
 \vspace{1cm}
-\begin{lemma}[Fancy mode $M_1$] for $3\leq t/s +1 \leq n \leq \lfloor t/s\rfloor^2/2+5\lfloor t/s\rfloor / 2 +1$
+\begin{lemma}[Fancy mode $M_1$] for $3\leq t/s +1 \leq n \leq \lfloor t/s\rfloor^2/2+5\lfloor t/s\rfloor / 2 +2$
 	\begin{align*}
 		w^{\min}_{s,t}(n) &= \left\lceil \sqrt{2\left(n-\frac{t}{s}\right)+\frac{9}{4}}-\frac{3}{2} \right\rceil\\
 		w^{\max}_{s,t}(n) &= \left\lfloor \sqrt{2\left(n-\frac{t}{s}\right)-\frac{7}{4}}+\frac{1}{2} \right\rfloor\\
