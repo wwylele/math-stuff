@@ -454,7 +454,7 @@ The following is a graph for $s = 9$, $t = 4$. We set the vertical axis as $w - 
 \includegraphics[scale=0.8]{w-n.png}
 
 \vspace{1cm}
-\begin{lemma}[Fibonacci]
+\begin{lemma}[Rational]
 	Given positive integer $s$ and $t$, define the non-decreasing sequence $\{n_i\}_{i=1}^\infty$ as
 	\[
 		n_1 = \dots = n_{s + t} = 1
@@ -462,10 +462,17 @@ The following is a graph for $s = 9$, $t = 4$. We set the vertical axis as $w - 
 	\[
 		n_{i} = n_{i - s} + n_{i - t} , \quad i > s + t
 	\]
-	Then we have ,when $n_i \neq n_{i+1}$ 
+	then we have, when $n_i \neq n_{i+1}$, for $n_i \le n < n_{i+1}$
+	\begin{align*}
+	\Delta E_{s,t}(n) &= i\\
+	w^{\min}_{s,t}(n) &= \max\{n_{i - t},\, n_{i +1 - t} + n - n_{i+1}\}\quad(n\geq 2)	\\
+	w^{\max}_{s,t}(n) &= \min\{n_{i +1 - t},\,n_{i - t} + n - n_{i} \} \quad(n\geq 2)
+	\end{align*}
+	Specifically
 	\[
-		\Delta E_{s,t}(n) = i,\quad n_i \le n < n_{i+1}
+	w_{s,t}(n_i) = \{n_{i-t}\}\quad(n_i\geq 2)
 	\]
+	and $w_{s,t}(n)$ between $n_i$ and $n_{i-t}$ forms either a parallelogram or a straight thin line.
 \end{lemma}
 \begin{proof}
 	Proof by induction
@@ -473,7 +480,7 @@ The following is a graph for $s = 9$, $t = 4$. We set the vertical axis as $w - 
 	The first no-empty $n$-interval is $n_{s+t} \le n <n_{s+t+1}$, which is exactly $n = 1$. We have shown that $\Delta E(1) = s + t$ so the base case satisfies.
 	
 	
-	\paragraph{Inductive step} For all other non-empty $n$ interval $[n_i, n_{i+1})$ ($i > s + t$), both end satisfies the iteration formula
+	\paragraph{Inductive step} For all other non-empty $n$ interval $[n_i, n_{i+1})$ ($i > s + t$), both end satisfies the recurrence relation
 	\begin{align*}
 	n_{i} &= n_{i - s} + n_{i - t} \\
 	n_{i + 1} &= n_{i- s + 1 } + n_{i - t + 1 } 
@@ -484,7 +491,7 @@ The following is a graph for $s = 9$, $t = 4$. We set the vertical axis as $w - 
 	&= \Delta E(n_{i - t} - 1) - \Delta E(n_{i - s}) + t - s \\ 
 	&<  (i - t) - (i - s) + t - s  
 	=0\\
-	&\quad (\text{$[n_{i - s},n_{i - s} + 1)$ may be empty, but $\Delta E(n_{i - s})\geq i-s$}) \\
+	&\quad (\text{$[n_{i - s},n_{i - s} + 1)$ may be empty, but $\Delta E(n_{i - s})\geq i-s$ anyway})
 	\end{align*}
 	\begin{align*}
 	\Delta_w D^{n_{i - t}}(n_{i}) &= \Delta E(n_{i - t}) - \Delta E(n_{i} - n_{i - t} - 1) + t - s \\ 
@@ -541,11 +548,18 @@ The following is a graph for $s = 9$, $t = 4$. We set the vertical axis as $w - 
 		&\le \Delta E(n_{i}) + \Delta E(n_{i}) +\dots +\Delta E(n_{i})\\
 		&=(n_{i+1} - n_{i})i
 	\end{align*}
-	The equality must holds, so we have locked $\Delta E(n) = i$ for all $ n_i \le n < n_{i+1}$
+	The equality must holds, so we have locked $\Delta E(n) = i$ for all $ n_i \le n < n_{i+1}$.
+		
+	Regarding the shape of $w(n)$ between $n_{i}$ and $n_{i+1}$, we have
+	\begin{itemize}
+		\item If $n_{i-s} \neq n_{i-s+1}$ and $n_{i-t} \neq n_{i-t+1}$, then $w(n_{i}+1) = \{n_{i - t}, n_{i - t} + 1\}$. Together with $w(n_{i}) =  \{n_{i - t}\}$, we know this forms a parallelogram as described before.
+		\item If $n_{i-t} = n_{i-t+1}$, then the single value for $w$ at two ends $w(n_{i}) = w(n_{i+1})$. This restricts all $w$ to be on the same horizontal line
+		\item If $n_{i-s} = n_{i-s+1}$, then the single value for $w$ at two ends $w(n_{i}) + n_{i+1} - n_i = w(n_{i+1})$. This restricts all $w$ to be on the same line with slope of 1.
+	\end{itemize}
 	
 \end{proof}	
 
-This property provides a way to iteratively generate intervals of constant differential for $E(n)$. For example, for $s = t = 1$ (balanced bisection), we have the following
+This property provides a way to recursively generate intervals of constant differential for $E(n)$ when $s$ and $t$ are integers (and by extension due to homogeneity, whenever $s/t$ is rational). For example, for $s = t = 1$ (balanced bisection), we have the following
 \begin{align*}
 \Delta E_{1,1}(1) &= 2 \\
 \Delta E_{1,1}(2) = \Delta E_{1,1}(3) &= 3\\
@@ -561,7 +575,7 @@ Similarly, for $s = 1$ and $t = 2$, we have
 \Delta E_{1,2}(3)  = \Delta E_{1,2}(4) &= 5\\
 \Delta E_{1,2}(5) =\dots = \Delta E_{1,2}(7) &= 6\\
 \Delta E_{1,2}(8) =\dots = \Delta E_{1,2}(12) &= 7\\
-\Delta E_{1,2}(\phi_{i -1}) =\dots = \Delta E_{1,1}(\phi_{i} - 1) &= i
+\Delta E_{1,2}(\phi_{i -1}) =\dots = \Delta E_{1,2}(\phi_{i} - 1) &= i
 \end{align*}
 where $\phi_i$ is the $i$th Fibonacci number.
 
@@ -718,6 +732,100 @@ If we graph $w$ over $t$, we will get a series of ``blocks", separated by vertic
 We omitted the graph beyond $t=1$, but remember that it can be derived by $w_{1,t}(n) = n - w_{1,1/t}(n)$ due to symmetry and homogeneity.
 
 We can observe from the graph that there are a few red spikes poking out of black boxes. This shows that at certain $(s, t)$ pair, the optimizer $w_{s,t}$ can be a set larger than its neighbor for both sides, even resulting in non-monotonicity in $w^{\min}$ and $w^{\max}$ over $t$ (fixing $s$).
+
+\vspace{1cm}
+\begin{lemma}[Node] 
+	Every positive rational $t$ will be a node for some $E_{1,t}(n)$-$t$ graph with a large enough $n$
+\end{lemma}
+\begin{proof}
+	To help with the proof, we will use the dual number $a = b + c\varepsilon $, where $\varepsilon$ is the infinitesimal unit (or the nilpotent). Dual numbers form a total order, where numbers are compared by the $b$ component first, then we compare the $c$ component when they share the same $b$. 
+	
+	Let $t + 1\varepsilon$ be at the position of $t$, and we calculate $E(n)$ using the same formula, but with dual numbers involved. The final result can always be expressed in the form
+	\[
+	E_{s,t + 1\varepsilon}(n) = E_{s,t}(n) + \varepsilon \partial_{+t}E_{s,t}(n) 
+	\]
+	where $\partial_{+t}E_{1,t}(n)  $ is the right derivative w.r.t $t$. Similarly, using $t - 1\varepsilon$, we get the left derivative as 
+	\[
+	E_{s,t - 1\varepsilon}(n) = E_{s,t}(n) - \varepsilon \partial_{-t}E_{s,t}(n) 
+	\]
+	We can find the formula for the derivative themselves as
+	\begin{align*}
+	\partial_{+t}E_{s,t}(1) &= 0\\
+	 \partial_{-t}E_{s,t}(1) &= 0 \\
+	 \partial_{+t}E_{s,t}(n) &= \min_{w\in w_{s,t}(n)}\{\partial_{+t}E_{s,t}(w) + \partial_{+t}E_{s,t}(n-w) + w\} \quad(n\geq 2)\\
+	 \partial_{-t}E_{s,t}(n) &= \max_{w\in w_{s,t}(n)}\{\partial_{-t}E_{s,t}(w) + \partial_{-t}E_{s		,t}(n-w) + w\} \quad(n\geq 2)
+	\end{align*}
+	It can also easily be proved that the derivatives are also homogeneous
+	\[
+	\partial_{\pm t}E_{ks,kt}(n) = \partial_{\pm t}E_{s,t}(n)
+	\]
+	so to study for rational $t$, we can equivalently study for co-prime integer pairs $s$ and $t$. We want to prove that for any positive co-prime integer pair $s$ and $t$, there are some $n$ such that
+	\[
+	\partial_{+t}E_{s,t}(n) \neq \partial_{-t}E_{s,t}(n) 
+	\]
+	
+	
+	We will use the $w$ formula from Property [Rational]. Remember we defined a helper sequence $\{n_i\}_{i=0}^{\infty}$. We first prove that, for co-prime $s$ and $t$ and large enough $i$, the interval has at least length of 2 (or any given number, but we don't need that)
+	\[
+	\exists I, \forall i>I, \Delta_i n_{i} \ge 2
+	\]
+	The differential of $\{n_i\}_{i=0}^{\infty}$ satisfies the recurrence relation
+	\begin{align*}
+	\Delta_i n_1 &= \Delta_i n_2 = \dots = \Delta_i n_{s+t-1} = 0\\
+	\Delta_i n_{s+t} &= 1\\
+	\Delta_i n_i &= \Delta_i n_{i-s} + \Delta_i n_{i-t} \quad (i > s + t)
+	\end{align*}
+	By Bézout's identity, the following equation for integer pair $(p, q)$ always have solutions for any given integer $r$
+	\[
+	ps + qt = r
+	\]
+	and we can find $(s + t)$ consecutive $r$ values such that there are positive integer solutions: we first pick any consecutive $r$ values, and then add to them by multiple of $s$ and $t$ until solutions become positive. For these $r$, we have
+	\begin{align*}
+	\Delta_i n_{s+t+r} &\geq \Delta_i n_{s+t+r - s} \geq \Delta_i n_{s+t+r - 2s} \geq\dots \geq \Delta_i  n_{s+t+r - ps} \\
+		&\geq \Delta_i n_{s+t+r - ps - t} \geq \Delta_i n_{s+t+r - ps - 2t} \geq\dots \geq \Delta_i  n_{s+t+r - ps - qt} \\ 
+		&= \Delta n_{s+t} = 1
+	\end{align*}
+	So we have got $(s + t)$ consecutive $\Delta_i n_i\geq 1$, and then any further $\Delta_i n_i$ will use the sum the two element from these $1$s or greater, so they are all greater or equal to 2.
+	
+	Going back to proving the existence of nodes. We will prove this by contradiction. Let's assume that the following holds for all positive integer $n$
+	\[
+	\partial_{+t}E_{s,t}(n) = \partial_{-t}E_{s,t}(n) = \partial_{t}E_{s,t}(n) 
+	\]
+	This implies the derivative will have the unified formula
+	\begin{align*}
+	\partial_{t}E_{s,t}(1) &= 0\\
+	\partial_{t}E_{s,t}(n) &= \partial_{t}E_{s,t}(w) + \partial_{t}E_{s,t}(n-w) + w\quad \forall w\in w_{s,t}(n) \quad(n\geq 2)
+	\end{align*}
+	We can also derive the secondary differential formula for $n\geq 2$
+	\begin{align*}
+	\Delta_n \partial_{t}E_{s,t}(n) =\begin{cases}
+	\Delta_n  \partial_{t}E_{s,t}(n-w) & (w\in w_{s,t}(n), w\in w_{s,t}(n+1) )\\
+	\Delta_n  \partial_{t}E_{s,t}(w) + 1 & (w\in w_{s,t}(n), w+1\in w_{s,t}(n+1) )
+	\end{cases}
+	\end{align*}
+	Consider the three related $n$-intervals $[n_{i}, n_{i+1})$, $[n_{i + t-s}, n_{i + t-s + 1})$ and $[n_{i+t}, n_{i+t + 1})$ ($i > I$). For large enough $i$, the intervals have at least length of 2. So we have
+	\begin{align*}
+	w(n_{i+t}) &= \{n_{i}\}\\
+	w(n_{i+t}+1) &= \{n_{i}, n_{i}+1\}
+	\end{align*}
+	Applying the secondary differential formula, we get
+	\begin{align*}
+	\Delta_n \partial_{t}E_{s,t}(n_{i+t}) &= \Delta_n \partial_{t}E_{s,t}(n_{i + t-s}) \\
+	\Delta_n \partial_{t}E_{s,t}(n_{i+t}) &= \Delta_n  \partial_{t}E_{s,t}(n_{i}) + 1
+	\end{align*}
+	Let's denote $\Delta_n \partial_{t}E_{s,t}(n_{i})$ as $d_i$. The equation above means, for all $i$ greater than a large enough $I$, we have
+	\begin{align*}
+	d_{i+s} &= d_{i}\\
+	d_{i+t} &= d_{i} + 1
+	\end{align*}
+	Now consider $d_{i+st}$, we will get two disagreeing values for it
+	\begin{align*}
+	d_{i+st} & = d_{i}\\
+	d_{i+st} &= d_{i} + s
+	\end{align*}
+	The contradiction comes from the assumption that there is no node. This proves that there must be a node.
+	
+\end{proof}
 
 \vspace{1cm}
 \begin{lemma}[Mode $M_0$] The optimizer degenerates at extreme $s/t$ ratio. For $n \geq2$
@@ -965,15 +1073,15 @@ E(n_{k,p}) &= D^{k}(n_{k,p}) \\
 \begin{proof}
 	We can plot the graph of real optimizer $w_{s,t}(n)$ as a map over $n$ and $t/s$. In the following graphs, the horizontal axis from left to right is $n$ running from $2$ to $10,000,000$ in logarithmic scale, and the vertical axis from up to down is ratio $r= t/s$ running from $1$ to $10,000,000$ in logarithmic scale.  All of these graphs are expected to have a perfect mirror for $r= t/s \in (0, 1]$ in logarithmic scale so we omitted that part. These graphs aren't accurate as they don't show the values when $r$ is an integer or a simple fraction, where $w$ can be a much larger set than its neighbors; nonetheless, they still display interesting properties for most $r$.
 	
-	\includegraphics[scale=0.4]{w.png}\,\includegraphics[scale=0.4]{bias.png}
+	\includegraphics[scale=0.3]{w.png}\,\includegraphics[scale=0.3]{bias.png}
 	
 	\vspace{0.3cm}
 	
-	\includegraphics[scale=0.4]{variance.png}\,\includegraphics[scale=0.4]{e-bias.png}
+	\includegraphics[scale=0.3]{variance.png}\,\includegraphics[scale=0.3]{e-bias.png}
 	
 	\vspace{0.3cm}
 	
-	\includegraphics[scale=0.4]{mode.png}
+	\includegraphics[scale=0.3]{mode.png}
 	
 	The first graph id colored using the average relative optimizer $w_{s,t}(n)$, where color gradients runs from 0.0 to 0.5
 	\[
@@ -1016,16 +1124,6 @@ E(n_{k,p}) &= D^{k}(n_{k,p}) \\
 	Around $s \approx t$, there is mode $S$.
 \end{proof}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-\section{Back to the classic binary search}
-In the original binary search problem is represented by $s = t = T$. In this case, the recursive equation becomes
-\[
-F_{s,t}(n) = T + \min_{0<w<n}\left\{\frac{w}{n}F_{s,t}(w) + \frac{n-w}{n}F_{s,t}(n-w)\right\}
-\]
-
-TODO
 
 
 
