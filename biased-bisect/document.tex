@@ -453,14 +453,182 @@ The following is a graph for $s = 9$, $t = 4$. We set the vertical axis as $w - 
 
 \includegraphics[scale=0.8]{w-n.png}
 
+
 \vspace{1cm}
-\begin{lemma}[Rational]
-	Given positive integer $s$ and $t$, define the non-decreasing sequence $\{n_i\}_{i=1}^\infty$ as
+\begin{lemma}[Joint]
+	Define the function $\eta : (\min\{s, t\}, \infty) \to \mathbb{Z}^+$
+	\begin{align*}
+	\eta(x) = \begin{cases} 1  &(\min\{s, t\}<x\le s+t)\\
+	 \eta(x-s) + \eta(x-t)  &(x> s+t)
+	\end{cases}
+	\end{align*}
+	This function is like stair cases, and has the form
+	\begin{align*}
+	\eta(x) = \begin{cases} \eta_1  &(\min\{s, t\}<x\le x_1)\\
+	\eta_2  &(x_1<x\le x_2)\\
+	\eta_3  &(x_2<x\le x_3)\\
+	\eta_4  &(x_3<x\le x_4)\\
+	\cdots
+	\end{cases}
+	\end{align*}
+	where $\eta_1 = 1$,  $x_1 = s+t$ and the function is non-decreasing. It defines the ``joint sequence" $\{\eta_k\}_{k=1}^{\infty}$ that's strictly increasing
 	\[
-		n_1 = \dots = n_{s + t} = 1
+	\eta_1 < \eta_2 < \eta_3 < \eta_4 < \dots
+	\]
+	
+	We call a tuple $(x_k, \eta_k\nearrow\eta_{k+1})$ a ``jump point". Each jump point is related to $E(n)$ in the range $n \in [\eta_k, \eta_{k+1})$. For $\eta_k \le n < \eta_{k+1}$
+	\begin{align*}
+	\Delta E_{s,t}(n) &= x_k\\
+	w^{\min}_{s,t}(n) &= \max\{\eta(x_k-t),\, \eta(x_{k+1}-t) + n -\eta_{k+1}\}\quad(n\geq 2)	\\
+	w^{\max}_{s,t}(n) &= \min\{\eta(x_{k+1}-t),\,\eta(x_k-t) + n -\eta_k \} \quad(n\geq 2)
+	\end{align*}
+	Specifically
+	\[
+	w_{s,t}(\eta_k) = \{\eta(x_k-t)\}\quad(\eta_k\geq 2)
+	\]
+	In other words, a jump point corresponds to a bead in $w(n)$. The bead may be degenerated to a thin straight line in some cases.
+\end{lemma}
+\begin{proof}
+		Proof by induction
+	\paragraph{Base case}
+	The first jump point is $(x_1, \eta_1\nearrow\eta_2) = (s+t, 1\nearrow2)$, which corresponds to $n = 1$. We have shown that $\Delta E(1) = s + t$ so the base case is satisfied.
+	
+	\paragraph{Inductive step} A jump point $(x_k, \eta_k\nearrow\eta_{k+1})$, is related to two previous ``probable jump point" $(x_k-s, S\nearrow_?S')$ and $(x_k-t, T\nearrow_?T')$, with the following relation
+	\begin{align*}
+	S &= \eta(x_k-s)\\
+	T &= \eta(x_k-t)\\
+	S' &= \eta(x_{k+1}-s)\\
+	T' &= \eta(x_{k+1}-t)\\
+	S + T &= \eta_k \\
+	S' + T' &= \eta_{k+1}
+	\end{align*}
+	At least one of the two probable jump points $x_k-s$, $x_k-t$ must be a real jump point (otherwise $x_k$ wouldn't be a jump point). And then we have the following inequalities 
+	\begin{align*}
+	\Delta E(S) &\ge x_k - s &(\text{Equal when $x_k-s$ is a jump point}) \\
+	\Delta E(T) &\ge x_k - t &(\text{Equal when $x_k-t$ is a jump point}) \\
+	\Delta E(S+1) &\ge \Delta E(S) \ge x_k - s  &(\text{Due to convexity of $E$})\\
+	\Delta E(T+1) &\ge \Delta E(T) \ge x_k - t \\
+	\Delta E(S-1) &< x_k - s &(\text{if $S\ge 2$})\\
+	\Delta E(T-1) &< x_k - t &(\text{if $T\ge 2$})\\
+	\end{align*}
+	Let's look at the starting point of the current interval $E(\eta_k)$ around $w = T$. The differential $\Delta_w D$ are
+	\begin{align*}
+	\Delta_w D^{T - 1}(\eta_k) &= \Delta E(T-1) - \Delta E(\eta_k - T) + t - s\\
+	&= \Delta E(T-1) - \Delta E(S) + t - s\\
+	&< (x_k - t) - (x_k - s) + t - s = 0
+	\end{align*}
+	\begin{align*}
+	\Delta_w D^{T }(\eta_k) &= \Delta E(T) - \Delta E(\eta_k - T - 1) + t - s\\
+	&= \Delta E(T) - \Delta E(S - 1) + t - s\\
+	&> (x_k - t) - (x_k - s) + t - s = 0
+	\end{align*}
+	Either of them might not exist for $T = 1$ or $T = \eta_k - 1$, but it doesn't affect the arguments. Because of convexity of $D^w$, this means 
+	\[
+	w(\eta_k) = \{T\} = \{\eta(x_k-t)\}
+	\]
+	and
+	\[
+	E(\eta_k) = E(T) + E(S) + T t + S s
+	\]
+	We can use the same argument for the last point of the current interval and get
+	\[
+	w(\eta_{k+1}) = \{T'\}
 	\]
 	\[
-		n_{i} = n_{i - s} + n_{i - t} , \quad i > s + t
+	E(\eta_{k+1}) = E(T') + E(S') + T' t + S' s
+	\]
+	The total difference between the two end points is
+	\begin{align*}
+	E(\eta_{k+1}) - E(\eta_k) &= E(T') - E(T) + E(S') - E(S) + (T'-T)t + (S'-S)s\\
+	&= (T'-T)(x_k-t) + (S'-S)(x_k-s) + (T'-T)t + (S'-S)s \quad \\
+	&(\text{This is true regardless whether the $x_k-t$ or $x_k-s$ is real jump points})\\
+	&=(T'-T + S' - S)x_k\\
+	&=(\eta_{k+1} -\eta_k)x_k
+	\end{align*}
+	If $\eta_{k+1} -\eta_k = 1$, then 
+	\[
+	E(\eta_{k+1}) - E(\eta_k) = \Delta E(\eta_k) = x_k
+	\]
+	and the current interval is proved. Otherwise, let's look at $E(\eta_k +1)$ around $w = T$ and $w = T+1$. The differential $\Delta_w D$ are
+	\begin{align*}
+	\Delta_w D^{T - 1}(\eta_k+1) &= \Delta E(T-1) - \Delta E(\eta_k - T + 1) + t - s\\
+	&=\Delta E(T-1) - \Delta E(S + 1) + t - s\\
+	&< (x_k - t) - (x_k -s) + t -s = 0
+	\end{align*}
+	\begin{align*}
+	\Delta_w D^{T + 1}(\eta_k+1) &= \Delta E(T+1) - \Delta E(\eta_k - T - 1) + t - s\\
+	&=\Delta E(T+1) - \Delta E(S - 1) + t - s\\
+	&> (x_k - t) - (x_k -s) + t -s = 0
+	\end{align*}
+	Again, either of them might not exist, but anyway, due to convexity, the optimizer is among $w\in\{T, T+1\}$ (or potentially both). Their $D^w(\eta_k+1)$ are 
+	\begin{align*}
+	D^T(\eta_k+1) &= E(T) + E(\eta_k+1-T) +Tt +(\eta_k+1-T)s \\
+	&= E(T) + E(S+1) +Tt +(S+1)s\\
+	&= E(T) + E(S) + \Delta E(S) +Tt +(S+1)s\\
+	&= E(\eta_k) + \Delta E(S) +s \\
+	&\geq E(\eta_k) + x_k \quad (\text{equality holds when $x_k-s$ is a jump point})
+	\end{align*}
+	\begin{align*}
+	D^{T+1}(\eta_k+1) &= E(T+1) + E(\eta_k-T) +(T+1)t +(\eta_k-T)s \\
+	&= E(T+1) + E(S) +(T+1)t +Ss \\
+	&= E(T) + \Delta E(T)+ E(S) +  (T+1)t +Ss\\
+	&= E(\eta_k) + \Delta E(T) +t \\
+	&\geq E(\eta_k) + x_k \quad (\text{equality holds when $x_k-t$ is a jump point})
+	\end{align*}
+	Because at least one of the equality holds, we have
+	\[
+	E(\eta_k+1) =  E(\eta_k) + x_k
+	\]
+	The choice of $w$ among $\{T, T+1\}$ depends on which are jump points
+	\begin{itemize}
+		\item $x_k-s$ is a jump point $\iff T \in w(\eta_k+1)$ 
+		\item $x_k-t$ is a jump point $\iff T+1 \in w(\eta_k+1)$ 
+	\end{itemize}
+	Then $\Delta E(\eta_k)$ would be 
+	\begin{align*}
+	\Delta E(\eta_k) &= E(\eta_k+1) - E(\eta_k) \\
+	&= x_k 
+	\end{align*}
+	Remember $E(\eta_{k+1}) - E(\eta_k) = (\eta_{k+1} -\eta_k)x_k$, then we have 
+	\begin{align*}
+	(\eta_{k+1} -\eta_k)x_k &= E(\eta_{k+1}) - E(\eta_k) \\
+	&= \Delta E(\eta_k) + \Delta E(\eta_k + 1) +\dots+\Delta E(\eta_{k+1} - 1) \\
+	&\geq  \Delta E(\eta_k) + \Delta E(\eta_k) +\dots+\Delta E(\eta_k) \\
+	&\geq (\eta_{k+1} -\eta_k)x_k
+	\end{align*}
+	This equality must holds, so this locks all $\Delta E(n) = x_k$ for $\eta_{k} \leq n < \eta_{k+1}$, and this proves the formula for $\Delta E(n)$.
+	
+	As for the values of $w(n)$ in between, we have three cases 
+	\begin{itemize}
+		\item If both $x_k-s$ and $x_k-t$ are jump points, then we have $w(\eta_k +1) =\{T, T+1\}$, and there are ``constant differential" regions $n \in [S, S')$ and $n \in [T, T')$. We have shown that $w(n)$ will form a parallelogram that satisfy the formula.
+		\item If $x_k-s$ is not a jump point, then we have the following equations
+		\begin{align*}
+		S &= S'\\
+		w(\eta_{k}) &= \{T\}\\
+		w(\eta_{k+1}) &= \{T'\} = \{T+\eta_{k+1} - \eta_k\}
+		\end{align*}
+		The two end points form a slope of 1. Because of $w$-Lipschitz continuity, this forces all $w(n)$ to be on the thin line $w(\eta_{k} + a) = \{T+a\}$.
+		\item If $x_k-t$ is not a jump point, then we have the following equations 
+		\begin{align*}
+		T &= T'\\
+		w(\eta_{k}) &= \{T\}\\
+		w(\eta_{k+1}) &= \{T'\} = \{T\}
+		\end{align*}
+		The two end points are on the same level. Because of $w$-Lipschitz continuity, this forces all $w(n)$ to be on the same level.
+	\end{itemize}
+	In summary, we have proved the formula for $w(n)$
+	
+
+\end{proof}
+
+\vspace{1cm}
+\begin{lemma}[Fibonacci]
+	Given positive integer $s$ and $t$, define the non-decreasing ``generalized Fibonacci sequence" $\{n_i\}_{i=\min\{s,t\}+1}^\infty$ as
+	\[
+	n_{\min\{s,t\}+1} = \dots = n_{s + t} = 1
+	\]
+	\[
+	n_{i} = n_{i - s} + n_{i - t} , \quad i > s + t
 	\]
 	then we have, when $n_i \neq n_{i+1}$, for $n_i \le n < n_{i+1}$
 	\begin{align*}
@@ -468,94 +636,13 @@ The following is a graph for $s = 9$, $t = 4$. We set the vertical axis as $w - 
 	w^{\min}_{s,t}(n) &= \max\{n_{i - t},\, n_{i +1 - t} + n - n_{i+1}\}\quad(n\geq 2)	\\
 	w^{\max}_{s,t}(n) &= \min\{n_{i +1 - t},\,n_{i - t} + n - n_{i} \} \quad(n\geq 2)
 	\end{align*}
-	Specifically
-	\[
-	w_{s,t}(n_i) = \{n_{i-t}\}\quad(n_i\geq 2)
-	\]
-	and $w_{s,t}(n)$ between $n_i$ and $n_{i-t}$ forms either a parallelogram or a straight thin line.
 \end{lemma}
 \begin{proof}
-	Proof by induction
-	\paragraph{Base case}
-	The first no-empty $n$-interval is $n_{s+t} \le n <n_{s+t+1}$, which is exactly $n = 1$. We have shown that $\Delta E(1) = s + t$ so the base case satisfies.
-	
-	
-	\paragraph{Inductive step} For all other non-empty $n$ interval $[n_i, n_{i+1})$ ($i > s + t$), both end satisfies the recurrence relation
-	\begin{align*}
-	n_{i} &= n_{i - s} + n_{i - t} \\
-	n_{i + 1} &= n_{i- s + 1 } + n_{i - t + 1 } 
-	\end{align*}
-	Let's look at $E(n_{i})$ around $w = n_{i - t}$ (We will omit the special case for $n_{i-t} = 1$ or $n_{i-t} = n_{i} - 1$, as one side of the $w$-differential doesn't exist, but the argument for the minimal value is the same)
-	\begin{align*}
-	\Delta_w D^{n_{i - t} - 1}(n_{i}) &= \Delta E(n_{i - t} - 1) - \Delta E(n_{i} - n_{i - t}) + t - s \\ 
-	&= \Delta E(n_{i - t} - 1) - \Delta E(n_{i - s}) + t - s \\ 
-	&<  (i - t) - (i - s) + t - s  
-	=0\\
-	&\quad (\text{$[n_{i - s},n_{i - s} + 1)$ may be empty, but $\Delta E(n_{i - s})\geq i-s$ anyway})
-	\end{align*}
-	\begin{align*}
-	\Delta_w D^{n_{i - t}}(n_{i}) &= \Delta E(n_{i - t}) - \Delta E(n_{i} - n_{i - t} - 1) + t - s \\ 
-	&= \Delta E(n_{i - t}) - \Delta E(n_{i - s} - 1) + t - s \\ 
-	&> (i - t) - (i - s) + t - s 
-	=0
-	\end{align*}
-	So $w(n_{i}) = \{n_{i - t}\}$ (due to convexity), and 
-	\begin{align*}
-	E(n_i) &= E(n_{i - t}) + E(n_{i - s}) + n_{i - t} t + n_{i - s} s 
-	\end{align*}
-	With the same argument, at $E(n_{i + 1})$ we have  $w(n_{i + 1}) = \{n_{i - t + 1}\}$, and 
-	\begin{align*}
-	E(n_{i+1}) &= E(n_{i - t+1}) + E(n_{i - s+1}) + n_{i - t+1} t + n_{i - s+1} s 
-	\end{align*}
-	The total difference between the two is
-	\begin{align*}
-	E(n_{i+1}) - E(n_i) &= E(n_{i - t+1}) - E(n_{i - t}) + E(n_{i - s+1}) - E(n_{i - s}) + (n_{i - t+1} - n_{i-t}) t+ (n_{i - s+1} - n_{i-s}) s\\
-	&= (n_{i - t+1} - n_{i-t})(i-t) + (n_{i - s+1} - n_{i-s})(i-s) + (n_{i - t+1} - n_{i-t}) t+ (n_{i - s+1} - n_{i-s}) s\\
-	&=(n_{i - t+1} - n_{i-t} + n_{i - s+1} - n_{i-s})i\\
-	&=(n_{i+1} - n_{i})i
-	\end{align*}
-	If $n_{i+1} - n_{i}$ = 1, then $E(n_{i+1}) - E(n_i) = \Delta E(n_i) = i$ and thus the formula is proved. Otherwise, let's look at $E(n_{i} + 1)$ around $w = n_{i - t}$ and $w = n_{i - t} + 1$ (again, ignore one side of the $w$-differential if it doesn't exist)
-	\begin{align*}
-	\Delta_w D^{n_{i - t} - 1}(n_{i} +1) &= \Delta E(n_{i - t} - 1) - \Delta E(n_{i} - n_{i - t} + 1) + t - s \\ 
-	&= \Delta E(n_{i - t} - 1) - \Delta E(n_{i - s}  + 1) + t - s \\ 
-	&< (i - t) - (i - s) + t - s 
-	=0
-	\end{align*}
-	\begin{align*}
-	\Delta_w D^{n_{i - t} + 1}(n_{i} +1) &= \Delta E(n_{i - t} + 1) - \Delta E(n_{i} - n_{i - t} -1) + t - s \\ 
-	&= \Delta E(n_{i - t} + 1) - \Delta E(n_{i - s}  -1) + t - s \\ 
-	&> (i - t) - (i - s) + t - s 
-	=0
-	\end{align*}
-	So the optimizer is among $w\in\{n_{i - t}, n_{i - t} + 1\}$ (or potentially both). Let's calculate their $D^w(n_{i}+1)$
-	\begin{align*}
-	D^{n_{i - t}}(n_{i}+1) &= E(n_{i - t}) + E(n_{i-s}+1) + n_{i - t} t + (n_{i-s}+1)s\\
-	D^{n_{i - t} + 1}(n_{i}+1) &= E(n_{i - t}+1) + E(n_{i-s}) + (n_{i - t} + 1) t + n_{i-s}s\\
-	\end{align*}
-	So the differential at $E(n_{i})$ is
-	\begin{align*}
-	\Delta E(n_{i}) &= \min\{D^{n_{i - t}}(n_{i}+1) - E(n_i),D^{n_{i - t} + 1}(n_{i}+1)- E(n_i) \} \\
-	&=\min\{\Delta E(n_{i-s}) + s, \Delta E(n_{i-t}) + t\}
-	\end{align*}
-	Remember $\Delta E(n_{i-s}) \ge i -s$, $ \Delta E(n_{i-t}) \ge i - t$, and at least one of them has equality, otherwise both $n_{i-s} = n_{i-s+1}$ and $n_{i-t} = n_{i-t+1}$, which means $[n_i, n_{i+1})$ is empty. So we have 
+	We can construct $\{n_i\}_{i=\min\{s,t\}+1}^{\infty}$ from $\eta(x)$ as
 	\[
-	\Delta E(n_{i}) = i
+	n_i = \eta(i)
 	\]
-	Remember $E(n_{i+1}) - E(n_i) = (n_{i+1} - n_{i})i$, then we have
-	\begin{align*}
-	(n_{i+1} - n_{i})i &= E(n_{i+1}) - E(n_i) \\
-		&= \Delta E(n_{i}) + \Delta E(n_{i} + 1) + \dots + \Delta E(n_{i+1} -1)\\
-		&\le \Delta E(n_{i}) + \Delta E(n_{i}) +\dots +\Delta E(n_{i})\\
-		&=(n_{i+1} - n_{i})i
-	\end{align*}
-	The equality must holds, so we have locked $\Delta E(n) = i$ for all $ n_i \le n < n_{i+1}$.
-		
-	Regarding the shape of $w(n)$ between $n_{i}$ and $n_{i+1}$, we have
-	\begin{itemize}
-		\item If $n_{i-s} \neq n_{i-s+1}$ and $n_{i-t} \neq n_{i-t+1}$, then $w(n_{i}+1) = \{n_{i - t}, n_{i - t} + 1\}$. Together with $w(n_{i}) =  \{n_{i - t}\}$, we know this forms a parallelogram as described before.
-		\item If $n_{i-t} = n_{i-t+1}$, then the single value for $w$ at two ends $w(n_{i}) = w(n_{i+1})$. This restricts all $w$ to be on the same horizontal line
-		\item If $n_{i-s} = n_{i-s+1}$, then the single value for $w$ at two ends $w(n_{i}) + n_{i+1} - n_i = w(n_{i+1})$. This restricts all $w$ to be on the same line with slope of 1.
-	\end{itemize}
+	and one can easily verify that this satisfies the recurrence relation of both $\eta(x)$ and $\{n_i\}_{i}$. And for every $n_i \neq n_{i+1}$, there is a jump point at $(i,n_i\nearrow n_{i+1})$, and we can derive the $\Delta E_{s,t}(n)$ and $w_{s,t}(n)$ formula for integer case from the previous property.
 	
 \end{proof}	
 
@@ -578,7 +665,6 @@ Similarly, for $s = 1$ and $t = 2$, we have
 \Delta E_{1,2}(\phi_{i -1}) =\dots = \Delta E_{1,2}(\phi_{i} - 1) &= i
 \end{align*}
 where $\phi_i$ is the $i$th Fibonacci number.
-
 	
 \vspace{1cm}
 \begin{lemma}[$s,t$-concavity]
@@ -765,13 +851,13 @@ We can observe from the graph that there are a few red spikes poking out of blac
 	\]
 	
 	
-	We will use the $w$ formula from Property [Rational]. Remember we defined a helper sequence $\{n_i\}_{i=0}^{\infty}$. We first prove that, for co-prime $s$ and $t$ and large enough $i$, the interval has at least length of 2 (or any given number, but we don't need that)
+	We will use the generalized Fibonacci sequence $\{n_i\}_{i=\min\{s,t\}+1}^{\infty}$ previously discussed. We first prove that, for co-prime $s$ and $t$ and large enough $i$, the interval has at least length of 2
 	\[
 	\exists I, \forall i>I, \Delta_i n_{i} \ge 2
 	\]
-	The differential of $\{n_i\}_{i=0}^{\infty}$ satisfies the recurrence relation
+	The differential of $\{n_i\}_{i=\min\{s,t\}+1}^{\infty}$ satisfies the recurrence relation
 	\begin{align*}
-	\Delta_i n_1 &= \Delta_i n_2 = \dots = \Delta_i n_{s+t-1} = 0\\
+	\Delta_i n_{\min\{s,t\}+1} &= \Delta_i n_{\min\{s,t\}+2} = \dots = \Delta_i n_{s+t-1} = 0\\
 	\Delta_i n_{s+t} &= 1\\
 	\Delta_i n_i &= \Delta_i n_{i-s} + \Delta_i n_{i-t} \quad (i > s + t)
 	\end{align*}
@@ -789,18 +875,18 @@ We can observe from the graph that there are a few red spikes poking out of blac
 	
 	Going back to proving the existence of nodes. We will prove this by contradiction. Let's assume that the following holds for all positive integer $n$
 	\[
-	\partial_{+t}E_{s,t}(n) = \partial_{-t}E_{s,t}(n) = \partial_{t}E_{s,t}(n) 
+	\partial_{+t}E_{s,t}(n) = \partial_{-t}E_{s,t}(n) = \delta(n)
 	\]
 	This implies the derivative will have the unified formula
 	\begin{align*}
-	\partial_{t}E_{s,t}(1) &= 0\\
-	\partial_{t}E_{s,t}(n) &= \partial_{t}E_{s,t}(w) + \partial_{t}E_{s,t}(n-w) + w\quad \forall w\in w_{s,t}(n) \quad(n\geq 2)
+	\delta(1) &= 0\\
+	\delta(n) &= \delta(w) + \delta(n-w) + w\quad \forall w\in w_{s,t}(n) \quad(n\geq 2)
 	\end{align*}
 	We can also derive the secondary differential formula for $n\geq 2$
 	\begin{align*}
-	\Delta_n \partial_{t}E_{s,t}(n) =\begin{cases}
-	\Delta_n  \partial_{t}E_{s,t}(n-w) & (w\in w_{s,t}(n), w\in w_{s,t}(n+1) )\\
-	\Delta_n  \partial_{t}E_{s,t}(w) + 1 & (w\in w_{s,t}(n), w+1\in w_{s,t}(n+1) )
+	\Delta_n \delta(n) =\begin{cases}
+	\Delta_n  \delta(n-w) & (w\in w_{s,t}(n), w\in w_{s,t}(n+1) )\\
+	\Delta_n  \delta(w) + 1 & (w\in w_{s,t}(n), w+1\in w_{s,t}(n+1) )
 	\end{cases}
 	\end{align*}
 	Consider the three related $n$-intervals $[n_{i}, n_{i+1})$, $[n_{i + t-s}, n_{i + t-s + 1})$ and $[n_{i+t}, n_{i+t + 1})$ ($i > I$). For large enough $i$, the intervals have at least length of 2. So we have
@@ -810,10 +896,10 @@ We can observe from the graph that there are a few red spikes poking out of blac
 	\end{align*}
 	Applying the secondary differential formula, we get
 	\begin{align*}
-	\Delta_n \partial_{t}E_{s,t}(n_{i+t}) &= \Delta_n \partial_{t}E_{s,t}(n_{i + t-s}) \\
-	\Delta_n \partial_{t}E_{s,t}(n_{i+t}) &= \Delta_n  \partial_{t}E_{s,t}(n_{i}) + 1
+	\Delta_n \delta(n_{i+t}) &= \Delta_n \delta(n_{i + t-s}) \\
+	\Delta_n \delta(n_{i+t}) &= \Delta_n \delta(n_{i}) + 1
 	\end{align*}
-	Let's denote $\Delta_n \partial_{t}E_{s,t}(n_{i})$ as $d_i$. The equation above means, for all $i$ greater than a large enough $I$, we have
+	Let's denote $\Delta_n \delta(n_i) = d_i$. The equation above means, for all $i$ greater than a large enough $I$, we have
 	\begin{align*}
 	d_{i+s} &= d_{i}\\
 	d_{i+t} &= d_{i} + 1
@@ -826,6 +912,20 @@ We can observe from the graph that there are a few red spikes poking out of blac
 	The contradiction comes from the assumption that there is no node. This proves that there must be a node.
 	
 \end{proof}
+
+However, the first node of given $(s, t)$ can appear pretty late. Our proof above estimated that the node appears around $n_{I+st}$. The $n_i$ sequence growth exponentially like 
+\[
+n_i \sim a^i
+\]
+where $a$ is the solution to the following characteristic equation
+\[
+a^{-s} + a^{-t} = 1
+\]
+It can be seen that the solution $a \in [2^{1/s}, 2^{1/t}]$ (assuming $s \geq t$), so the growth of $n_{I+st}$, omitting the $I$ part, is at least around 
+\[
+n_{I+st} \sim  [2^t, 2^s]
+\]
+So for ratio with larger numbers, the first node position grows exponentially.
 
 \vspace{1cm}
 \begin{lemma}[Mode $M_0$] The optimizer degenerates at extreme $s/t$ ratio. For $n \geq2$
@@ -1020,22 +1120,22 @@ E(n_{k,p}) &= D^{k}(n_{k,p}) \\
 	\end{align*}
 	Remember that the traditional bisect problem has a time complexity of $F(n) = E(n)/n \sim O(\log n)$, we can guess that the solution to the functional equation above is in the form
 	\[
-	\tilde{E}_{s,t}(x) = k_{s,t}x\ln x
+	\tilde{E}_{s,t}(x) = K_{s,t}x\ln x
 	\]
 	Substitute this in the equation, we get
 	\begin{align*}
-	k_{s,t}x\ln x &= \min_{w}\{ k_{s,t}w\ln w + k_{s,t}(x-w)\ln (x-w)+wt+(x-w)s\}
+	K_{s,t}x\ln x &= \min_{w}\{ K_{s,t}w\ln w + K_{s,t}(x-w)\ln (x-w)+wt+(x-w)s\}
 	\end{align*}
 	The function to minimize is differentiable, so we can study its derivative
 	\begin{align*}
-	&\frac{d}{dw} ( k_{s,t}w\ln w + k_{s,t}(x-w)\ln (x-w)+wt+(x-w)s )\\
-	&=k_{s,t}(1 + \ln w) - k_{s,t}(1 + \ln(x-w))+t-s\\
-	&=k_{s,t}(\ln w - \ln (x-w)) + t -s
+	&\frac{d}{dw} ( K_{s,t}w\ln w + K_{s,t}(x-w)\ln (x-w)+wt+(x-w)s )\\
+	&=K_{s,t}(1 + \ln w) - K_{s,t}(1 + \ln(x-w))+t-s\\
+	&=K_{s,t}(\ln w - \ln (x-w)) + t -s
 	\end{align*}
 	The derivative monotonically increases in $0<w<x$ and approaches $\pm \infty$ at each end respectively, so the single minimal value of the original function is at derivative of $0$
 	\begin{align*}
-	k_{s,t}(\ln w - \ln (x-w)) + t -s &= 0\\
-	k_{s,t} &= \frac{s -t }{\ln w - \ln (x-w)}
+	K_{s,t}(\ln w - \ln (x-w)) + t -s &= 0\\
+	K_{s,t} &= \frac{s -t }{\ln w - \ln (x-w)}
 	\end{align*}
 	and we substitute this back and remove the $\min$ operator, we get
 	\[
@@ -1051,20 +1151,276 @@ E(n_{k,p}) &= D^{k}(n_{k,p}) \\
 	\]
 	The solution is unfortunately not easy to express in a closed form, but we do get a normalized optimizer function $g_{s,t}$ independent from $n$. The optimizer for the discrete problem should be similar to this.
 	
-	We can also get the coefficient $k_{s,t}$ by
+	We can also get the coefficient $K_{s,t}$ by
 	\[
 	k_{s,t} = \frac{s -t }{\ln w - \ln (x-w)} = \frac{s -t }{\ln g_{s,t} - \ln (1-g_{s,t})} = -\frac{t}{\ln g_{s,t}} = - \frac{s}{\ln(1-g_{s,t})}
 	\]
-	or equivalently, the $k_{s,t} = k$ is the solution of the equation
+	or equivalently, the $K_{s,t} = K$ is the solution of the equation
 	\[
-	e^{-s/k} + e^{-t/k} = 1
+	e^{-s/K} + e^{-t/K} = 1
 	\]
-	The time solution to the discrete problem $E_{s,t}(n)$ should also be similar to $\tilde{E}_{s,t}(n) = k_{s,t}n\ln n$. We can also prove the inequality
+	The time solution to the discrete problem $E_{s,t}(n)$ should also be similar to $\tilde{E}_{s,t}(n) = K_{s,t}n\ln n$. We can also prove the inequality
 	\[
 	E_{s,t}(n) \geq \tilde{E}_{s,t}(n)
 	\]
 	by noticing that the optimizer for $\tilde{E}$ is always in a super set for the one for $E_{s,t}$
 
+\end{proof}
+
+\vspace{1cm}
+\begin{lemma}[$E$ limit]
+	\[
+	\lim_{n\to\infty}\frac{E_{s,t}(n)}{\tilde{E}_{s,t}(n)} = 1
+	\]
+\end{lemma}
+\begin{proof}
+	
+	We will use the function $\eta(x)$ previously defined. First of all, let's show that $\eta(x)$ has asymptotic behavior
+	\[
+	\frac{\eta(x)}{e^{x/K_{s,t}}} = C \in [e^{-(s+t)/K},e^{-\min\{s,t\}/K}]
+	\]
+	It is easy to show that any function in the form 
+	\[
+	\eta'(x) = C e^{x/K_{s,t}}
+	\]
+	satisfies the functional equation 
+	\[
+	\eta'(x) = \eta'(x - s) + \eta'(x - t)
+	\]
+	which $\eta(x)$ also satisfies. So if we find a $\eta'(x)$ that is completely larger or smaller than $\eta(x)$ in the seeding region $(\min\{s,t\}, s+t]$, then by induction such $\eta'(x)$ will always bound $\eta(x)$ above or below. We can choose the end points of the seeding region to get $C_{hi} = e^{-\min\{s,t\}/K}$ and $C_{lo} = e^{-(s+t)/K}$ for the upper and lower bound.
+	
+	We first prove the limit on the subsequence $\{\eta_k\}_{k=1}^{\infty}$ . We want to prove 
+	\[
+	\lim_{k\to\infty}\frac{E_{s,t}(\eta_k)}{\tilde{E}_{s,t}(\eta_k)} = 1
+	\]
+	The value of $E(\eta_k)$ can be expressed as 
+	\begin{align*}
+	E(\eta_k) &= x_1 (\eta_2 - \eta_1) + x_2 (\eta_3 - \eta_2) + \dots +x_{k-1} (\eta_k - \eta_{k-1})\\
+	&=  x_{k-1}\eta_k - (x_1 \eta_1 + (x_2 - x_1) \eta_2 + (x_3 - x_2)\eta_3 + \dots + (x_{k-1} - x_{k-2}) \eta_{k-1}) \\
+	&< x_{k-1}\eta_k
+	\end{align*}
+	We can use the squeeze theorem (Remember $E(n) \ge \tilde{E}(n)$) and only prove the following limit instead
+	\[
+	\lim_{k\to\infty}\frac{x_{k-1}\eta_k}{\tilde{E}_{s,t}(\eta_k)} = \lim_{k\to\infty}\frac{x_{k-1}}{K_{s,t}\ln\eta_k} = 1
+	\]
+	Recall the asymptotic behavior of $\eta(x)$, we have
+	\begin{align*}
+	\frac{x_{k-1}}{K_{s,t}\ln\eta_k} &= \frac{x_{k-1}}{K_{s,t}\ln\eta(x_k)} \\
+	&=\frac{x_{k-1}}{K_{s,t}\ln\left(C e^{x_k/K_{s,t}}\right)}\\
+	&=\frac {x_{k-1}}{x_k +K_{s,t}\ln C }
+	\end{align*}
+	The difference between $x_{k-1}$ and $x_k$ is bounded
+	\[
+	x_k - x_{k-1} = B \le \max\{s, t\}
+	\]	
+	because otherwise we would have a long constant region for $\eta(x)$, which traces back to an equally long seeding region, which we know is only $\max\{s, t\}$ long. On the other hand, the sequence $\{x_k\}$ is unbounded, because each jump point at $x_k$ should create another two jump points $x_k+s$ and $x_k+t$ that is also part of the $\{x_k\}$ sequence, thus leading the sequence to grow unbounded. This means the limit 
+	\begin{align*}
+	\lim_{k\to\infty}\frac{x_{k-1}}{K_{s,t}\ln\eta_k} &= \lim_{k\to\infty}\frac {x_{k-1}}{x_k +K_{s,t}\ln C } \\
+	&= \lim_{k\to\infty}\frac {x_{k-1}}{x_{k-1} + B +K_{s,t}\ln C }\\
+	&= \lim_{k\to\infty}\frac {1}{1 + \frac{B +K_{s,t}\ln C}{x_{k-1}} } \\
+	&=1
+	\end{align*}
+	and we therefore proved the limit on the subsequence
+	\[
+	\lim_{k\to\infty}\frac{E_{s,t}(\eta_k)}{\tilde{E}_{s,t}(\eta_k)} = 1
+	\]
+	
+	In order to prove the full limit, let's look at some properties of $\tilde{E}(n)$. Consider the following two points on the curve
+	\begin{align*}
+	A &= (a, K a\ln a)\\
+	B &= (b, K b\ln b)
+	\end{align*}
+	The tangent at $A$ has the following equation
+	\[
+	Y_a(n) = K(\ln a + 1)n - Ka
+	\]
+	Because $\tilde{E}(n)$ is convex, this tangent line is always below $\tilde{E}(n)$. We denote the linear function that passes both $A$ and $B$ as $L_{a,b}(n)$. Then for $a\le n\le b$, we have 
+	\begin{align*}
+	\frac{L_{a,b}(n)}{\tilde{E}(n)} &\le \frac{L_{a,b}(n)}{Y_a(n)} \\
+	&\le \frac{L_{a,b}(b)}{Y_a(b)} \\
+	&= \frac{Kb \ln b}{K(\ln a + 1)b - Ka}\\
+	&= \frac{\ln b}{\ln a + 1 - a/b}
+	\end{align*}
+	Now set $a = \eta_{k} = \eta(x_k)$ and $b = \eta_{k+1} = \eta(x_{k+1})$, then their ratio is
+	\begin{align*}
+	\frac{a}{b} &= \frac{\eta(x_k)}{\eta(x_{k+1})}\\
+		&= \frac{C e^{x_k K}}{C' e^{x_{k+1} K} } \quad &(\text{Both $C$ and $C'$ are some variables in $[e^{-(s+t)/K},e^{-\min\{s,t\}/K}]$})\\
+		&= C'' e^{(x_k-x_{k+1}) K} \quad &(C'' \in [e^{-\max\{s,t\}/K}, e^{\max\{s,t\}/K}]) \\
+		& = C'''\in [e^{-2\max\{s,t\}/K}, 1] \quad & (\text{Remember $x_{k+1} - x_{k} \le \max\{s,t\}$})
+	\end{align*}
+	So we can have the limit
+	\begin{align*}
+	\lim_{k\to\infty} \frac{\ln b}{\ln a + 1 - a/b} &= \lim_{k\to\infty} \frac{\ln \eta_{k+1}}{\ln \eta_{k} + 1 - \eta_{k}/\eta_{k+1}}\\
+	&= \lim_{k\to\infty} \frac{\ln \eta_{k+1}}{\ln \eta_{k+1} + \ln C''' + 1 - C'''} \\
+	&= 1 \quad (\text{$\eta_{k+1}$ is unbounded, while $C'''$ is bounded})
+	\end{align*}
+	and the squeeze theorem locks the limit to 
+	\begin{align*}
+	\lim_{k\to\infty}\frac{L_{\eta_{k},\eta_{k+1}}(n)}{\tilde{E}(n)} = 1
+	\end{align*}
+	Now we realize that $E(n)$ is linear between $\eta_k\le n \le \eta_{k+1}$, plus the end points has the limit
+	\begin{align*}
+	\lim_{k\to\infty} \frac{E(\eta_k)}{\tilde{E}(\eta_k)} &= \lim_{k\to\infty} \frac{E(\eta_k)}{L_{\eta_{k},\eta_{k+1}}(\eta_k)} = 1 \\
+	\lim_{k\to\infty} \frac{E(\eta_{k+1})}{\tilde{E}(\eta_{k+1})} &= \lim_{k\to\infty} \frac{E(\eta_{k+1})}{L_{\eta_{k},\eta_{k+1}}(\eta_{k+1})} = 1
+	\end{align*}
+	Then the two linear function has limit for any point in $\eta_k\le n \le\eta_{k+1}$
+	\begin{align*}
+	\lim_{k\to\infty} \frac{E(n)}{L_{\eta_{k},\eta_{k+1}}(n)} = 1 \quad(\text{arbitrarily choose a $n\in[\eta_k,\eta_{k+1}]$ for each $k$})
+	\end{align*}
+	Combining with the previous limit between $L$ and $\tilde{E}$, we get
+	\begin{align*}
+	\lim_{k\to\infty} \frac{E(n)}{\tilde{E}(n)} = 1
+	\end{align*}
+	which implies 
+	\[
+	\lim_{n\to\infty} \frac{E(n)}{\tilde{E}(n)} = 1
+	\]
+	
+	
+\end{proof}
+
+\iffalse
+		We can also provide an example why the general limit $\lim_{n\to\infty} E(n)/\tilde{E}(n) = 1$ is not true. Consider $s = t = 1$ and the following sequence 
+		\[
+		m_k = 2^{k+1} + 2^{k}
+		\]
+		We can compute $E(m_k)$ manually
+		\begin{align*}
+		E(m_k) &= E(2^{k+1} + 2^{k}) \\
+			&= 2\cdot 1 + 3\cdot 2 + 4\cdot 4 +\dots + (k+2) \cdot 2^{k} + (k+3) \cdot 2^{k} \\
+			&= 2^{k+1}(k+1) + 2^k(k+3)
+		\end{align*}
+		We can also compute $K_{1,1} = 1/\ln(2)$ and the limit on this sequence would be
+		\begin{align*}
+		\lim_{k\to\infty} \frac{E(m_k)}{\tilde{E}(m_k)} &= \lim_{n\to\infty} \frac{2^{k+1}(k+1) + 2^k(k+3)}{ (2^{k+1} + 2^{k})\log_{2}(2^{k+1} + 2^{k}) } \\
+		&=\lim_{n\to\infty} \frac{3k + 5}{ 3(k+\log_{2}(3))  }
+		\end{align*}
+\fi
+
+\iffalse
+			\vspace{1cm}
+			\begin{lemma}[$w$ limit]
+				We define the ``$w$-deviation" as follows
+				\[
+				V_{s,t}(n) = \min_{w_{s,t}^{\min}(n)\le w \le w_{s,t}^{\max}(n)}^{w\in\mathbb{R}} \left\{ \left|\frac{w}{n} - g_{s,t}\right| \right\}
+				\]
+				Then the deviation converges to zero
+				\[
+				\lim_{n\to\infty} V_{s,t}(n) = 0
+				\]
+			\end{lemma}
+			\begin{proof}
+				We will again use the help of $\eta(x)$ functions. We first prove a weaker limit 
+				\begin{align*}
+				\lim_{k\to\infty} \frac{w(\eta_k)}{\eta_k} &= \lim_{k\to\infty} \frac{\eta(x_k-t)}{\eta(x_k)} \\
+				&=\lim_{k\to\infty} \frac{\eta(x_k-t)}{\eta(x_k)} \\
+				&= \text{(TODO)}
+				\end{align*}
+				
+				
+				
+				Now consider $\eta_{k}\le n \le \eta_{k+1}$. Because of the parallelogram property, we know that the linear interpolation of $w(\eta_k)$ is with in the $w$ interval 
+				\[
+				w'(n) = \frac{\eta_{k+1} - n}{\eta_{k+1} - \eta_{k}} w(\eta_{k}) + \frac{n - \eta_{k}}{\eta_{k+1} - \eta_{k}} w(\eta_{k+1}) \in [w^{\min}(n), w^{\max}(n)]
+				\]
+				so we have
+				\[
+				V(n) \le \left|\frac{w'(n)}{n} - g\right|
+				\]
+				On the other hand, $w'(n)/n$ is also a linear interpolation of the joints (with a different set of parameters)
+				\[
+				\frac{w'(n)}{n} = \frac{\eta_{k+1}/n-1}{\eta_{k+1}/\eta_{k}-1} \frac{w(\eta_{k})}{\eta_{k}} + \frac{\eta_{k+1}/\eta_{k} - \eta_{k+1}/n}{\eta_{k+1}/\eta_{k}-1} \frac{w(\eta_{k+1})}{\eta_{k+1}}
+				\]
+				so it can't be farther from $g$ than the joints are
+				\[
+				\left|\frac{w'(n)}{n} - g\right| \le \max\{ V(\eta_{k}), V(\eta_{k+1}) \}
+				\]
+				this means non-joint $V(n)$ is always bounded by joints. For $\eta_{k}\le n \le \eta_{k+1}$
+				\[
+				V(n) \le \max\{ V(\eta_{k}), V(\eta_{k+1}) \}
+				\]
+				Since the joints satisfies the limit, all points bounded by joints will satisfy the limit.
+				\[
+				\lim_{n\to\infty} V_{s,t}(n) = 0
+				\]
+			\end{proof}
+\fi
+
+\vspace{1cm}
+\begin{lemma}[$w$ limit]
+	We define the ``$w$-deviation" as follows
+	\[
+		V_{s,t}(n) = \min_{w_{s,t}^{\min}(n)\le w \le w_{s,t}^{\max}(n)}^{w\in\mathbb{R}} \left\{ \left|\frac{w}{n} - g_{s,t}\right| \right\}
+	\]
+	Then for $s/t\in\mathbb{Q}$, 
+	\[
+	\lim_{n\to\infty} V_{s,t}(n) = 0
+	\]
+\end{lemma}
+\begin{proof}
+	Without loss of generality, we will only discuss for co-prime integer pair $(s, t)$. We will first prove a weaker limit about the joint sequence. Let's first look at the joint sequence $\{n_i\}_{i=\min\{s,t\}+1}^{\infty}$. 
+	
+	
+	Recall the recurrence formula for the joint sequence 
+	\[
+	n_i = n_{i-s} + n_{i-t}
+	\]
+	Such sequence always has a formulate in the form of
+	\[
+	n_i = \sum_{j} c_j x^i_j
+	\]
+	where $x_j$ are the complex roots of the equation
+	\[
+	x^{-s} + x^{-t} = 1
+	\]
+	All roots of this equation satisfy
+	\[
+	|x|^{-s} + |x|^{-t} \ge 1 \quad \text{(Triangle inequality)}
+	\]
+	Consider the real function $f(u) = u^{-s} + u^{-t} - 1$, which monotonically decreases and has a single root in $\mathbb{R}^+$, so the largest $u$ that satisfies $f(u)\ge 0$ is the root $u_*$ itself. Going back to $|x_*| = u_*$. Obviously the real value $x_* = u_*$ is a root of the $x$ equation. We can also assert that no other roots $x$ satisfies $|x| = u_*$, because
+	\begin{align*}
+	&x = u_*e^{i\pi\theta} \text{ is a root} \\
+	\implies& e^{-i\pi s\theta}, e^{-i\pi t\theta} \in \mathbb{R} \quad \text{(Triangle inequality)} \\
+	\implies& s\theta, t\theta \in \mathbb{Z} \\
+	\implies& \theta \in \mathbb{Z} \quad (s, t \text{ co-prime})
+	\end{align*}
+	This means the original equation for $x$ has a single positive real root, and it has the strictly largest magnitude among all complex roots. Notice that $x_* = e^{1/K_{s,t}}$ is a real root, so it is the root with the largest magnitude. 
+	
+	We have the following limit
+	\begin{align*}
+	\lim_{i\to\infty} \frac{n_{i-t}}{n_i} &= \lim_{i\to\infty} \frac{\sum_{j} c_j x^{i-t}_j}{\sum_{j} c_j x^i_j} \\
+	&= x_*^{-t}\\
+	&= e^{-t/K_{s,t}}\\
+	&= g_{s,t}
+	\end{align*}
+	Remember $w_{s,t}(n_i) = \{n_{i-t}\}$, so the limit above is actually a subsequence of the general $w$-limit at joints:
+	\[
+	\lim_{i\to\infty} V_{s,t}(n_i) = 0
+	\]
+	Now consider $n_i\le n \le n_{i+1}$. Because of the parallelogram property, we know that the linear interpolation of joint $w$ is with in the $w$ interval 
+	\[
+		w'(n) = \frac{n_{i+1} - n}{n_{i+1} - n_{i}} w(n_i) + \frac{n - n_{i}}{n_{i+1} - n_{i}} w(n_{i+1}) \in [w^{\min}(n), w^{\max}(n)]
+	\]
+	so we have
+	\[
+	V(n) \le \left|\frac{w'(n)}{n} - g\right|
+	\]
+	On the other hand, $w'(n)/n$ is also a linear interpolation of the joints (with a different set of parameters)
+	\[
+	\frac{w'(n)}{n} = \frac{n_{i+1}/n-1}{n_{i+1}/n_i-1} \frac{w(n_i)}{n_i} + \frac{n_{i+1}/n_i - n_{i+1}/n}{n_{i+1}/n_i-1} \frac{w(n_{i+1})}{n_{i+1}}
+	\]
+	so it can't be farther from $g$ than the joints are
+	\[
+	\left|\frac{w'(n)}{n} - g\right| \le \max\{ V(n_i), V(n_{i+1}) \}
+	\]
+	this means non-joint $V(n)$ is always bounded by joints. For $n_i\le n \le n_{i+1}$
+	\[
+	V(n) \le \max\{ V(n_i), V(n_{i+1}) \}
+	\]
+	Since the joints satisfies the limit, all points bounded by joints will satisfy the limit.
+	\[
+	\lim_{n\to\infty} V_{s,t}(n) = 0
+	\]
 \end{proof}
 
 \begin{lemma} [Modes]
