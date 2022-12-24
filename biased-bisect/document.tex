@@ -315,6 +315,8 @@ w^{\max}_{s,t}(n+1) &= w^{\max}_{s,t}(n)+ \{0, 1\}
 	\end{align*}
 	This means $w^{\min}(n) -1$ can't be a minimal point of $D^{w}(n+1)$.
 \end{proof}
+
+\paragraph{Remark}
 	This property provides a nice way to quickly calculate $E(n)$ for large $n$: instead of checking all $n-1$ possible values for $w$, we only need to check $w = w^{\{min,max\}}(n-1) + \{0, 1\}$ (at most 4 points)
 	
 
@@ -368,7 +370,7 @@ w^{\max}_{s,t}(n+1) &= w^{\max}_{s,t}(n)+ \{0, 1\}
 	\Delta E(w_{\triangleleft}-1) &< \Delta E(w_{\triangleleft}) = \Delta E(w_{\triangleleft}+1) = \dots &= \Delta E(w_{\triangleleft}+p-1) &= a < \Delta E(w_{\triangleleft}+p) \\
 	\Delta E(n_{\triangleleft} - w_{\triangleleft}-1) &< \Delta E(n_{\triangleleft} - w_{\triangleleft}) = \Delta E(n_{\triangleleft} - w_{\triangleleft} + 1) = \dots &= \Delta E(n_{\triangleleft} - w_{\triangleleft} + q - 1) &= b < \Delta E(n_{\triangleleft} - w_{\triangleleft} + q )
 	\end{align*} 
-	This is saying that $n = w_{\triangleleft}$ starts a segment of length $p$ with constant slope $a$, and similarly $n = n_{\triangleleft} - w_{\triangleleft}$ starts a segment of length $q$ with constant slope $b$. Note that we didn't specify the value of $p$ or $q$, and they can be as small as 1. We are guaranteed that $p$ and $q$ are finite, because neither  $\Delta E(w_{\triangleleft})$ or $\Delta E(n_{\triangleleft} - w_{\triangleleft})$ can be equal to $\Delta E(n_{\triangleleft})$ (thus giving an upper bound to $p$ and $q$):
+	This is saying that $n = w_{\triangleleft}$ starts a linear segment of length $p$ with slope $a$, and similarly $n = n_{\triangleleft} - w_{\triangleleft}$ starts a linear segment of length $q$ with slope $b$. Note that we didn't specify the value of $p$ or $q$, and they can be as small as 1. We are guaranteed that $p$ and $q$ are finite, because neither  $\Delta E(w_{\triangleleft})$ or $\Delta E(n_{\triangleleft} - w_{\triangleleft})$ can be equal to $\Delta E(n_{\triangleleft})$ (thus giving an upper bound to $p$ and $q$):
 	\[
 	\Delta E(n_{\triangleleft}) = \Delta E(w_{\triangleleft}) + t = \Delta E(n_{\triangleleft} - w_{\triangleleft}) + s
 	\]
@@ -413,7 +415,7 @@ w^{\max}_{s,t}(n+1) &= w^{\max}_{s,t}(n)+ \{0, 1\}
 	\end{align*}
 	Given the convexity of $D^w(n)$ over $w$, this indicates the largest optimizer is $w_{s,t}^{max}(n_{\triangleright} - k) = w_{\triangleright}$. Using the same rise-and-run argument, we can then prove the full formula for  $w^{\max}_{s,t}(n)$ between $n_{\triangleleft}$ and $n_{\triangleright}$.
 	
-	Finally, let's show the constant differential between $n_{\triangleleft}$ and $n_{\triangleright}$. Considering three consecutive points $n, n+1, n+2$ ($n_{\triangleleft} \le n \le n_{\triangleright} - 2$), we can always find a $w^*$ such that
+	Finally, let's show the linearity of $E(n)$ between $n_{\triangleleft}$ and $n_{\triangleright}$. Considering three consecutive points $n, n+1, n+2$ ($n_{\triangleleft} \le n \le n_{\triangleright} - 2$), we can always find a $w^*$ such that
 	\begin{align*}
 	w^* &\in w(n)\\
 	\{w^*, w^*+1\} &\subseteq w(n+1)\\
@@ -443,11 +445,12 @@ w^{\max}_{s,t}(n+1) &= w^{\max}_{s,t}(n)+ \{0, 1\}
 	Because a single-element set $w(n) = {w^*}$ can only be followed by another single-element set $w(n+1) = {w^*}$ or $w(n+1)={w^*+1}$, or a two-element set $w(n+1) = {w^*, w^*+1}$ (which initiates a parallelogram as per previous property), and $w(2) = {1}$, we can conclude that the $w(n)$ graph consists of multiple (potentially infinite) parallelograms connected by threads (single-element $w$ set). 
 \end{proof}
 
-There is more to say about the size of beads. In the previous property, we showed that two segments with constant slope, of length $p$ and $q$ respectively, will generate a bead also with constant slope of length $p + q$. This implies more beads with larger size will be generated, and the bead size $B(n)$ has the following relation
+\paragraph{Remark}
+There is more to say about the size of beads. In the previous property, we showed that two linear segments of length $p$ and $q$ respectively, will generate a linear segment of length $p + q$. This implies more beads with larger size will be generated, and the bead size $B(n)$ has the following relation
 \[
 	B(n) = B(w) + B(n-w)
 \]
-This hints the linear growth in bead size $B(n) \sim O(n)$.
+This hints the linear growth in bead size $B(n) \sim \mathcal{O}(n)$.
 
 The following is a graph for $s = 9$, $t = 4$. We set the vertical axis as $w - n/2$ to demonstrate the symmetrical nature.
 
@@ -600,7 +603,7 @@ The following is a graph for $s = 9$, $t = 4$. We set the vertical axis as $w - 
 	
 	As for the values of $w(n)$ in between, we have three cases 
 	\begin{itemize}
-		\item If both $x_k-s$ and $x_k-t$ are jump points, then we have $w(\eta_k +1) =\{T, T+1\}$, and there are ``constant differential" regions $n \in [S, S')$ and $n \in [T, T')$. We have shown that $w(n)$ will form a parallelogram that satisfy the formula.
+		\item If both $x_k-s$ and $x_k-t$ are jump points, then we have $w(\eta_k +1) =\{T, T+1\}$, and $E(n)$ is linear for $n \in [S, S']$ and $n \in [T, T']$. We have shown that $w(n)$ will form a parallelogram that satisfy the formula.
 		\item If $x_k-s$ is not a jump point, then we have the following equations
 		\begin{align*}
 		S &= S'\\
@@ -620,6 +623,35 @@ The following is a graph for $s = 9$, $t = 4$. We set the vertical axis as $w - 
 	
 
 \end{proof}
+
+\paragraph{Remark}
+
+Although we defined $\eta(n)$ on all real numbers in $(\min\{s, t\}, \infty)$, not all of them are important. It is easy to see that jump points $x_k$ can only be in the following subsets
+\begin{itemize}
+	\item for $s/t\in\mathbb{Q}$, $x_k \in \gcd(s,t)\mathbb{Z}$. Specifically, if $s$ and $t$ are integers, $x_k\in\mathbb{Z}$. We will discuss this in the next property.
+	\item for $s/t\notin\mathbb{Q}$, $x_k \in s\mathbb{Z} + t\mathbb{Z}$, a subset of an algebraic number field with bases $\{s, t\}$
+\end{itemize}
+Another way to put this is that the jump point sequence $\{x_k\}_{k=1}^{\infty}$ is all elements in ascending order from the set
+\[
+	J_{s,t} = \{ps+qt\ |\  p \in \mathbb{Z}^+, q \in \mathbb{Z}^+\}
+\]
+
+The function $\Delta E(n)$ is, in some sense, the inverse function of $\eta(x)$. Of course, $\eta(x)$ is not injective, so we take the inverse in this way: for each flat line in $\eta(n)$ which becomes vertical in the inverse, we take the highest point as the inverse function value. We also connects the vertical jumps in $\eta(n)$, which becomes flat in the inverse. The $\Delta E(n)$ function, defined over $n \in [1, \infty)$ (for real numbers) is
+\begin{align*}
+\Delta E(n) = \begin{cases}
+x_1 & (1 = \eta_1 \le n < \eta_2) \\
+x_2 & (\eta_2 \le n < \eta_3) \\
+x_3 & (\eta_3 \le n < \eta_4) \\
+\dots
+\end{cases}
+\end{align*}
+and the function $E(n)$ is the integral 
+\begin{align*}
+E(n) &= \int_1^n \Delta E(m)\, dm \\
+ &= \left(\sum_{k = 1}^{h-1} x_k (\eta_{k+1} - \eta_k)\right) + x_{h} (n - \eta_{h}) \quad (\eta_{h} \le n < \eta_{h+1}) \\
+ &= n x_h - \left(\eta_1 \min\{s, t\} + \int_{\min\{s, t\}}^{x_h} \eta(x)\, dx\right)\\
+ &= n x_h  - \left(\eta_1 x_1 + \sum_{k=2}^{h} \eta_k (x_{h} - x_{h-1})\right)
+\end{align*}
 
 \vspace{1cm}
 \begin{lemma}[Fibonacci]
@@ -646,7 +678,9 @@ The following is a graph for $s = 9$, $t = 4$. We set the vertical axis as $w - 
 	
 \end{proof}	
 
-This property provides a way to recursively generate intervals of constant differential for $E(n)$ when $s$ and $t$ are integers (and by extension due to homogeneity, whenever $s/t$ is rational). For example, for $s = t = 1$ (balanced bisection), we have the following
+\paragraph{Remark}
+
+This property provides a way to recursively generate linear segments for $E(n)$ when $s$ and $t$ are integers (and by extension due to homogeneity, whenever $s/t$ is rational). For example, for $s = t = 1$ (balanced bisection), we have the following
 \begin{align*}
 \Delta E_{1,1}(1) &= 2 \\
 \Delta E_{1,1}(2) = \Delta E_{1,1}(3) &= 3\\
@@ -681,6 +715,8 @@ Fixing $n$ and $s$, $E_{s,t}(n)$ is a piecewise linear function of $t$. The node
 \begin{proof}
 	This can be proved by induction. Omitted.
 \end{proof}
+
+\paragraph{Remark}
 With this property, we can graph the function with a series of segments. For example, the graph of $E_{1,t}(29)$ over $t\in[0,1]$ is 
 
 \vspace{0.5cm}
@@ -758,6 +794,8 @@ It can be seen from the graph that nodes are most at unit fractions $t = 1/p$, b
 \begin{proof}
 	Remember that $E_{s,t}(n)$ calculated by taking the $t$-pointwise minimum of a sequence of piecewise linear, convex functions $D^w(t)$ indexed by $w$. If the pointwise minimum results in a simple linear function over a $t$-interval, it must be resulted from the same set of $w$. This is because, if any $D^w_{s,t}(n)$ tries to join or leave $E_{s,t}(n)$ midway in the interval, it must bend down due to convexity, and that would result in  $E_{s,t}(n) \le D^w_{s,t}(n)$ bending down as well, contradicting with the fact that $E_{s,t}(n)$ is a simple linear function in this interval. $D^w_{s,t}(n)$ can only join or leave at the nodes of $E_{s,t}(n)$
 \end{proof}
+
+\paragraph{Remark}
 
 If we graph $w$ over $t$, we will get a series of ``blocks", separated by vertical lines (marked red) at the nodes of $E$ over $t$. For example, the graph of $w_{1,t}(29)$ over $t\in[0,1]$ is 
 
@@ -912,6 +950,8 @@ We can observe from the graph that there are a few red spikes poking out of blac
 	The contradiction comes from the assumption that there is no node. This proves that there must be a node.
 	
 \end{proof}
+
+\paragraph{Remark}
 
 However, the first node of given $(s, t)$ can appear pretty late. Our proof above estimated that the node appears around $n_{I+st}$. The $n_i$ sequence growth exponentially like 
 \[
@@ -1113,39 +1153,39 @@ E(n_{k,p}) &= D^{k}(n_{k,p}) \\
 	The ``normalized" optimizer $g_{s,t}(n) = w_{s,t}(n)/n$ is similar to a function $g_{s,t}$ that's independent from $n$.
 \end{lemma}
 \begin{proof}
-	This is rather a heuristic observation than a concrete theorem. Consider a continuous version of the original problem:
+	This is rather a heuristic observation than a concrete theorem. Consider a continuous version of the original problem for $n\in\mathbb{R}$
 	\begin{align*}
 		\tilde{E}_{s,t}(1) &= 0, \\
-		\tilde{E}_{s,t}(x) &= \min_{0<w<x}^{w\in\mathbb{R}}\{\tilde{E}_{s,t}(w) + \tilde{E}_{s,t}(x-w) + wt+(x-w)s\}\text{ for } x\in\mathbb{R}^+
+		\tilde{E}_{s,t}(n) &= \min_{0<w<n}^{w\in\mathbb{R}}\{\tilde{E}_{s,t}(w) + \tilde{E}_{s,t}(n-w) + wt+(n-w)s\}\text{ for } n\in(1,\infty)
 	\end{align*}
-	Remember that the traditional bisect problem has a time complexity of $F(n) = E(n)/n \sim O(\log n)$, we can guess that the solution to the functional equation above is in the form
+	Remember that the traditional bisect problem has a time complexity of $F(n) = E(n)/n \sim \mathcal{O}(\log n)$, we can guess that the solution to the functional equation above is in the form
 	\[
-	\tilde{E}_{s,t}(x) = K_{s,t}x\ln x
+	\tilde{E}_{s,t}(n) = K_{s,t}n\ln n
 	\]
 	Substitute this in the equation, we get
 	\begin{align*}
-	K_{s,t}x\ln x &= \min_{w}\{ K_{s,t}w\ln w + K_{s,t}(x-w)\ln (x-w)+wt+(x-w)s\}
+	K_{s,t}n\ln n &= \min_{w}\{ K_{s,t}w\ln w + K_{s,t}(n-w)\ln (n-w)+wt+(n-w)s\}
 	\end{align*}
 	The function to minimize is differentiable, so we can study its derivative
 	\begin{align*}
-	&\frac{d}{dw} ( K_{s,t}w\ln w + K_{s,t}(x-w)\ln (x-w)+wt+(x-w)s )\\
-	&=K_{s,t}(1 + \ln w) - K_{s,t}(1 + \ln(x-w))+t-s\\
-	&=K_{s,t}(\ln w - \ln (x-w)) + t -s
+	&\frac{d}{dw} ( K_{s,t}w\ln w + K_{s,t}(n-w)\ln (n-w)+wt+(n-w)s )\\
+	&=K_{s,t}(1 + \ln w) - K_{s,t}(1 + \ln(n-w))+t-s\\
+	&=K_{s,t}(\ln w - \ln (n-w)) + t -s
 	\end{align*}
-	The derivative monotonically increases in $0<w<x$ and approaches $\pm \infty$ at each end respectively, so the single minimal value of the original function is at derivative of $0$
+	The derivative monotonically increases in $0<w<n$ and approaches $\pm \infty$ at each end respectively, so the single minimal value of the original function is at derivative of $0$
 	\begin{align*}
-	K_{s,t}(\ln w - \ln (x-w)) + t -s &= 0\\
-	K_{s,t} &= \frac{s -t }{\ln w - \ln (x-w)}
+	K_{s,t}(\ln w - \ln (n-w)) + t -s &= 0\\
+	K_{s,t} &= \frac{s -t }{\ln w - \ln (n-w)}
 	\end{align*}
 	and we substitute this back and remove the $\min$ operator, we get
 	\[
-	\frac{s -t }{\ln w - \ln (x-w)} x\ln x =  \frac{s -t }{\ln w - \ln (x-w)}w\ln w + \frac{s -t }{\ln w - \ln (x-w)}(x-w)\ln (x-w)+wt+(x-w)s\,,
+	\frac{s -t }{\ln w - \ln (n-w)} n\ln n =  \frac{s -t }{\ln w - \ln (n-w)}w\ln w + \frac{s -t }{\ln w - \ln (n-w)}(n-w)\ln (n-w)+wt+(n-w)s\,,
 	\]
 	which can be simplified to 
 	\[
-	\frac{\ln(w/x)}{\ln(1-w/x)} = \frac{t}{s}\,.
+	\frac{\ln(w/n)}{\ln(1-w/n)} = \frac{t}{s}\,.
 	\]
-	If we define the normalized function $g_{s,t} = w/x$, then it is a function that satisfies
+	If we define the normalized function $g_{s,t} = w/n$, then it is a function that satisfies
 	\[
 	\frac{\ln g}{\ln(1-g)} = \frac{t}{s}\quad\text{ or }\quad g^{s} = (1-g)^t\,.
 	\]
@@ -1153,7 +1193,7 @@ E(n_{k,p}) &= D^{k}(n_{k,p}) \\
 	
 	We can also get the coefficient $K_{s,t}$ by
 	\[
-	k_{s,t} = \frac{s -t }{\ln w - \ln (x-w)} = \frac{s -t }{\ln g_{s,t} - \ln (1-g_{s,t})} = -\frac{t}{\ln g_{s,t}} = - \frac{s}{\ln(1-g_{s,t})}
+	k_{s,t} = \frac{s -t }{\ln w - \ln (n-w)} = \frac{s -t }{\ln g_{s,t} - \ln (1-g_{s,t})} = -\frac{t}{\ln g_{s,t}} = - \frac{s}{\ln(1-g_{s,t})}
 	\]
 	or equivalently, the $K_{s,t} = K$ is the solution of the equation
 	\[
@@ -1211,13 +1251,13 @@ E(n_{k,p}) &= D^{k}(n_{k,p}) \\
 	\end{align*}
 	The difference between $x_{k-1}$ and $x_k$ is bounded
 	\[
-	x_k - x_{k-1} = B \le \max\{s, t\}
+	x_k - x_{k-1} = M \le \max\{s, t\}
 	\]	
 	because otherwise we would have a long constant region for $\eta(x)$, which traces back to an equally long seeding region, which we know is only $\max\{s, t\}$ long. On the other hand, the sequence $\{x_k\}$ is unbounded, because each jump point at $x_k$ should create another two jump points $x_k+s$ and $x_k+t$ that is also part of the $\{x_k\}$ sequence, thus leading the sequence to grow unbounded. This means the limit 
 	\begin{align*}
 	\lim_{k\to\infty}\frac{x_{k-1}}{K_{s,t}\ln\eta_k} &= \lim_{k\to\infty}\frac {x_{k-1}}{x_k +K_{s,t}\ln C } \\
-	&= \lim_{k\to\infty}\frac {x_{k-1}}{x_{k-1} + B +K_{s,t}\ln C }\\
-	&= \lim_{k\to\infty}\frac {1}{1 + \frac{B +K_{s,t}\ln C}{x_{k-1}} } \\
+	&= \lim_{k\to\infty}\frac {x_{k-1}}{x_{k-1} + M +K_{s,t}\ln C }\\
+	&= \lim_{k\to\infty}\frac {1}{1 + \frac{M +K_{s,t}\ln C}{x_{k-1}} } \\
 	&=1
 	\end{align*}
 	and we therefore proved the limit on the subsequence
@@ -1248,10 +1288,11 @@ E(n_{k,p}) &= D^{k}(n_{k,p}) \\
 		&= C'' e^{(x_k-x_{k+1}) K} \quad &(C'' \in [e^{-\max\{s,t\}/K}, e^{\max\{s,t\}/K}]) \\
 		& = C'''\in [e^{-2\max\{s,t\}/K}, 1] \quad & (\text{Remember $x_{k+1} - x_{k} \le \max\{s,t\}$})
 	\end{align*}
-	So we can have the limit
+	So we can the limit
 	\begin{align*}
 	\lim_{k\to\infty} \frac{\ln b}{\ln a + 1 - a/b} &= \lim_{k\to\infty} \frac{\ln \eta_{k+1}}{\ln \eta_{k} + 1 - \eta_{k}/\eta_{k+1}}\\
 	&= \lim_{k\to\infty} \frac{\ln \eta_{k+1}}{\ln \eta_{k+1} + \ln C''' + 1 - C'''} \\
+	&= \lim_{k\to\infty} \frac{1}{1 + \frac{\ln C''' + 1 - C'''}{\ln \eta_{k+1}}} \\
 	&= 1 \quad (\text{$\eta_{k+1}$ is unbounded, while $C'''$ is bounded})
 	\end{align*}
 	and the squeeze theorem locks the limit to 
@@ -1278,6 +1319,10 @@ E(n_{k,p}) &= D^{k}(n_{k,p}) \\
 	
 	
 \end{proof}
+
+\paragraph{Remark}
+
+The proof also hinted the function converges at the order of $1+\mathcal{O}(1/\log(n))$, which is really slow. 
 
 \iffalse
 		We can also provide an example why the general limit $\lim_{n\to\infty} E(n)/\tilde{E}(n) = 1$ is not true. Consider $s = t = 1$ and the following sequence 
@@ -1358,10 +1403,9 @@ E(n_{k,p}) &= D^{k}(n_{k,p}) \\
 	\]
 \end{lemma}
 \begin{proof}
-	Without loss of generality, we will only discuss for co-prime integer pair $(s, t)$. We will first prove a weaker limit about the joint sequence. Let's first look at the joint sequence $\{n_i\}_{i=\min\{s,t\}+1}^{\infty}$. 
+	Without loss of generality, we will only discuss for co-prime integer pair $(s, t)$. We will first prove a weaker limit about the generalized Fibonacci sequence $\{n_i\}_{i=\min\{s,t\}+1}^{\infty}$.
 	
-	
-	Recall the recurrence formula for the joint sequence 
+	Recall the recurrence formula for the generalized Fibonacci sequence 
 	\[
 	n_i = n_{i-s} + n_{i-t}
 	\]
@@ -1423,6 +1467,43 @@ E(n_{k,p}) &= D^{k}(n_{k,p}) \\
 	\]
 \end{proof}
 
+
+
+\vspace{1cm}
+\begin{lemma}[$w$ limit, irrational](TODO)
+	For $s/t\notin\mathbb{Q}$, 
+	\[
+	\lim_{n\to\infty} V_{s,t}(n) = 0
+	\]
+\end{lemma}
+\paragraph{Remark}
+It is unknown whether this is true yet. Even if this is true, the convergence seems really slow, and would require a different proving technique comparing to the rational case. The current proof sketch is as follows.
+
+For $s/t\notin\mathbb{Q}$, we want to prove the limit
+\[
+	\lim_{x\to\infty} \frac{\eta_{s,t}(x)}{e^{x/K_{s,t}}} = \Lambda_{s,t}
+\]
+exists. This limit in fact doesn't exist for $s/t\in\mathbb{Q}$, but empirical data shows it might exist for irrational $s/t$, and is slightly smaller than $1/e$ (varies depending on $s$ and $t$). If this limit indeed exists, the rate of convergence is probably very slow.
+
+There are two evidence that the limit could exist. One is that, if we write
+\[
+\eta_{s,t}(x) =  e^{x/K_{s,t}}\lambda_{s,t}(x)
+\]
+then the function $\lambda_{s,t}(x)$ satisfies the recurrence relation
+\[
+\lambda(x) = e^{-s/K} \lambda(x-s) + e^{-t/K} \lambda(x-t)
+\]
+where $\lambda_{s,t}(x)$ is a linear interpolation of two previous values (remember $e^{-s/K} + e^{-t/K} = 1$), so $\lambda(x)$ should eventually converges to the "average" value of seeding values.
+	
+The other evidence is that, $\eta(x)$ could be expanded as
+\[
+\eta_{s,t}(x) = \sum_{i} c_i e^{r_i x}
+\]
+where $r_i$ are all the roots of equation $e^{-sr} + e^{-tr} = 1$. $r = 1/K$ is a root, and also the root with the largest real component. It's corresponding term should dominate all terms for large $x$.
+
+If this limit exist, then we can quickly prove $\lim_{x\to\infty} \eta(x-t)/\eta(x) = g_{s,t}$, and then apply the same technique as the rational case to finish the proof.
+
+\vspace{1cm}
 \begin{lemma} [Modes]
 	The optimizer $w_{s,t}(n)$ forms several regions of ``modes" for different combination of ${n,s,t}$
 \end{lemma}
