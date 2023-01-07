@@ -17,6 +17,8 @@ bottom=2cm,
 ]
 {geometry}
 
+\setlength\parskip{1em}
+
 \begin{document}
 
 \newtheorem{problem}{Problem}
@@ -652,6 +654,141 @@ E(n) &= \int_1^n \Delta E(m)\, dm \\
  &= n x_h - \left(\eta_1 \min\{s, t\} + \int_{\min\{s, t\}}^{x_h} \eta(x)\, dx\right)\\
  &= n x_h  - \left(\eta_1 x_1 + \sum_{k=2}^{h} \eta_k (x_{h} - x_{h-1})\right)
 \end{align*}
+This also conforms to a natural extension of $E(n)$ for real number $n$: it is linear interpolation between nearest integer points.
+
+Below is the graph of $n = \eta(x)$ and $x = \Delta E(n)$ for $s = \sqrt{2}, t = \sqrt{3}$.
+
+\begin{tikzpicture}[yscale=0.8,xscale=0.8]
+\tkzInit[xmin=0,ymin=0,xmax=15.9,ymax=10,xstep=1,ystep=1]
+\tkzDrawX[label={$n$}]
+\tkzLabelX[step=1]
+\tkzDrawY[label={$x$},above]
+%\tkzLabelY[step=1]
+\tkzDefPoint( 1, 3.1462643699419726){p0} 
+\tkzDefPoint( 2, 4.5604779323150675){p1} 
+\tkzDefPoint( 3, 4.878315177510849 ){p2}
+\tkzDefPoint( 4, 5.974691494688162 ){p3}
+\tkzDefPoint( 5, 6.292528739883945 ){p4}
+\tkzDefPoint( 7, 6.610365985079727 ){p5}
+\tkzDefPoint( 8, 7.388905057061258 ){p6}
+\tkzDefPoint( 9, 7.70674230225704  ){p7}
+\tkzDefPoint(12, 8.024579547452822 ){p8}
+\tkzDefPoint(15, 8.342416792648605 ){p9}
+
+\tkzDefPoint(0, 1.4142135623730950){pp} 
+\tkzDefPoint(0, 3.1462643699419726){pp0} 
+\tkzDefPoint(0, 4.5604779323150675){pp1} 
+\tkzDefPoint(0, 4.878315177510849 ){pp2}
+\tkzDefPoint(0, 5.974691494688162 ){pp3}
+\tkzDefPoint(0, 6.292528739883945 ){pp4}
+\tkzDefPoint(0, 6.610365985079727 ){pp5}
+\tkzDefPoint(0, 7.388905057061258 ){pp6}
+\tkzDefPoint(0, 7.70674230225704  ){pp7}
+\tkzDefPoint(0, 8.024579547452822 ){pp8}
+\tkzDefPoint(0, 8.342416792648605 ){pp9}
+
+\tkzDefPoint( 1, 1.4142135623730950){q}
+\tkzDefPoint( 2, 3.1462643699419726){q0} 
+\tkzDefPoint( 3, 4.5604779323150675){q1} 
+\tkzDefPoint( 4, 4.878315177510849 ){q2}
+\tkzDefPoint( 5, 5.974691494688162 ){q3}
+\tkzDefPoint( 7, 6.292528739883945 ){q4}
+\tkzDefPoint( 8, 6.610365985079727 ){q5}
+\tkzDefPoint( 9, 7.388905057061258 ){q6}
+\tkzDefPoint(12, 7.70674230225704  ){q7}
+\tkzDefPoint(15, 8.024579547452822 ){q8}
+\tkzDefPoint(15.5, 8.342416792648605 ){qe}
+
+\tkzDefPoint( 1, 0){qq}
+\tkzDefPoint( 2, 0){qq0} 
+\tkzDefPoint( 3, 0){qq1} 
+\tkzDefPoint( 4, 0){qq2}
+\tkzDefPoint( 5, 0){qq3}
+\tkzDefPoint( 7, 0){qq4}
+\tkzDefPoint( 8, 0){qq5}
+\tkzDefPoint( 9, 0){qq6}
+\tkzDefPoint(12, 0){qq7}
+\tkzDefPoint(15, 0){qq8}
+
+\tkzDrawSegments[style=dashed](q,pp p0,pp0 p1,pp1 p2,pp2 p3,pp3 p4,pp4 p5,pp5 p6,pp6 p7,pp7 p8,pp8 p9,pp9)
+\tkzDrawSegments[style=dashed](q,qq q0,qq0 q1,qq1 q2,qq2 q3,qq3 q4,qq4 q5,qq5 q6,qq6 q7,qq7 q8,qq8)
+
+\tkzDrawSegments[color=blue](q,p0 q0,p1 q1,p2 q2,p3 q3,p4 q4,p5 q5,p6 q6,p7 q7,p8 q8,p9)
+\tkzDrawPoints[size=5,color=blue](p0,p1,p2,p3,p4,p5,p6,p7,p8,p9)
+\tkzDrawPoints[size=5,color=blue,fill=white](q,q0,q1,q2,q3,q4,q5,q6,q7,q8)
+
+\tkzDrawSegments[color=red](p0,q0 p1,q1 p2,q2 p3,q3 p4,q4 p5,q5 p6,q6 p7,q7 p8,q8 p9,qe)
+\tkzDrawPoints[size=2.5,color=red](p0,p1,p2,p3,p4,p5,p6,p7,p8,p9)
+\tkzDrawPoints[size=2.5,color=red,fill=white](q0,q1,q2,q3,q4,q5,q6,q7,q8)
+
+
+\tkzLabelPoint[color=blue]({14,9.5}){$n = \eta(x)$}
+\tkzLabelPoint[color=red]({14,9}){$x = \Delta E(n)$}
+
+\tkzLabelPoint[left](pp){\tiny $\min\{s,t\}=\sqrt{2}$}
+\tkzLabelPoint[left](pp0){\tiny $x_1=\sqrt{2}+\sqrt{3}$}
+\tkzLabelPoint[left](pp1){\tiny $x_2=2\sqrt{2}+\sqrt{3}$}
+\tkzLabelPoint[left](pp2){\tiny $x_3=\sqrt{2}+2\sqrt{3}$}
+\tkzLabelPoint[left](pp3){\tiny $x_4=3\sqrt{2}+\sqrt{3}$}
+\tkzLabelPoint[left](pp4){\tiny $x_5=2\sqrt{2}+2\sqrt{3}$}
+\tkzLabelPoint[left](pp5){\tiny $x_6=\sqrt{2}+3\sqrt{3}$}
+\tkzLabelPoint[left](pp6){\tiny $x_7=4\sqrt{2}+\sqrt{3}$}
+\tkzLabelPoint[left](pp7){\tiny $x_8=3\sqrt{2}+2\sqrt{3}$}
+\tkzLabelPoint[left](pp8){\tiny $x_9=2\sqrt{2}+3\sqrt{3}$}
+\tkzLabelPoint[left](pp9){\tiny $x_{10}=\sqrt{2}+4\sqrt{3}$}
+
+\tkzLabelPoint[above right](qq){\small $\eta_1$}
+\tkzLabelPoint[above right](qq0){\small $\eta_2$}
+\tkzLabelPoint[above right](qq1){\small $\eta_3$}
+\tkzLabelPoint[above right](qq2){\small $\eta_4$}
+\tkzLabelPoint[above right](qq3){\small $\eta_5$}
+\tkzLabelPoint[above right](qq4){\small $\eta_6$}
+\tkzLabelPoint[above right](qq5){\small $\eta_7$}
+\tkzLabelPoint[above right](qq6){\small $\eta_8$}
+\tkzLabelPoint[above right](qq7){\small $\eta_9$}
+\tkzLabelPoint[above right](qq8){\small $\eta_{10}$}
+
+\end{tikzpicture}
+
+\vspace{1cm}
+
+Additionally, we can define the following ``jump height function" $\delta: (\min\{s,t\},\infty)\to\mathbb{Z}^{0+}$, which is the length of red segments in the graph above
+\begin{align*}
+\delta(x) = \eta(x^+) - \eta(x^-) =\begin{cases}
+\eta_{i+1} - \eta_{i} & (x = x_i)\\
+0 & (\text{otherwise})\\
+\end{cases}
+\end{align*}
+which can also be expressed with the recursive formula
+\begin{align*}
+\delta(x) = \begin{cases}
+0 & (x \in (\min\{s, t\}, s + t))\\
+1 & (x = s+t)\\
+\delta(x-s)+ \delta(x-t) & (x\in(s+t,\infty))
+\end{cases}
+\end{align*}
+For $s/t\notin\mathbb{Q}$, the jump point set $J_{s,t}$ has one-to-one correspondence to positive integer pairs $(p,q)\in(\mathbb{Z}^+)^2$. This means, for $(p,q)\in(\mathbb{Z}^{0+})^2 / \{(0,0), (0,1), (1,0)\}$
+\begin{align*}
+\delta(ps+qt) = \begin{cases}
+ 0 & (p= 0 \text{ or } q = 0) \\
+ 1 & (p = q = 1) \\
+ \delta((p-1)s+qt) + \delta(ps+(q-1)t) & (\text{otherwise})
+\end{cases}
+\end{align*}
+It is easy to see $\delta$ forms a Pascal's triangle over $(p,q)\in(\mathbb{Z}^+)^2$
+\[
+	\delta(ps+qt) = \binom{p+q-2}{q-1} = \frac{(p+q-2)!}{(p-1)!(q-1)!}
+\]
+This can be further generalized to make it also work for $s/t\in\mathbb{Q}$ as 
+\[
+	\delta(x) = \sum_{(p,q)\in(\mathbb{Z}^+)^2}^{ps+qt = x} \frac{(p+q-2)!}{(p-1)!(q-1)!}
+\]
+To see how this works for rational $s/t$, we can still map $x$ to integer pair $(p, q)$ - except this time a line of many $(p, q)$ correspond to the same $x$. For the first jump point $x = s + t$, all $(p, q)$ such that $ps + qt = s + t$ will have corresponding $\delta = 1$. This is equivalent to ``seeding" Pascal's triangles at many places, so the resulting $\delta$ value everywhere should be the sum of all these Pascal's triangles.
+
+This gives rise to an alternative way to express $\eta(x)$
+\[
+	\eta(x) = 1 + \sum_{x_i < x} \delta(x_i) = 1 + \sum_{(p,q)\in(\mathbb{Z}^+)^2}^{ps+qt < x} \frac{(p+q-2)!}{(p-1)!(q-1)!}
+\]
 
 \vspace{1cm}
 \begin{lemma}[Fibonacci]
@@ -1497,9 +1634,9 @@ where $\lambda_{s,t}(x)$ is a linear interpolation of two previous values (remem
 	
 The other evidence is that, $\eta(x)$ could be expanded as
 \[
-\eta_{s,t}(x) = \sum_{i} c_i e^{r_i x}
+\eta_{s,t}(x) = \sum_{j} c_j e^{r_j x}
 \]
-where $r_i$ are all the roots of equation $e^{-sr} + e^{-tr} = 1$. $r = 1/K$ is a root, and also the root with the largest real component. It's corresponding term should dominate all terms for large $x$.
+where $r_j$ are all the roots of equation $e^{-sr} + e^{-tr} = 1$. $r = 1/K$ is a root, and also the root with the largest real component. It's corresponding term should dominate all terms for large $x$.
 
 If this limit exist, then we can quickly prove $\lim_{x\to\infty} \eta(x-t)/\eta(x) = g_{s,t}$, and then apply the same technique as the rational case to finish the proof.
 
