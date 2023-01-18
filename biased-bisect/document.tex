@@ -789,6 +789,50 @@ This gives rise to an alternative way to express $\eta(x)$
 \[
 	\eta(x) = 1 + \sum_{x_i < x} \delta(x_i) = 1 + \sum_{(p,q)\in(\mathbb{Z}^+)^2}^{ps+qt < x} \frac{(p+q-2)!}{(p-1)!(q-1)!}
 \]
+More interesting property can be revealed via Laplace transform. Consider the following shifted function $\phi(x)$
+\begin{align*}
+	\phi(x) &= \eta(x + s +t) \\
+	&= 1 + \sum_{(p,q)\in(\mathbb{Z}^+)^2}^{ps+qt < x+s+t} \frac{(p+q-2)!}{(p-1)!(q-1)!}\\
+	&= 1 + \sum_{(p,q)\in(\mathbb{Z}^{0+})^2}^{ps+qt < x} \frac{(p+q)!}{p!q!}\\
+	&= 1 + \sum_{p=0}^{\infty}\sum_{q=0}^{\infty} \frac{(p+q)!}{p!q!} \theta(x - (ps + qt))
+\end{align*}
+where $\theta$ is the unit step function. Its Laplace transform is 
+\begin{align*}
+\mathcal{L}\{\phi\}(\sigma) &= \frac{1}{\sigma} + \sum_{p=0}^{\infty}\sum_{q=0}^{\infty} \frac{(p+q)!}{p!q!} \frac{e^{-(ps+qt)\sigma}}{\sigma} \\
+&= \frac{1}{\sigma} + \frac{1}{\sigma} \sum_{j=0}^{\infty} (e^{-sr} + e^{-tr})^j\\
+&= \frac{1}{\sigma} + \frac{1}{\sigma(1- (e^{-s\sigma} + e^{-t\sigma}))} \quad(\text{converges for big enough }\mathfrak{R}(\sigma))
+\end{align*}
+This function, after analytic continuation, has a removable singularity at $\sigma = 0$, and a pole at every $\sigma = r$ where $r$ are the complex roots of the following equation
+\begin{align*}
+e^{-sr} + e^{-tr} = 1
+\end{align*}
+On the other hand, function $\phi$ satisfy the functional equation
+\[
+\phi(x) = \phi(x - s) + \phi(x - t)
+\]
+which has a solution space with basis
+\[
+\phi_r(x) = e^{r x}
+\]
+where $r$ is a root of the same equation above. Function $\phi$ should be a linear combination of basis
+\[
+\phi(x) = \sum_{r} C_r e^{r x}
+\]
+which has Laplace transform that also has poles at $\sigma = r$
+\[
+\mathcal{L}\{\phi\}(\sigma) = \sum_{r} \frac{C_r}{\sigma - r}
+\]
+The two Laplace transform should agree to each other, so we can compare their coefficient of $1/(\sigma - r)$ at poles
+\begin{align*}
+C_r &= \lim_{\sigma\to r} \frac{\sigma - r}{\sigma(1- (e^{-s\sigma} + e^{-t\sigma}))} \\
+&= \lim_{\sigma\to r} \frac{\partial_\sigma(\sigma - r)}{\sigma\partial_\sigma(1- (e^{-s\sigma} + e^{-t\sigma}))} \\
+    &= \frac{1}{r(s e^{-sr} + t e^{-tr})}
+\end{align*}
+Plugging everything back, we get a new formula for $\eta(x)$
+\[
+\eta(x) =^{\star} \frac{1}{2}(\eta(x^-) + \eta(x^+)) = \sum_r \frac{e^{r(x - (s +t))}}{r(s e^{-sr} + t e^{-tr})}  = \sum_r \frac{e^{rx}}{r(s e^{tr} + t e^{sr})}
+\]
+As the symbol $=^{\star}$ signifies, $\eta(x)$ isn't strictly equal to the series at all points: at jump points, the series converges to half way between left and right function value, as per usual behavior of Laplace transform at discontinuity. Also note on summation order: this series doesn't converge absolutely and summation order is important. We can index $r$ by $|\mathfrak{I}(r)|$ in ascending order. This follows the limit direction in Mellin's inverse formula, together with Cauchy residue theorem.
 
 \vspace{1cm}
 \begin{lemma}[Fibonacci]
@@ -1090,6 +1134,7 @@ We can observe from the graph that there are a few red spikes poking out of blac
 
 \paragraph{Remark}
 
+\if false
 However, the first node of given $(s, t)$ can appear pretty late. Our proof above estimated that the node appears around $n_{I+st}$. The $n_i$ sequence growth exponentially like 
 \[
 n_i \sim a^i
@@ -1103,6 +1148,20 @@ It can be seen that the solution $a \in [2^{1/s}, 2^{1/t}]$ (assuming $s \geq t$
 n_{I+st} \sim  [2^t, 2^s]
 \]
 So for ratio with larger numbers, the first node position grows exponentially.
+\fi
+
+We can find the first node for given $(s, t)$ using the previously derived formula for $\eta(x)$
+\[
+\eta(x) = 1 + \sum_{(p,q)\in(\mathbb{Z}^+)^2}^{ps+qt<x}\frac{(p+q-2)!}{(p-1)!(q-2)!} 
+\]
+A node is where a perturbation in $(s, t)$ causes a change in the summation terms. This happens if there are multiple $(p,q)\in(\mathbb{Z}^+)^2$ pairs are on the summation boundary, such that $ps+qt = x$. For coprime integer pair $(s, t)$, the smallest $x$ that makes this happen is
+\[
+x^* = st + s + t
+\]
+where both $(p,q) = (t+1, 1)$ and $(p,q) = (1, s+1)$ are on the summation boundary. Hence the corresponding first node for coprime $(s,t)$ is the first $n$ after the node slope (which is $x^*$)
+\[
+n^* = \eta(x^*) + 1 = \eta(st + s + t) + 1
+\]
 
 \vspace{1cm}
 \begin{lemma}[Mode $M_0$] The optimizer degenerates at extreme $s/t$ ratio. For $n \geq2$
@@ -1295,24 +1354,24 @@ E(n_{k,p}) &= D^{k}(n_{k,p}) \\
 		\tilde{E}_{s,t}(1) &= 0, \\
 		\tilde{E}_{s,t}(n) &= \min_{0<w<n}^{w\in\mathbb{R}}\{\tilde{E}_{s,t}(w) + \tilde{E}_{s,t}(n-w) + wt+(n-w)s\}\text{ for } n\in(1,\infty)
 	\end{align*}
-	Remember that the traditional bisect problem has a time complexity of $F(n) = E(n)/n \sim \mathcal{O}(\log n)$, we can guess that the solution to the functional equation above is in the form
+	Remember that the traditional bisect problem has a time complexity of $F(n) = E(n)/n \sim \mathcal{O}(\log n)$, we can guess that the solution to the functional equation above is in the form (we choose to use the reciprocal of the coefficient because later we will see this is more convenient)
 	\[
-	\tilde{E}_{s,t}(n) = K_{s,t}n\ln n
+	\tilde{E}_{s,t}(n) = \frac{n\ln n}{\rho_{s,t}} 
 	\]
 	Substitute this in the equation, we get
 	\begin{align*}
-	K_{s,t}n\ln n &= \min_{w}\{ K_{s,t}w\ln w + K_{s,t}(n-w)\ln (n-w)+wt+(n-w)s\}
+	\frac{n\ln n}{\rho_{s,t}}  &= \min_{w}\left\{ \frac{w\ln w}{\rho_{s,t}}  + \frac{(n-w)\ln (n-w)}{\rho_{s,t}} +wt+(n-w)s\right\}
 	\end{align*}
 	The function to minimize is differentiable, so we can study its derivative
 	\begin{align*}
-	&\frac{d}{dw} ( K_{s,t}w\ln w + K_{s,t}(n-w)\ln (n-w)+wt+(n-w)s )\\
-	&=K_{s,t}(1 + \ln w) - K_{s,t}(1 + \ln(n-w))+t-s\\
-	&=K_{s,t}(\ln w - \ln (n-w)) + t -s
+	&\frac{d}{dw} \left( \frac{w\ln w}{\rho_{s,t}}  + \frac{(n-w)\ln (n-w)}{\rho_{s,t}} +wt+(n-w)s \right)\\
+	&=\frac{1 + \ln w}{\rho_{s,t}} - \frac{1 + \ln(n-w)}{\rho_{s,t}}+t-s\\
+	&=\frac{\ln w - \ln (n-w)}{\rho_{s,t}} + t -s
 	\end{align*}
 	The derivative monotonically increases in $0<w<n$ and approaches $\pm \infty$ at each end respectively, so the single minimal value of the original function is at derivative of $0$
 	\begin{align*}
-	K_{s,t}(\ln w - \ln (n-w)) + t -s &= 0\\
-	K_{s,t} &= \frac{s -t }{\ln w - \ln (n-w)}
+	\frac{\ln w - \ln (n-w)}{\rho_{s,t}} + t -s &= 0\\
+	\rho_{s,t} &= \frac{\ln w - \ln (n-w)}{s -t }
 	\end{align*}
 	and we substitute this back and remove the $\min$ operator, we get
 	\[
@@ -1328,15 +1387,15 @@ E(n_{k,p}) &= D^{k}(n_{k,p}) \\
 	\]
 	The solution is unfortunately not easy to express in a closed form, but we do get a normalized optimizer function $g_{s,t}$ independent from $n$. The optimizer for the discrete problem should be similar to this.
 	
-	We can also get the coefficient $K_{s,t}$ by
+	We can also get the coefficient $\rho_{s,t}$ by
 	\[
-	k_{s,t} = \frac{s -t }{\ln w - \ln (n-w)} = \frac{s -t }{\ln g_{s,t} - \ln (1-g_{s,t})} = -\frac{t}{\ln g_{s,t}} = - \frac{s}{\ln(1-g_{s,t})}
+	\rho_{s,t} = \frac{\ln w - \ln (n-w)}{s -t } = \frac{\ln g_{s,t} - \ln (1-g_{s,t})}{s -t } = -\frac{\ln g_{s,t}}{t}= - \frac{\ln(1-g_{s,t})}{s}
 	\]
-	or equivalently, the $K_{s,t} = K$ is the solution of the equation
+	or equivalently, $\rho_{s,t} = r$ is the real solution to the equation
 	\[
-	e^{-s/K} + e^{-t/K} = 1
+	e^{-sr} + e^{-tr} = 1
 	\]
-	The time solution to the discrete problem $E_{s,t}(n)$ should also be similar to $\tilde{E}_{s,t}(n) = K_{s,t}n\ln n$. We can also prove the inequality
+	The time solution to the discrete problem $E_{s,t}(n)$ should also be similar to $\tilde{E}_{s,t}(n)$. We can also prove the inequality
 	\[
 	E_{s,t}(n) \geq \tilde{E}_{s,t}(n)
 	\]
@@ -1354,17 +1413,17 @@ E(n_{k,p}) &= D^{k}(n_{k,p}) \\
 	
 	We will use the function $\eta(x)$ previously defined. First of all, let's show that $\eta(x)$ has asymptotic behavior
 	\[
-	\frac{\eta(x)}{e^{x/K_{s,t}}} = C \in [e^{-(s+t)/K},e^{-\min\{s,t\}/K}]
+	\frac{\eta(x)}{e^{\rho_{s,t} x}} = C \in [e^{-(s+t)\rho_{s,t}},e^{-\min\{s,t\}\rho_{s,t}}]
 	\]
 	It is easy to show that any function in the form 
 	\[
-	\eta'(x) = C e^{x/K_{s,t}}
+	\eta'(x) = C e^{\rho_{s,t} x}
 	\]
 	satisfies the functional equation 
 	\[
 	\eta'(x) = \eta'(x - s) + \eta'(x - t)
 	\]
-	which $\eta(x)$ also satisfies. So if we find a $\eta'(x)$ that is completely larger or smaller than $\eta(x)$ in the seeding region $(\min\{s,t\}, s+t]$, then by induction such $\eta'(x)$ will always bound $\eta(x)$ above or below. We can choose the end points of the seeding region to get $C_{hi} = e^{-\min\{s,t\}/K}$ and $C_{lo} = e^{-(s+t)/K}$ for the upper and lower bound.
+	which $\eta(x)$ also satisfies. So if we find a $\eta'(x)$ that is completely larger or smaller than $\eta(x)$ in the seeding region $(\min\{s,t\}, s+t]$, then by induction such $\eta'(x)$ will always bound $\eta(x)$ above or below. We can choose the end points of the seeding region to get $C_{hi} = e^{-\min\{s,t\}\rho_{s,t}}$ and $C_{lo} = e^{-(s+t)\rho_{s,t}}$ for the upper and lower bound.
 	
 	We first prove the limit on the subsequence $\{\eta_k\}_{k=1}^{\infty}$ . We want to prove 
 	\[
@@ -1378,13 +1437,13 @@ E(n_{k,p}) &= D^{k}(n_{k,p}) \\
 	\end{align*}
 	We can use the squeeze theorem (Remember $E(n) \ge \tilde{E}(n)$) and only prove the following limit instead
 	\[
-	\lim_{k\to\infty}\frac{x_{k-1}\eta_k}{\tilde{E}_{s,t}(\eta_k)} = \lim_{k\to\infty}\frac{x_{k-1}}{K_{s,t}\ln\eta_k} = 1
+	\lim_{k\to\infty}\frac{x_{k-1}\eta_k}{\tilde{E}_{s,t}(\eta_k)} = \lim_{k\to\infty}\frac{\rho_{s,t}x_{k-1}}{\ln\eta_k} = 1
 	\]
 	Recall the asymptotic behavior of $\eta(x)$, we have
 	\begin{align*}
-	\frac{x_{k-1}}{K_{s,t}\ln\eta_k} &= \frac{x_{k-1}}{K_{s,t}\ln\eta(x_k)} \\
-	&=\frac{x_{k-1}}{K_{s,t}\ln\left(C e^{x_k/K_{s,t}}\right)}\\
-	&=\frac {x_{k-1}}{x_k +K_{s,t}\ln C }
+	\frac{\rho_{s,t}x_{k-1}}{\ln\eta_k} &= \frac{\rho_{s,t}x_{k-1}}{\ln\eta(x_k)} \\
+	&=\frac{\rho_{s,t}x_{k-1}}{\ln\left(C e^{\rho_{s,t}x_k}\right)}\\
+	&=\frac {\rho_{s,t}x_{k-1}}{\rho_{s,t}x_k +\ln C }
 	\end{align*}
 	The difference between $x_{k-1}$ and $x_k$ is bounded
 	\[
@@ -1392,9 +1451,9 @@ E(n_{k,p}) &= D^{k}(n_{k,p}) \\
 	\]	
 	because otherwise we would have a long constant region for $\eta(x)$, which traces back to an equally long seeding region, which we know is only $\max\{s, t\}$ long. On the other hand, the sequence $\{x_k\}$ is unbounded, because each jump point at $x_k$ should create another two jump points $x_k+s$ and $x_k+t$ that is also part of the $\{x_k\}$ sequence, thus leading the sequence to grow unbounded. This means the limit 
 	\begin{align*}
-	\lim_{k\to\infty}\frac{x_{k-1}}{K_{s,t}\ln\eta_k} &= \lim_{k\to\infty}\frac {x_{k-1}}{x_k +K_{s,t}\ln C } \\
-	&= \lim_{k\to\infty}\frac {x_{k-1}}{x_{k-1} + M +K_{s,t}\ln C }\\
-	&= \lim_{k\to\infty}\frac {1}{1 + \frac{M +K_{s,t}\ln C}{x_{k-1}} } \\
+	\lim_{k\to\infty}\frac{\rho_{s,t}x_{k-1}}{\ln\eta_k} &= \lim_{k\to\infty}\frac {\rho_{s,t}x_{k-1}}{\rho_{s,t}x_k +\ln C } \\
+	&= \lim_{k\to\infty}\frac {\rho_{s,t}x_{k-1}}{\rho_{s,t}(x_{k-1} + M) +\ln C }\\
+	&= \lim_{k\to\infty}\frac {1}{1 + \frac{\rho_{s,t}M +\ln C}{\rho_{s,t}x_{k-1}} } \\
 	&=1
 	\end{align*}
 	and we therefore proved the limit on the subsequence
@@ -1421,9 +1480,9 @@ E(n_{k,p}) &= D^{k}(n_{k,p}) \\
 	Now set $a = \eta_{k} = \eta(x_k)$ and $b = \eta_{k+1} = \eta(x_{k+1})$, then their ratio is
 	\begin{align*}
 	\frac{a}{b} &= \frac{\eta(x_k)}{\eta(x_{k+1})}\\
-		&= \frac{C e^{x_k K}}{C' e^{x_{k+1} K} } \quad &(\text{Both $C$ and $C'$ are some variables in $[e^{-(s+t)/K},e^{-\min\{s,t\}/K}]$})\\
-		&= C'' e^{(x_k-x_{k+1}) K} \quad &(C'' \in [e^{-\max\{s,t\}/K}, e^{\max\{s,t\}/K}]) \\
-		& = C'''\in [e^{-2\max\{s,t\}/K}, 1] \quad & (\text{Remember $x_{k+1} - x_{k} \le \max\{s,t\}$})
+		&= \frac{C e^{\rho_{s,t} x_k}}{C' e^{\rho_{s,t} x_{k+1}} } \quad &(\text{Both $C$ and $C'$ are some variables in $[e^{-(s+t)\rho_{s,t}},e^{-\min\{s,t\}\rho_{s,t}}]$})\\
+		&= C'' e^{\rho_{s,t}(x_k-x_{k+1})} \quad &(C'' \in [e^{-\max\{s,t\}\rho_{s,t}}, e^{\max\{s,t\}\rho_{s,t}}]) \\
+		& = C'''\in [e^{-2\max\{s,t\}\rho_{s,t}}, 1] \quad & (\text{Remember $x_{k+1} - x_{k} \le \max\{s,t\}$})
 	\end{align*}
 	So we can the limit
 	\begin{align*}
@@ -1461,72 +1520,7 @@ E(n_{k,p}) &= D^{k}(n_{k,p}) \\
 
 The proof also hinted the function converges at the order of $1+\mathcal{O}(1/\log(n))$, which is really slow. 
 
-\iffalse
-		We can also provide an example why the general limit $\lim_{n\to\infty} E(n)/\tilde{E}(n) = 1$ is not true. Consider $s = t = 1$ and the following sequence 
-		\[
-		m_k = 2^{k+1} + 2^{k}
-		\]
-		We can compute $E(m_k)$ manually
-		\begin{align*}
-		E(m_k) &= E(2^{k+1} + 2^{k}) \\
-			&= 2\cdot 1 + 3\cdot 2 + 4\cdot 4 +\dots + (k+2) \cdot 2^{k} + (k+3) \cdot 2^{k} \\
-			&= 2^{k+1}(k+1) + 2^k(k+3)
-		\end{align*}
-		We can also compute $K_{1,1} = 1/\ln(2)$ and the limit on this sequence would be
-		\begin{align*}
-		\lim_{k\to\infty} \frac{E(m_k)}{\tilde{E}(m_k)} &= \lim_{n\to\infty} \frac{2^{k+1}(k+1) + 2^k(k+3)}{ (2^{k+1} + 2^{k})\log_{2}(2^{k+1} + 2^{k}) } \\
-		&=\lim_{n\to\infty} \frac{3k + 5}{ 3(k+\log_{2}(3))  }
-		\end{align*}
-\fi
 
-\iffalse
-			\vspace{1cm}
-			\begin{lemma}[$w$ limit]
-				We define the ``$w$-deviation" as follows
-				\[
-				V_{s,t}(n) = \min_{w_{s,t}^{\min}(n)\le w \le w_{s,t}^{\max}(n)}^{w\in\mathbb{R}} \left\{ \left|\frac{w}{n} - g_{s,t}\right| \right\}
-				\]
-				Then the deviation converges to zero
-				\[
-				\lim_{n\to\infty} V_{s,t}(n) = 0
-				\]
-			\end{lemma}
-			\begin{proof}
-				We will again use the help of $\eta(x)$ functions. We first prove a weaker limit 
-				\begin{align*}
-				\lim_{k\to\infty} \frac{w(\eta_k)}{\eta_k} &= \lim_{k\to\infty} \frac{\eta(x_k-t)}{\eta(x_k)} \\
-				&=\lim_{k\to\infty} \frac{\eta(x_k-t)}{\eta(x_k)} \\
-				&= \text{(TODO)}
-				\end{align*}
-				
-				
-				
-				Now consider $\eta_{k}\le n \le \eta_{k+1}$. Because of the parallelogram property, we know that the linear interpolation of $w(\eta_k)$ is with in the $w$ interval 
-				\[
-				w'(n) = \frac{\eta_{k+1} - n}{\eta_{k+1} - \eta_{k}} w(\eta_{k}) + \frac{n - \eta_{k}}{\eta_{k+1} - \eta_{k}} w(\eta_{k+1}) \in [w^{\min}(n), w^{\max}(n)]
-				\]
-				so we have
-				\[
-				V(n) \le \left|\frac{w'(n)}{n} - g\right|
-				\]
-				On the other hand, $w'(n)/n$ is also a linear interpolation of the joints (with a different set of parameters)
-				\[
-				\frac{w'(n)}{n} = \frac{\eta_{k+1}/n-1}{\eta_{k+1}/\eta_{k}-1} \frac{w(\eta_{k})}{\eta_{k}} + \frac{\eta_{k+1}/\eta_{k} - \eta_{k+1}/n}{\eta_{k+1}/\eta_{k}-1} \frac{w(\eta_{k+1})}{\eta_{k+1}}
-				\]
-				so it can't be farther from $g$ than the joints are
-				\[
-				\left|\frac{w'(n)}{n} - g\right| \le \max\{ V(\eta_{k}), V(\eta_{k+1}) \}
-				\]
-				this means non-joint $V(n)$ is always bounded by joints. For $\eta_{k}\le n \le \eta_{k+1}$
-				\[
-				V(n) \le \max\{ V(\eta_{k}), V(\eta_{k+1}) \}
-				\]
-				Since the joints satisfies the limit, all points bounded by joints will satisfy the limit.
-				\[
-				\lim_{n\to\infty} V_{s,t}(n) = 0
-				\]
-			\end{proof}
-\fi
 
 \vspace{1cm}
 \begin{lemma}[$w$ limit]
@@ -1548,30 +1542,30 @@ The proof also hinted the function converges at the order of $1+\mathcal{O}(1/\l
 	\]
 	Such sequence always has a formulate in the form of
 	\[
-	n_i = \sum_{j} c_j x^i_j
+	n_i = \sum_{j} c_j \xi^i_j
 	\]
-	where $x_j$ are the complex roots of the equation
+	where $\xi_j$ are the complex roots of the equation
 	\[
-	x^{-s} + x^{-t} = 1
+	\xi^{-s} + \xi^{-t} = 1
 	\]
 	All roots of this equation satisfy
 	\[
-	|x|^{-s} + |x|^{-t} \ge 1 \quad \text{(Triangle inequality)}
+	|\xi|^{-s} + |\xi|^{-t} \ge 1 \quad \text{(Triangle inequality)}
 	\]
-	Consider the real function $f(u) = u^{-s} + u^{-t} - 1$, which monotonically decreases and has a single root in $\mathbb{R}^+$, so the largest $u$ that satisfies $f(u)\ge 0$ is the root $u_*$ itself. Going back to $|x_*| = u_*$. Obviously the real value $x_* = u_*$ is a root of the $x$ equation. We can also assert that no other roots $x$ satisfies $|x| = u_*$, because
+	Consider the real function $f(u) = u^{-s} + u^{-t} - 1$, which monotonically decreases and has a single root in $\mathbb{R}^+$, so the largest $u$ that satisfies $f(u)\ge 0$ is the root $u_*$ itself. Going back to $|\xi_*| = u_*$. Obviously the real value $\xi_* = u_*$ is a root of the $\xi$ equation. We can also assert that no other roots $\xi$ satisfies $|\xi| = u_*$, because
 	\begin{align*}
-	&x = u_*e^{i\pi\theta} \text{ is a root} \\
+	&\xi = u_*e^{i\pi\theta} \text{ is a root} \\
 	\implies& e^{-i\pi s\theta}, e^{-i\pi t\theta} \in \mathbb{R} \quad \text{(Triangle inequality)} \\
 	\implies& s\theta, t\theta \in \mathbb{Z} \\
 	\implies& \theta \in \mathbb{Z} \quad (s, t \text{ co-prime})
 	\end{align*}
-	This means the original equation for $x$ has a single positive real root, and it has the strictly largest magnitude among all complex roots. Notice that $x_* = e^{1/K_{s,t}}$ is a real root, so it is the root with the largest magnitude. 
+	This means the original equation for $\xi$ has a single positive real root, and it has the strictly largest magnitude among all complex roots. Notice that $\xi_* = e^{\rho_{s,t}}$ is a real root, so it is the root with the largest magnitude. 
 	
 	We have the following limit
 	\begin{align*}
-	\lim_{i\to\infty} \frac{n_{i-t}}{n_i} &= \lim_{i\to\infty} \frac{\sum_{j} c_j x^{i-t}_j}{\sum_{j} c_j x^i_j} \\
-	&= x_*^{-t}\\
-	&= e^{-t/K_{s,t}}\\
+	\lim_{i\to\infty} \frac{n_{i-t}}{n_i} &= \lim_{i\to\infty} \frac{\sum_{j} c_j \xi^{i-t}_j}{\sum_{j} c_j \xi^i_j} \\
+	&= \xi_*^{-t}\\
+	&= e^{-t\rho_{s,t}}\\
 	&= g_{s,t}
 	\end{align*}
 	Remember $w_{s,t}(n_i) = \{n_{i-t}\}$, so the limit above is actually a subsequence of the general $w$-limit at joints:
@@ -1614,31 +1608,29 @@ The proof also hinted the function converges at the order of $1+\mathcal{O}(1/\l
 	\]
 \end{lemma}
 \paragraph{Remark}
-It is unknown whether this is true yet. Even if this is true, the convergence seems really slow, and would require a different proving technique comparing to the rational case. The current proof sketch is as follows.
+
+I haven't found a concrete proof yet, but here is some heuristic argument.
 
 For $s/t\notin\mathbb{Q}$, we want to prove the limit
 \[
-	\lim_{x\to\infty} \frac{\eta_{s,t}(x)}{e^{x/K_{s,t}}} = \Lambda_{s,t}
+\lim_{x\to\infty} \frac{\eta_{s,t}(x)}{e^{\rho_{s,t}x}} = \frac{1}{\rho_{s,t}(se^{t\rho_{s,t}}+te^{s\rho_{s,t}})}
 \]
-exists. This limit in fact doesn't exist for $s/t\in\mathbb{Q}$, but empirical data shows it might exist for irrational $s/t$, and is slightly smaller than $1/e$ (varies depending on $s$ and $t$). If this limit indeed exists, the rate of convergence is probably very slow.
-
-There are two evidence that the limit could exist. One is that, if we write
-\[
-\eta_{s,t}(x) =  e^{x/K_{s,t}}\lambda_{s,t}(x)
-\]
-then the function $\lambda_{s,t}(x)$ satisfies the recurrence relation
-\[
-\lambda(x) = e^{-s/K} \lambda(x-s) + e^{-t/K} \lambda(x-t)
-\]
-where $\lambda_{s,t}(x)$ is a linear interpolation of two previous values (remember $e^{-s/K} + e^{-t/K} = 1$), so $\lambda(x)$ should eventually converges to the "average" value of seeding values.
-	
-The other evidence is that, $\eta(x)$ could be expanded as
-\[
-\eta_{s,t}(x) = \sum_{j} c_j e^{r_j x}
-\]
-where $r_j$ are all the roots of equation $e^{-sr} + e^{-tr} = 1$. $r = 1/K$ is a root, and also the root with the largest real component. It's corresponding term should dominate all terms for large $x$.
-
 If this limit exist, then we can quickly prove $\lim_{x\to\infty} \eta(x-t)/\eta(x) = g_{s,t}$, and then apply the same technique as the rational case to finish the proof.
+
+The left side function can be expanded using the series previously obtained via Laplace transform
+\[
+\frac{\eta_{s,t}(x)}{e^{\rho_{s,t}x}} =^{\star}  \sum_r \frac{e^{(r - \rho_{s,t})x}}{r(s e^{tr} + t e^{sr})}
+\]
+Remember $r= \rho_{s,t}$ is one of the root, so equivalently we want to prove the limit 
+\[
+\lim_{x\to\infty} \sum_{r \neq \rho_{s,t}} \frac{e^{(r - \rho_{s,t})x}}{r(s e^{tr} + t e^{sr})} = 0
+\] 
+Because all other solutions has $\mathfrak{R}(r) < \rho_{s,t}$, each individual term tends to zero. Unfortunately we can't simply swap the limit and summation because
+\begin{itemize}
+	\item The series doesn't converge absolutely.
+	\item There are infinitely many $r$ whose real components are arbitrarily close to $\rho_{s,t}$, whose corresponding terms decay very slowly. This hints that summation of them at $x\to\infty$ might ``leak over" zero.
+\end{itemize}
+However, we also have heuristic data shows that the magnitude of each component is decreasingly smaller for closer $r - \rho_{s,t}$, limiting the contribution from slow-decaying terms to the series. Further more, the oscillating magnitude of the sum seems to be mainly determined by the term with the largest magnitude, which decreases and vanishes for $x\to\infty$, but not at an exponential rate overall when including all terms.
 
 \vspace{1cm}
 \begin{lemma} [Modes]
@@ -1671,7 +1663,7 @@ If this limit exist, then we can quickly prove $\lim_{x\to\infty} \eta(x-t)/\eta
 	\]
 	The forth graph is colored using the relative difference between $E(n)$ and its continuous version, where dark blue means little difference, while dark red means $E(n)$ is significantly higher
 	\[
-	c_4 =\frac{E_{s,t}(n)} {\tilde{E}_{s,t}(n)} = \frac{E_{s,t}(n)} {k_{s,t} n \ln n}
+	c_4 =\frac{E_{s,t}(n)} {\tilde{E}_{s,t}(n)} = \frac{\rho_{s,t} E_{s,t}(n)} {n \ln n}
 	\]
 	
 	We can see the graph is divided into several regions. We have already discussed mode $M_0$ and $M_1$ above. There are also mode $M_2$, $M_3$ and so on. A new mode $M_{n+1}$ is formed when the ``short branch" ($E(w)$ when $w$ is small) falls into mode $M_n$. For mode beyond $M_4$, they seems to ``fade away" and becomes very close to the continuous optimizer. We can find the approximated boundaries between these modes. As $t/s$ grows very large, and $g$ becomes very small, we have
@@ -1695,7 +1687,37 @@ If this limit exist, then we can quickly prove $\lim_{x\to\infty} \eta(x-t)/\eta
 	\]
 	These lines match what we see in the graphs.
 	
-	Around $s \approx t$, there is mode $S$.
+	We can also understand mode boundaries with the joint function $\eta(x)$. Consider the differential in mode $M_0$
+	\[
+	\Delta E(n) = t + ns, \quad n < \frac{t}{s} + 1
+	\]
+	which has limit
+	\[
+	\Delta E(n) < 2t + s
+	\]
+	This means the boundary between $M_0$ and $M_1$ is at
+	\[
+	n_{0|1} \sim \eta_{s,t}(2t + s)
+	\]
+	Because each boundary generates the next boundary by being the short branch, we can derive that in general
+	\[
+	n_{k|k+1} \sim \eta_{s,t}((k+2)t + s)
+	\]
+	Also remember that for coprime integer pairs $(s, t)$, the first node is at
+	\[
+	n^* = \eta_{s,t}(st + s + t) + 1
+	\]
+	which is right after $n_{s-1|s}$, the boundary between $M_{s-1}$ and $M_s$.
+	
+	In fact, if we group all $n = \eta_{s,t}(ps + qt)$ by integer pairs $(p, q)$, we can get a nice pattern. In the graph below, each block in the range
+	\[
+	\eta_{s,t}(ps + qt) < n < \eta_{s,t}((ps + qt)^+)
+	\] 
+	is colored according to $(p, q)$. The hue is controlled by $p$, while the brightness alternates for different $q$.
+	
+	\includegraphics[scale=0.3]{web.png}
+	
+	This graph displays a similar pattern seen in the optimizer variance graph, and also clearly shows different regions with different colors.
 \end{proof}
 
 
