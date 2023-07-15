@@ -834,7 +834,7 @@ More interesting property can be revealed via Laplace transform. Consider the fo
 where $\theta$ is the unit step function. Its Laplace transform is 
 \begin{align*}
 \mathcal{L}\{\phi\}(\sigma) &= \frac{1}{\sigma} + \sum_{p=0}^{\infty}\sum_{q=0}^{\infty} \frac{(p+q)!}{p!q!} \frac{e^{-(ps+qt)\sigma}}{\sigma} \\
-&= \frac{1}{\sigma} + \frac{1}{\sigma} \sum_{j=0}^{\infty} (e^{-sr} + e^{-tr})^j\\
+&= \frac{1}{\sigma} + \frac{1}{\sigma} \sum_{j=0}^{\infty} (e^{-s\sigma} + e^{-t\sigma})^j\\
 &= \frac{1}{\sigma} + \frac{1}{\sigma(1- (e^{-s\sigma} + e^{-t\sigma}))} \quad(\text{converges for big enough }\mathfrak{R}(\sigma))
 \end{align*}
 This function, after analytic continuation, has a removable singularity at $\sigma = 0$, and a pole at every $\sigma = r$ where $r$ are the complex roots of the following equation
