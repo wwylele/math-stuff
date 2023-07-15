@@ -1703,30 +1703,103 @@ The proof also hinted the function converges at the order of $1+\mathcal{O}(1/\l
 	\end{align*}
 \end{lemma}
 \begin{proof}
-	(TODO)
+First, let's observe the properties of the roots $r$ of the equation
+\[
+e^{-sr} + e^{-tr} = 1
+\]
+We already introduced a real root of this equation $\rho$. In fact, we can show that $\rho$ has uniquely the largest real components among all complex roots when $s/t\notin\mathbb{Q}$: all roots satisfies the triangle inequality
+\[
+|e^{-sr}| + |e^{-tr}| = e^{-s\Re(r)} + e^{-t\Re(r)} \ge 1
+\]
+Because the left side is a decreasing function of $\Re(r)$, we have $\Re(r) \le \rho$. Let's assume there is another root $r=\rho + i\theta$ with the same real component, then the triangle inequality requires
+\begin{align*}
+e^{-is\theta},e^{-it\theta}\in\mathbb{R^+}\implies  s\theta,t\theta\in2\pi\mathbb{Z}
+\end{align*}
+which is only possible for $\theta = 0$ due to irrational $s/t$.
+
+We can also show that all complex roots is distributed evenly. That is, the limit
+\[
+\lim_{n\to\infty} \frac{|r_n|}{n}
+\]
+exists, where $r_n$ are roots in ascend order of their magnitude. (TODO)
+
+Next, let's introduce the $\mu$-smooth step function, for positive $\mu$
+\[
+\theta^{\mu}(x) = \begin{cases}
+0 \quad &(x < 0) \\
+\frac{x}{\mu} \quad &(0\le x\le \mu)\\
+1 \quad &(x>\mu)
+\end{cases}
+\]
+which has Laplace transform
+\begin{align*}
+\mathcal{L}\{\theta^{\mu}\}(\sigma) &= \int_0^{\mu} \frac{x}{\mu} e^{\sigma x} dx + \int_{\mu}^\infty e^{\sigma x} dx = \frac{1 - e^{\mu\sigma}}{\mu\sigma^2}
+\end{align*}
+We can also see that
+\[
+	\theta^{\mu}(x)\le\theta(x)\le\theta^{\mu}(x+\mu)
+\]
+which is the core inequality we will build on.
+
+Similar to the previously discussed function $\phi(x)$, we can construct its smooth version
+\[
+\phi^{\mu}(x) = 1 + \sum_{p=0}^{\infty}\sum_{q=0}^{\infty}\frac{(p+q)!}{p!q!}\theta^{\mu}(x-(ps+qt))
+\]
+which has Laplace transform
+\begin{align*}
+\mathcal{L}\{\phi^{\mu}\}(\sigma) &= \frac{1}{\sigma} + \frac{1-e^{-k\sigma}}{k\sigma^2(1-(e^{-s\sigma} + e^{-t\sigma}))}
+\end{align*}
+and by comparing coefficient at poles, we get
+\begin{align*}
+\phi^{\mu}(x) = \sum_{r} \frac{(1-e^{-\mu r})e^{rx}}{\mu r^2(se^{-sr}+te^{-tr})}
+\end{align*}
+We also inherit the inequality
+\[
+\phi^{\mu}(x)\le\phi(x)\le\phi^{\mu}(x+\mu)
+\]
+
+Let's explore the asymptotic behavior of $\phi^{\mu}(x)$. Consider the following limit
+\begin{align*}
+\lim_{x\to\infty}\frac{\phi^{\mu}(x)}{e^{\rho x}} = \lim_{x\to\infty}\sum_{r} \frac{(1-e^{-\mu r})e^{(r-\rho)x}}{\mu r^2(se^{-sr}+te^{-tr})}
+\end{align*}
+We can exchange the limit and the summation using Tannery's theorem. Consider the bound $M_r$ (Remember $\rho$ has the largest real component)
+\[
+M_r =\left| \frac{1-e^{-\mu r}}{\mu r^2(se^{-sr}+te^{-tr})} \right| \ge \left| \frac{(1-e^{-\mu r})e^{(r-\rho)x}}{\mu r^2(se^{-sr}+te^{-tr})} \right|
+\]
+The sum of all bounds converges
+\[
+\sum_{r} M_r < \infty
+\]
+which can be proved by comparison with series $\sum 1/n^2$. This allows us to exchange the operators
+\[
+\lim_{x\to\infty}\frac{\phi^{\mu}(x)}{e^{\rho x}} =\sum_{r}  \lim_{x\to\infty}\frac{(1-e^{-\mu r})e^{(r-\rho)x}}{\mu r^2(se^{-sr}+te^{-tr})} = \frac{1-e^{-\mu \rho}}{\mu \rho^2(se^{-s\rho}+te^{-t\rho})}
+\]
+
+Let's go back to the inequality, and take limit on both sides
+\begin{align*}
+\phi^{\mu}(x)&\le\phi(x)\le\phi^{\mu}(x+\mu) \\
+\frac{\phi^{\mu}(x)}{e^{\rho x}}&\le\frac{\phi(x)}{e^{\rho x}}\le e^{\mu\rho} \frac{\phi^{\mu}(x+\mu)}{e^{\rho (x+\mu)}} \\
+\lim_{x\to\infty}\frac{\phi^{\mu}(x)}{e^{\rho x}} &\le \liminf_{x\to\infty}\frac{\phi(x)}{e^{\rho x}} \le \limsup_{x\to\infty}\frac{\phi(x)}{e^{\rho x}}\le e^{\mu\rho} \lim_{x\to\infty}\frac{\phi^{\mu}(x+\mu)}{e^{\rho (x+\mu)}} \\
+ \frac{1-e^{-\mu \rho}}{\mu \rho}\frac{1}{\rho(se^{-s\rho}+te^{-t\rho})} &\le \liminf_{x\to\infty}\frac{\phi(x)}{e^{\rho x}} \le \limsup_{x\to\infty}\frac{\phi(x)}{e^{\rho x}}\le  \frac{e^{\mu \rho}-1}{\mu \rho}\frac{1}{\rho(se^{-s\rho}+te^{-t\rho})}
+\end{align*}
+Because the choice of $\mu$ is arbitrary, we can squeeze the limit
+\begin{align*}
+ \sup_{\mu}\frac{1-e^{-\mu \rho}}{\mu \rho}\frac{1}{\rho(se^{-s\rho}+te^{-t\rho})} &\le \liminf_{x\to\infty}\frac{\phi(x)}{e^{\rho x}} \le \limsup_{x\to\infty}\frac{\phi(x)}{e^{\rho x}}\le \inf_{\mu}\frac{e^{\mu \rho}-1}{\mu \rho}\frac{1}{\rho(se^{-s\rho}+te^{-t\rho})}\\
+\frac{1}{\rho(se^{-s\rho}+te^{-t\rho})} &\le \liminf_{x\to\infty}\frac{\phi(x)}{e^{\rho x}} \le \limsup_{x\to\infty}\frac{\phi(x)}{e^{\rho x}}\le \frac{1}{\rho(se^{-s\rho}+te^{-t\rho})}
+\end{align*}
+\[
+\lim_{x\to\infty} \frac{\phi(x)}{e^{\rho x}} = \frac{1}{\rho(se^{-s\rho}+te^{-t\rho})}
+\]
+which means
+\begin{align*}
+\lim_{x\to\infty} \nu(x) &= \lim_{x\to\infty}  \frac{e^{\rho x}}{\eta(x)\rho(se^{t\rho} + te^{s\rho})} \\
+&= \lim_{x\to\infty}  \frac{e^{\rho x}}{\phi(x-s-t)\rho(se^{t\rho} + te^{s\rho})} \\
+&= 1
+\end{align*}
 \end{proof}
 \paragraph{Remark}
 
-The left side function can be expanded using the series previously obtained via Laplace transform
-\[
-\upsilon_{s,t}(x) =^{\star}  \sum_r \frac{ \rho_{s,t}(s e^{t\rho_{s,t}} + t e^{s\rho_{s,t}}) }{r(s e^{tr} + t e^{sr})} e^{(r - \rho_{s,t})x}
-\]
-Remember $r= \rho_{s,t}$ is one of the root, whose corresponding term will be 1, so equivalently we want to prove the limit 
-\[
-\lim_{x\to\infty} \sum_{r \neq \rho_{s,t}} \frac{e^{(r - \rho_{s,t})x}}{r(s e^{tr} + t e^{sr})} = 0
-\] 
-Because all other solutions has $\mathfrak{R}(r) < \rho_{s,t}$, each individual term tends to zero. Unfortunately we can't simply swap the limit and summation because
-\begin{itemize}
-	\item The series doesn't converge absolutely.
-	\item There are infinitely many $r$ whose real components are arbitrarily close to $\rho_{s,t}$, whose corresponding terms decay very slowly. This hints that summation of them at $x\to\infty$ might ``leak over" zero.
-\end{itemize}
-However, we also have heuristic data shows that the magnitude of each component is decreasingly smaller for closer $r - \rho_{s,t}$, limiting the contribution from slow-decaying terms to the series. Further more, the oscillating magnitude of the sum seems to be mainly determined by the term with the largest magnitude, which decreases and vanishes for $x\to\infty$, but not at an exponential rate overall when including all terms.
-
-We can also try extrapolate from the rational case. By convention we often say $\gcd(s, t) = 0$ for $s/t\notin\mathbb{Q}$. If we consider $\kappa\to0$, then
-\[
-\limsup_{x\to\infty}  \upsilon_{s,t}(x) = \liminf_{x\to\infty}  \upsilon_{s,t}(x) = 1
-\]
-which suggests the unified limit for irrational case.
+We could try taking the limit directly on the expansion of $\eta(x)$. However, the Tannery's theorem cannot be applied to it, because the series for $\eta(x)$ doesn't converge absolutely. This is why we went to find a pair of bounding functions whose expansion does converge absolutely, and derive the limit with squeezing method.
 
 \vspace{1cm}
 \begin{lemma}[$w$ limit]
@@ -1740,7 +1813,6 @@ which suggests the unified limit for irrational case.
 	\]
 \end{lemma}
 \begin{proof}
-	(Only for $s/t\in\mathbb{Q}$ for now. TODO for irrational)
 	We will first prove the following weaker limit: for jump points $\{(x_i, \eta_i\nearrow\eta_{i+1})\}_{i=1}^\infty$, 
 	\[
 	\lim_{i\to\infty} \frac{\eta(x_i - t)}{\eta_i} = g_{s,t}
@@ -1755,9 +1827,9 @@ which suggests the unified limit for irrational case.
 	\lim_{i\to\infty} \frac{\eta(x_i - t)}{\eta_i} = \lim_{i\to\infty} \frac{n_{i-t}}{n_i}= e^{-t\rho_{s,t}}	= g_{s,t}
 	\end{align*}
 	
-	For $s/t\notin\mathbb{Q}$, assuming the $\eta$ asymptote for irrational holds, then
+	For $s/t\notin\mathbb{Q}$, with the $\eta$ asymptote for irrational case
 	\[
-	\lim_{i\to\infty} \frac{\eta(x_i - t)}{\eta_i} = \lim{i\to\infty} \frac{e^{\rho(x_i-t)}}{e^{\rho x_i}}  = g_{s,t}
+	\lim_{i\to\infty} \frac{\eta(x_i - t)}{\eta_i} = \lim_{i\to\infty} \frac{e^{\rho(x_i-t)}}{e^{\rho x_i}}  = g_{s,t}
 	\]
 	
 	Remember $w_{s,t}(\eta_i) = \{\eta(x_i - t)\}$, so the limit above is actually a subsequence of the general $w$-limit at joints:
