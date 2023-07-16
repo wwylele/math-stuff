@@ -1,5 +1,6 @@
 \documentclass[]{article}
 \usepackage{amsmath}
+\DeclareMathOperator\Arg{Arg}
 \usepackage{amsthm}
 \usepackage{amssymb}
 \usepackage{ulem}
@@ -1628,10 +1629,10 @@ The proof also hinted the function converges at the order of $1+\mathcal{O}(1/\l
 	\]
 	Consider the real function $f(u) = u^{-s} + u^{-t} - 1$, which monotonically decreases and has a single root in $\mathbb{R}^+$, so the largest $u$ that satisfies $f(u)\ge 0$ is the root $u_*$ itself. Going back to $|\xi_*| = u_*$. Obviously the real value $\xi_* = u_*$ is a root of the $\xi$ equation. We can also assert that no other roots $\xi$ has the same largest magnitude  $|\xi| = u_*$, because
 	\begin{align*}
-	&\xi = u_*e^{i\pi\theta} \text{ is a root} \\
-	\implies& e^{-i\pi s\theta}, e^{-i\pi t\theta} \in \mathbb{R}^+ \quad &\text{(Triangle inequality)} \\
-	\implies& s\theta, t\theta \in 2\mathbb{Z} \\
-	\implies& \theta \in 2\mathbb{Z} \quad &(s, t \text{ coprime})\\
+	&\xi = u_*e^{i\theta} \text{ is a root} \\
+	\implies& e^{-i s\theta}, e^{-i t\theta} \in \mathbb{R}^+ \quad &\text{(Triangle inequality)} \\
+	\implies& s\theta, t\theta \in 2\pi\mathbb{Z} \\
+	\implies& \theta \in 2\pi\mathbb{Z} \quad &(s, t \text{ coprime})\\
 	\implies& \xi = u_*
 	\end{align*}
 	This means the original equation for $\xi$ has a single positive real root $\xi_*$, and it has the strictly largest magnitude among all complex roots. Notice that $\xi_* = e^{\rho_{s,t}}$ is a real root, so it is the root with the largest magnitude. This means that all $\lim_{i\to\infty} (\xi/\xi_*)^i$ vanishes for $\xi\ne\xi_*$, and
@@ -1707,7 +1708,7 @@ First, let's observe the properties of the roots $r$ of the equation
 \[
 e^{-sr} + e^{-tr} = 1
 \]
-We already introduced a real root of this equation $\rho$. In fact, we can show that $\rho$ has uniquely the largest real components among all complex roots when $s/t\notin\mathbb{Q}$: all roots satisfies the triangle inequality
+We already introduced a real root of this equation $\rho$. In fact, we can show that $\rho$ has uniquely the largest real component among all complex roots when $s/t\notin\mathbb{Q}$: all roots satisfies the triangle inequality
 \[
 |e^{-sr}| + |e^{-tr}| = e^{-s\Re(r)} + e^{-t\Re(r)} \ge 1
 \]
@@ -1717,13 +1718,15 @@ e^{-is\theta},e^{-it\theta}\in\mathbb{R^+}\implies  s\theta,t\theta\in2\pi\mathb
 \end{align*}
 which is only possible for $\theta = 0$ due to irrational $s/t$.
 
-We can also show that all complex roots is distributed evenly. That is, the limit
-\[
-\lim_{n\to\infty} \frac{|r_n|}{n}
-\]
-exists, where $r_n$ are roots in ascend order of their magnitude. (TODO)
+On the other hand, all roots $r$ are bounded on the right side as well. For $r$ with low enough real component, $|e^{-sr} + e^{-tr}| \ge |e^{-s\Re(r)} - e^{-t\Re(r)}|$ can grow unbounded, nullifying the possibility of a root which would require  $|e^{-sr} + e^{-tr}|=1$.
 
-Next, let's introduce the $\mu$-smooth step function, for positive $\mu$
+We can also show that all complex roots is distributed evenly. Let's consider a rectangular contour on $g(r) = e^{-sr} + e^{-tr} - 1$ for the argument principle, whose height is $H$, and the left and right sides are far away enough. For the top and the bottom sides, as only $\Im(r)$ changes, the total change in $\Arg(g(r))$ is less than $2\pi$. For the right side, because $g(r)$ is always very close to $-1$, the total change in $\Arg(g(r))$ is also less than $2\pi$. For the left side, $g(r)$ is asymptotically similar to $e^{-\max\{s,t\}r}-1$, which has total change in $\Arg(g(r))$ of about $\max\{s,t\}H$. So in general, the total number of roots inside the contour is about $\max\{s,t\}H/(2\pi)$, give or take 3. Because all roots are also restricted in a vertical strip, we can show that
+\[
+\lim_{n\to\infty}\frac{|r_n|}{n} = \frac{\pi}{\max\{s,t\}}
+\]
+where $r_n$ are roots in ascend order of their magnitude.
+
+Next, let's introduce the smooth step function, for a small positive $\mu$
 \[
 \theta^{\mu}(x) = \begin{cases}
 0 \quad &(x < 0) \\
@@ -1762,15 +1765,28 @@ Let's explore the asymptotic behavior of $\phi^{\mu}(x)$. Consider the following
 \begin{align*}
 \lim_{x\to\infty}\frac{\phi^{\mu}(x)}{e^{\rho x}} = \lim_{x\to\infty}\sum_{r} \frac{(1-e^{-\mu r})e^{(r-\rho)x}}{\mu r^2(se^{-sr}+te^{-tr})}
 \end{align*}
-We can exchange the limit and the summation using Tannery's theorem. Consider the bound $M_r$ (Remember $\rho$ has the largest real component)
+Let's try exchanging the limit and the summation using Tannery's theorem. We can construct the bound $M_r$ 
 \[
-M_r =\left| \frac{1-e^{-\mu r}}{\mu r^2(se^{-sr}+te^{-tr})} \right| \ge \left| \frac{(1-e^{-\mu r})e^{(r-\rho)x}}{\mu r^2(se^{-sr}+te^{-tr})} \right|
+M_r = \frac{U}{\mu |r|^2 V}\ge \left| \frac{1-e^{-\mu r}}{\mu r^2(se^{-sr}+te^{-tr})} \right| \ge \left| \frac{(1-e^{-\mu r})e^{(r-\rho)x}}{\mu r^2(se^{-sr}+te^{-tr})} \right|
 \]
-The sum of all bounds converges
+where the constant are chosen such that
+\begin{itemize}
+	\item $U = 1 + \sup_{r} |e^{-\mu r}| \ge |1-e^{-\mu r}|$, which exists because $\Re(r)$ is bounded on the left side.
+	\item $0 < V =  \big||se^{-s\rho}| - |te^{-t\rho}|\big| = \min_{r} \big||se^{-sr}| - |te^{-tr}|\big| \le |se^{-sr}+te^{-tr}|$. To show this, consider the real function $g(x) = se^{-sx} - te^{-tx}$
+	\begin{itemize}
+		\item $g(x)$ has a single zero $x^* = (\ln s - \ln t) / (s - t) > \rho \ge r$. To show this, consider the decreasing function $h(x) = e^{-sx} + e^{-tx} - 1$ which has root $x = \rho$. It can be shown that $h(x^*)  =(t/s)^{s/(s-t)} + (t/s)^{t/(s-t)} -1 < 0$, meaning $x^* > \rho$.
+		\item $g(x)$ is a monotonic function before its zero, and can't be arbitrarily close to zero elsewhere. This is because $g'(x)$ has a single zero $x^{**} = 2x^*$ 
+	\end{itemize}
+\end{itemize}
+Because of the even distribution of roots we previously showed
+\[
+	\lim \frac{M_r}{1/n^2} = \frac{U \max\{s,t\}^2}{\mu V \pi^2}
+\]
+As $\sum 1/n^2$ converges, the limit comparison test shows that the sum of all bounds converges
 \[
 \sum_{r} M_r < \infty
 \]
-which can be proved by comparison with series $\sum 1/n^2$. This allows us to exchange the operators
+This allows us to exchange the operators
 \[
 \lim_{x\to\infty}\frac{\phi^{\mu}(x)}{e^{\rho x}} =\sum_{r}  \lim_{x\to\infty}\frac{(1-e^{-\mu r})e^{(r-\rho)x}}{\mu r^2(se^{-sr}+te^{-tr})} = \frac{1-e^{-\mu \rho}}{\mu \rho^2(se^{-s\rho}+te^{-t\rho})}
 \]
