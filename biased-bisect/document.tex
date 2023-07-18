@@ -1769,14 +1769,16 @@ Let's try exchanging the limit and the summation using Tannery's theorem. We can
 \[
 M_r = \frac{U}{\mu |r|^2 V}\ge \left| \frac{1-e^{-\mu r}}{\mu r^2(se^{-sr}+te^{-tr})} \right| \ge \left| \frac{(1-e^{-\mu r})e^{(r-\rho)x}}{\mu r^2(se^{-sr}+te^{-tr})} \right|
 \]
-where the constant are chosen such that
+where the constants are chosen such that
 \begin{itemize}
-	\item $U = 1 + \sup_{r} |e^{-\mu r}| \ge |1-e^{-\mu r}|$, which exists because $\Re(r)$ is bounded on the left side.
-	\item $0 < V =  \big||se^{-s\rho}| - |te^{-t\rho}|\big| = \min_{r} \big||se^{-sr}| - |te^{-tr}|\big| \le |se^{-sr}+te^{-tr}|$. To show this, consider the real function $g(x) = se^{-sx} - te^{-tx}$
-	\begin{itemize}
-		\item $g(x)$ has a single zero $x^* = (\ln s - \ln t) / (s - t) > \rho \ge r$. To show this, consider the decreasing function $h(x) = e^{-sx} + e^{-tx} - 1$ which has root $x = \rho$. It can be shown that $h(x^*)  =(t/s)^{s/(s-t)} + (t/s)^{t/(s-t)} -1 < 0$, meaning $x^* > \rho$.
-		\item $g(x)$ is a monotonic function before its zero, and can't be arbitrarily close to zero elsewhere. This is because $g'(x)$ has a single zero $x^{**} = 2x^*$ 
-	\end{itemize}
+	\item $U \ge |1-e^{-\mu r}|$. $U$ exists because $\Re(r)$ is bounded on the left side, hence the the whole term is bounded in magnitude.
+	\item $0 < V \le |se^{-sr}+te^{-tr}|$. To show the existence of $V$, consider $p = se^{-sr}+te^{-tr}$, which can be transformed as
+	\begin{align*}
+	&p = (s-t)e^{-sr} + t = (t-s)e^{-tr} + s\\
+	\implies& \frac{p-t}{s-t} = e^{-sr}, \quad \frac{p-s}{t-s} = e^{-tr}\\
+	\implies& \left|\frac{p-t}{s-t}\right|^t = \left|\frac{p-s}{s-t}\right|^s
+	\end{align*}
+	Viewed on the Cartesian plane, $p$ is on an oval-shape curve defined by the equation above. It can be seen that $0$ is not on the curve, nor its neighborhood. This means $|p|$ is lower bounded by a non-zero value.
 \end{itemize}
 Because of the even distribution of roots we previously showed
 \[
