@@ -1431,7 +1431,7 @@ E(n_{k,p}) &= D^{k}(n_{k,p}) \\
 \end{lemma}
 
 \vspace{1cm}
-\begin{lemma}[Guide]
+\begin{lemma}[Continuous approximation]
 	The ``normalized" optimizer $g_{s,t}(n) = w_{s,t}(n)/n$ is similar to a function $g_{s,t}$ that's independent from $n$.
 \end{lemma}
 \begin{proof}
@@ -1646,7 +1646,7 @@ The proof also hinted the function converges at the order of $1+\mathcal{O}(1/\l
 
 
 \vspace{1cm}
-\begin{lemma}[$\eta$ asymptote]
+\begin{lemma}[$\eta$ asymptote, rational]
 	Define function $\upsilon_{s,t}(x)$ as 
 	\[
 	\upsilon_{s,t}(x) =  \eta_{s,t}(x) \big/ \frac{e^{\rho_{s,t} x}}{\rho_{s,t}(s e^{t\rho_{s,t}} + te^{s\rho_{s,t}})}
@@ -1818,6 +1818,12 @@ which means
 \paragraph{Remark}
 
 We could try taking the limit directly on the expansion of $\eta(x)$. However, the Tannery's theorem cannot be applied to it, because the series for $\eta(x)$ doesn't converge absolutely. This is why we went to find a pair of bounding functions whose expansion does converge absolutely, and derive the limit with squeezing method.
+
+If we extend $\gcd$ to irrational pairs so that $\gcd(s, t) = 0$ for $s/t\notin \mathbb{Q}$, then this property can be merged with the previous property: define $\kappa_{s,t} = \rho_{s,t} \gcd(s, t)$, and $\Upsilon(x) = x/(e^x-1)$ with singularity at $x=0$ removed, then
+\begin{align*}
+	\limsup_{x\to\infty} \upsilon_{s,t}(x) &= e^{\kappa_{s,t}}\Upsilon(\kappa_{s,t}) \\
+	\liminf_{x\to\infty} \upsilon_{s,t}(x) &= \Upsilon(\kappa_{s,t})
+\end{align*}
 
 \vspace{1cm}
 \begin{lemma}[$w$ limit]
