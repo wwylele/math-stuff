@@ -1055,8 +1055,8 @@ We omitted the graph beyond $t=1$, but remember that it can be derived by $E_{1,
 
 It can be seen from the graph that nodes are most at unit fractions $t = 1/p$, but there are also a few nodes at non-unit fractions close to $t=1$.
 \vspace{1cm}
-\begin{lemma}[$s,t$-range]
-	Fixing $n$ and $s$, $w_{s,t}(n)$ is a ``piecewise constant" function. Over a single segment of the piecewise function $E_{s,t}(n)$, the same set of $w$ is chosen. However, exactly at a node of piecewise function $E_{s,t}(n)$, $w_{s,t}(n)$ can take a unique value that's not equal to either the one of the left segment or the one of the right segment.
+\begin{lemma}[$w$ segment]
+	Fixing $n$ and $s$, $w_{s,t}(n)$ is a ``piecewise constant" function. Over a single segment of the piecewise function $E_{s,t}(n)$, the same set of $w$ is chosen. However, exactly at a node of piecewise function $E_{s,t}(n)$, $w_{s,t}(n)$ can take a unique value that is not an element of either the left segment or the right segment.
 \end{lemma}
 \begin{proof}
 	Remember that $E_{s,t}(n)$ calculated by taking the $t$-pointwise minimum of a sequence of piecewise linear, convex functions $D^w(t)$ indexed by $w$. If the pointwise minimum results in a simple linear function over a $t$-interval, it must be resulted from the same set of $w$. This is because, if any $D^w_{s,t}(n)$ tries to join or leave $E_{s,t}(n)$ midway in the interval, it must bend down due to convexity, and that would result in  $E_{s,t}(n) \le D^w_{s,t}(n)$ bending down as well, contradicting with the fact that $E_{s,t}(n)$ is a simple linear function in this interval. $D^w_{s,t}(n)$ can only join or leave at the nodes of $E_{s,t}(n)$
@@ -1213,7 +1213,10 @@ If we graph $w$ over $t$, we will get a series of ``blocks", separated by vertic
 
 We omitted the graph beyond $t=1$, but remember that it can be derived by $w_{1,t}(n) = n - w_{1,1/t}(n)$ due to symmetry and homogeneity.
 
-We can observe from the graph that there are a few red spikes poking out of black boxes. This shows that at certain $(s, t)$ pair, the optimizer $w_{s,t}$ can be a set larger than its neighbor for both sides, even resulting in non-monotonicity in $w^{\min}$ and $w^{\max}$ over $t$ (fixing $s$).
+From the graph, we can observe that for $t = 1/4$ and $t = 1/2$, we have ``spiky node" where
+\[
+ w_{1,t^-}(n) \cup w_{1,t^+}(n)  \subsetneq w_{1,t}(n)
+\]
 
 \vspace{1cm}
 \begin{lemma}[Node] 
