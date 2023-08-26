@@ -1,0 +1,201 @@
+\documentclass[]{article}
+\usepackage{amsmath}
+\DeclareMathOperator\Arg{Arg}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage
+[
+left=2cm,
+right=2cm,
+top=2cm,
+bottom=2cm,
+]
+{geometry}
+
+\setlength\parskip{1em}
+
+\begin{document}
+
+\newtheorem{problem}{Problem}
+\newtheorem{lemma}{Property}
+
+\section{The problem}
+
+Function $f: \mathbb{R}\to\mathbb{C}$ satisfies the recurrence relation
+\[
+\lambda_1 f(t+t_1) + \lambda_2 f(t+t_2) + \dots \lambda_n f(t+t_n) = 0
+\]
+where
+\[
+0 = t_1 < t_2 <\dots <t_n = T
+\]
+Given the function value $f(t)$ for $t\in[S, S+T]$, find the general formula for $f(t)$
+
+\section{Solution}
+
+Consider the following solution basis that satisfies the recurrence relation
+\[
+p_j(t) = e^{x_j t}
+\]
+which means that $x_j$ are the solutions for the following equation
+\[
+\sum_{i = 1}^{n} \lambda_i e^{x_j t_i} = 0
+\]
+For now let's assume there is no repeated solutions. We want to express $f(t)$ in terms of the linear combination
+\[
+f(t) = \sum_j c_j e^{x_j t}
+\]
+To find the coefficients, we define the following dual basis
+\[
+q_j(t) = -\frac{\sum_{i=1}^{t_i<t-S} \lambda_i e^{x_j(t_i-t)} }{\sum_{i=1}^{n} \lambda_i t_i e^{x_j t_i}}
+\]
+These dual basis has the following nice property with the original basis
+\begin{align*}
+\int_{S}^{S+T} p_j(t)q_k(t)\,dt &= \int_{S}^{S+T} -e^{x_j t} \frac{\sum_{i=1}^{t_i<t-S} \lambda_i e^{x_k( t_i-t)} }{\sum_{i=1}^{n} \lambda_i t_i e^{x_k t_i}}\,dt \\
+&= -\frac{\sum_{i=1}^{n} \int_{S+t_i}^{S+T}  \lambda_i e^{x_k t_i}e^{(x_j - x_k) t}\,dt }{\sum_{i=1}^{n} \lambda_i t_i e^{x_k t_i}}\\
+&= \begin{dcases*}
+	 -\frac{\sum_{i=1}^{n}  \lambda_i e^{x_k t_i}  (T-t_i) }{\sum_{i=1}^{n} \lambda_i t_i e^{x_k t_i}} & $(x_j =x_k)$\\
+	 -\frac{\sum_{i=1}^{n} \lambda_i \left(e^{(x_j-x_k)(S+T)}e^{x_kt_i} - e^{(x_j-x_k)S}e^{x_jt_i}\right)}{(x_j - x_k)\sum_{i=1}^{n} \lambda_i t_i e^{x_k t_i}} & $(x_j \ne x_k)$
+\end{dcases*}\\
+&=\delta_{j}^k
+\end{align*}
+This means we can extract the coefficient using the dual basis
+\begin{align*}
+c_j &= \int_{S}^{S+T} f(t)q_j(t)\,dt \\
+    &=   -\frac{\sum_{i=1}^{n} \int_{S+t_i}^{S+T} \lambda_i e^{x_j(t_i-t)}f(t)\,dt }{\sum_{i=1}^{n} \lambda_i t_i e^{x_j t_i}}
+\end{align*}
+
+\section{Periodic}
+A periodic function is a special case of this problem where
+\begin{align*}
+	&n = 2 \\
+	&\lambda_1 = 1,\quad\lambda_2 = -1\\
+	&t_1 = 0,\quad t_2 = T
+\end{align*}
+for which we have the equation
+\[
+1 - e^{Tx} = 0
+\]
+which has solutions
+\[
+x_j = \frac{2\pi i j}{T}
+\]
+The solution bases and the dual basis are
+\[
+p_j(t) = e^{\frac{2\pi i jt}{T}}
+\]
+\[
+q_j(t) =  -\frac{ e^{-x_jt} }{ -T e^{x_j T}} = \frac{1}{T}e^{-\frac{2\pi i jt}{T}}
+\]
+which is equivalent to finding the Fourier series of $f(t)$
+
+\section{Distribution}
+The original problem can be generalized to to the recurrence relation with distribution $\lambda(\theta)$ with a support within $[0, T]$
+\[
+\int_{0}^{T}\lambda(\theta)f(t + \theta)\, d\theta = 0
+\]
+The solution basis are
+\[
+p_j(t) = e^{x_jt}
+\]
+where $x_j$ are solutions to the equation
+\[
+\int_{0}^{T}\lambda(\theta)e^{x_j\theta}\,d\theta = 0
+\]
+And the dual basis are
+\[
+q_j(t) = -\frac{\int_0^{t-S} \lambda(\theta)e^{x_j(\theta-t)}\,d\theta}{\int_0^T\theta\lambda(\theta)e^{x_j\theta}\,d\theta}
+\]
+which has the property
+\begin{align*}
+	\int_S^{S+T} p_j(t)q_k(t)\,dt &= \int_S^{S+T} -e^{x_jt}\frac{\int_0^{t-S} \lambda(\theta)e^{x_k(\theta-t)}\,d\theta}{\int_0^T\theta\lambda(\theta)e^{x_k\theta}\,d\theta}\,dt \\
+	&= -\frac{\int_{\theta=0}^{T}\int_{t=S+\theta}^{S+T} \lambda(\theta)e^{x_jt}e^{x_k(\theta-t)}\, dt d\theta}{\int_0^T\theta\lambda(\theta)e^{x_k\theta}\,d\theta } \\
+	&=\begin{dcases*}
+		-\frac{\int_{0}^{T} (T-\theta)\lambda(\theta)e^{x_k\theta}\,d\theta}{\int_0^T\theta\lambda(\theta)e^{x_k\theta}\,d\theta } & $(x_j = x_k)$\\
+		-\frac{\int_{0}^{T}\lambda(\theta)\left(e^{(x_j-x_k)(S+T)}e^{x_k\theta} - e^{(x_j-x_k)S}e^{x_j\theta}\right)\,d\theta }{(x_j-x_k)\int_0^T\theta\lambda(\theta)e^{x_k\theta}\,d\theta }  & $(x_j \ne x_k)$
+	\end{dcases*}\\
+	&=\delta_j^k
+\end{align*}
+So we can extract the coefficients the same way as before.
+
+\section{Discrete}
+A discrete analog to the original problem is as follows:
+
+Sequence $f: \mathbb{Z}\to\mathbb{C}$ satisfies the recurrence relation
+\[
+\lambda_{0} f(t) + \lambda_1 f(t+1) + \dots + \lambda_T f(t+T) = 0
+\]
+where $\lambda_{0} \ne 0$ and $\lambda_T \ne 0$. Given the sequence value $f(S), f(S+1),\dots,f(S+T-1)$, find the general formula for $f(t)$.
+
+We can consider the solution basis that satisfies the recurrence relation
+\[
+p_j(t) = x_j^t
+\]
+which means $x_j$ are the solutions to the following algebraic equation
+\[
+\sum_{n = 0}^{T} \lambda_{n} x^n = 0 
+\]
+This equation has $T$ solutions. For now, let's assume all ${x_j}$ are distinct. We want to express $f(t)$ in terms of the linear combination
+\[
+f(t) = \sum_j c_j x_j^t
+\]
+To find the coefficients, we define the following dual basis
+\[
+q_j(t) = -\frac{\sum_{n=0}^{t-S}\lambda_n x_j^{n-t}}{\sum_{n=0}^{T}\lambda_n n x_j^{n}}
+\]
+which has the property
+\begin{align*}
+	\sum_{t=S}^{S+T-1} p_j(t) q_k(t) &= -\frac{\sum_{t=S-S}^{S+T-1} \sum_{n=0}^{t-S}\lambda_n x_k^{n-t} x_j^t }{\sum_{n=0}^{T}\lambda_n n x_k^{n}} \\
+	&= -\frac{\sum_{n=0}^{T-1}\sum_{t=S+n}^{S+T-1} \lambda_n x_k^{n-t} x_j^t }{\sum_{n=0}^{T}\lambda_n n x_k^{n}} \\
+	&= \begin{dcases*} 
+		 -\frac{\sum_{n=0}^{T-1}(T-n) \lambda_n x_j^{n} }{\sum_{n=0}^{T}\lambda_n n x_k^{n}} & $(x_j = x_k)$\\
+		-\frac{\sum_{n=0}^{T-1}\lambda_n \left((x_j/x_k)^{S+T}x_k^n - (x_j/x_k)^S x_j^n \right)  }{(x_j/x_k - 1)\sum_{n=0}^{T}\lambda_n n x_k^{n}} & $(x_j \ne x_k)$
+	\end{dcases*}\\
+	&=\delta_{j}^k
+\end{align*}
+This means we can extract the coefficient using the dual basis
+\begin{align*}
+	c_j &= 	\sum_{t=S}^{S+T-1} f(t) q_j(t) \\
+	&= -\frac{\sum_{t=S}^{S+T-1}\sum_{n=0}^{t-S}\lambda_n f(t) x_j^{n-t}}{\sum_{n=0}^{T}\lambda_n n x_j^{n}}
+\end{align*}
+
+\section{Fibonacci sequence}
+
+The Fibonacci sequence is a special case where
+\begin{align*}
+	&T = 2\\
+&	\lambda_0 = 1,\quad\lambda_1 = 1,\quad\lambda_2 = -1\\
+	&S = 0\\
+&	f(0) = 0,\quad f(1) = 1\\
+\end{align*}
+We have the equation for $x_j$
+\[
+1 + x - x^2 = 0
+\]
+and we have solution
+\[
+x_{0,1} = \frac{1\pm\sqrt{5}}{2}
+\]
+The dual basis are
+\begin{align*}
+q_{0,1}(0) &= -\frac{1}{x_{0,1}^1 - 2x_{0,1}^2}\\
+&=\frac{5\mp\sqrt{5}}{10}  \\ 
+q_{0,1}(1) &= -\frac{x_{0,1}^{-1} + 1}{x_{0,1}^1 - 2x_{0,1}^2}\\
+&=\pm\frac{\sqrt{5}}{5} 
+\end{align*}
+So the coefficients are
+\begin{align*}
+	c_{0,1} = f(0)q_{0,1}(0) + f(1)q_{0,1}(1) = \pm\frac{\sqrt{5}}{5} 
+\end{align*}
+and the formula for the Fibonacci sequence is
+\[
+f(t) = c_0x_0^t + c_1x_1^t  =\frac{\sqrt{5}}{5} \left(\frac{1+\sqrt{5}}{2}\right)^t - \frac{\sqrt{5}}{5} \left(\frac{1-\sqrt{5}}{2}\right)^t
+\]
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\end{document}
