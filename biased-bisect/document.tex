@@ -57,9 +57,9 @@ and with some assumption clarified:
 
 The binary-search-like method is illustrated in the chart below.
 
-\tikzstyle{decision} = [diamond, draw, fill=blue!20, 
+\tikzstyle{decision} = [diamond, draw, fill=blue!20,
 text width=4.5em, text badly centered, node distance=3cm, inner sep=0pt]
-\tikzstyle{block} = [rectangle, draw, fill=blue!20, 
+\tikzstyle{block} = [rectangle, draw, fill=blue!20,
 text width=5em, text centered, minimum height=4em, node distance=3cm]
 \tikzstyle{line} = [draw, -latex']
 \tikzstyle{cloud} = [draw, ellipse,fill=red!20, node distance=2cm,
@@ -90,7 +90,7 @@ minimum height=2em]
 \end{tikzpicture}
 
 \section{The equation}
- 
+
 The step $(*)$ is where we want to find the best best strategy. It can be seen that on each iteration, the algorithm is effectively solving the same problem with a smaller size where $n = p - q$, therefore we can choose x by some function $w_{s,t}(n)$ as
 \[
 x = w_{s,t}(p - q) + p \,,
@@ -124,8 +124,8 @@ We will assume $s > 0 $ and $t > 0$ in general, unless specified otherwise.
 	The optimizer $w_{s,t}(n)$ outputs a set of $w$. It is not necessarily always a single $w$ that minimize the function
 \end{lemma}
 \begin{proof}
-	This is obvious. We haven't really restricted $w$ to be a single value for given $(n,s,t)$. Multiple $w$ can equally give the minimal result in the $E_{s,t}(n)$ equation. In fact, we will see that this is true for most cases. 
-\end{proof}	
+	This is obvious. We haven't really restricted $w$ to be a single value for given $(n,s,t)$. Multiple $w$ can equally give the minimal result in the $E_{s,t}(n)$ equation. In fact, we will see that this is true for most cases.
+\end{proof}
 
 \vspace{1cm}
 \begin{lemma}[Homogeneity] Homogeneity of $s$ and $t$. For any $k\in\mathbb{R}^+$ we have
@@ -137,9 +137,9 @@ We will assume $s > 0 $ and $t > 0$ in general, unless specified otherwise.
 \]
 \end{lemma}
 \begin{proof}
-		Proof by induction. 
+		Proof by induction.
 	\paragraph{Base case} for $n = 1$, $E_{ks,kt}(1) = 0 = k\cdot0 = kE_{s,t}(1)$
-	\paragraph{Inductive step} Assuming $E_{ks,kt}(m) = k E_{s,t}(m)$ holds for all $m = 1,2,\dots,n-1$, we can show that $E_{ks,kt}(n) = k E_{s,t}(n)$ by 
+	\paragraph{Inductive step} Assuming $E_{ks,kt}(m) = k E_{s,t}(m)$ holds for all $m = 1,2,\dots,n-1$, we can show that $E_{ks,kt}(n) = k E_{s,t}(n)$ by
 	\begin{align*}
 	E_{ks,kt}(n) &= \min_{w}\{E_{ks,kt}(w) + E_{ks,kt}(n-w) + wkt +(n-w)kst\}\\
 	  &= \min_{w}\{k E_{s,t}(w) + k E_{s,t}(n-w) + wkt +(n-w)ks\}\\
@@ -147,7 +147,7 @@ We will assume $s > 0 $ and $t > 0$ in general, unless specified otherwise.
 	  &=kE_{s,t}(n)
 	\end{align*}
 	and note that the transformation doesn't affect the choice of $w$.
-\end{proof}	
+\end{proof}
 \paragraph{Remark}
 This means it is only the ratio $s/t$ that affects the bisecting strategy.
 
@@ -176,9 +176,9 @@ As $w(n)$ are sets, the second equation can be understood as a 1-to-1 correspond
 	\[
 	w + w' = n
 	\]
-\end{proof}	
+\end{proof}
 \paragraph{Remark}
- Together with previous lemma, this means we only needs to study either $s/t \le1$ or $s/t \ge 1$.  
+ Together with previous lemma, this means we only needs to study either $s/t \le1$ or $s/t \ge 1$.
 
 \vspace{1cm}
 \begin{lemma}[$n$-convexity]
@@ -198,7 +198,7 @@ We will start using the notion of ``differential" (partial finite difference of 
 The subscript $x$ indicates the variable the differential is calculated over. When the context is clear, we omit the subscript variable.
 
 We can then formally define the convexity of $E(n)$ in terms of its differential
-\[  
+\[
 \Delta E(n) = E(n+1) - E(n)
 \]
 and say that $E_{s,t}(n)$ is convex on $[1,n]$ if and only if
@@ -213,7 +213,7 @@ w^*\in w(n) \implies w^* \in w(n+1) \lor w^*+1 \in w(n+1) \quad (\text{Propositi
 
 
 \paragraph{Base case}
-The first few values of $E(n)$ and $w(n)$ are 
+The first few values of $E(n)$ and $w(n)$ are
 \begin{align*}
 &E(1) = 0,\ &&\\
 &E(2) = s + t, \ &&w(2) = 1,\\
@@ -227,14 +227,14 @@ For a $w^*\in w(n)$, if $w^* >1$, we have
 \begin{align*}
 D^{w^*}(n+1) &= D^{w^*}(n) + \Delta E(n-w^*) +s\\
 &\le  D^{w^* - 1}(n) + \Delta E(n-w^*) +s \quad &(\text{$D^{w^*}(n)$ is the smallest among $D^{w}(n)$})\\
-&\le  D^{w^* - 1}(n) + \Delta E(n-(w^*-1)) +s \quad &(\text{Convexity $\mathbf{C}_{n}$}) \\ 
+&\le  D^{w^* - 1}(n) + \Delta E(n-(w^*-1)) +s \quad &(\text{Convexity $\mathbf{C}_{n}$}) \\
 &=D^{w(n)-1}(n+1)
 \end{align*}
 On the other hand, if $w^* < n -1$, we have
 \begin{align*}
 D^{w^*+1}(n+1) &= D^{w^*}(n) + \Delta E(w^*) +t \\
 &\le  D^{w^* + 1}(n) + \Delta E(w^*) +t \quad &(\text{$D^{w^*}(n)$ is the smallest among $D^{w}(n)$})\\
-&\le  D^{w^* + 1}(n) + \Delta E(w^* + 1) +t \quad &(\text{Convexity $\mathbf{C}_{n}$}) \\ 
+&\le  D^{w^* + 1}(n) + \Delta E(w^* + 1) +t \quad &(\text{Convexity $\mathbf{C}_{n}$}) \\
 &= D^{w^*+2}(n+1)
 \end{align*}
 Also notice that $D^w(n+1)$ is convex over $w=1,\dots,n$ due to convexity $\mathbf{C}_{n}$. The inequalities above shows the relations about four consecutive points at the valley of the convex function:
@@ -252,11 +252,11 @@ First, notice the relation between $\Delta E$
 \Delta E(n)&= \min\begin{cases}
 	\Delta E(w(n)) + t \quad(w(n+1) = w(n) + 1 \text{ exists})\\
 	\Delta E(n-w(n)) + s\quad(w(n+1) = w(n) \text{ exists})
-\end{cases} \quad (\text{Proposition $\mathbf{W}_n$}) \\	
+\end{cases} \quad (\text{Proposition $\mathbf{W}_n$}) \\
 \Delta E(n-1)&= \min\begin{cases}
 \Delta E(w(n-1)) + t \quad(w(n) = w(n-1) + 1\text{ exists})\\
 \Delta E(n-1-w(n-1)) + s\quad(w(n) = w(n-1)\text{ exists})
-\end{cases} \quad (\text{Proposition $\mathbf{W}_{n-1}$}) 	
+\end{cases} \quad (\text{Proposition $\mathbf{W}_{n-1}$})
 \end{align*}
 We can also make the following deduction
 \begin{align*}
@@ -299,9 +299,9 @@ w^{\max}_{s,t}(n+1) - w^{\max}_{s,t}(n) &\in  \{0, 1\}
 		\begin{align*}
 	w^{\min}_{s,t}(n+1) -  w^{\min}_{s,t}(n) \in  \{0, 1\} \iff w^{\max}_{t,s}(n+1) - w^{\max}_{t,s}(n) \in  \{0, 1\}
 	\end{align*}
-	so we can just focus on proving the first one. 
-	
-	From previous properties, we know that $w^{\min}(n+1) \leq w^{\min}(n) + 1$, because otherwise there would be no value $w(n+1)$ that can be either $w^{\min}(n)$ or $w^{\min}(n) + 1$. Now we only need to prove $w^{\min}(n+1)\geq w^{\min}(n)$, or in other words, $w^{\min}(n) - 1 \notin w(n+1)$. This is obviously true for $w^{\min}(n) = 1$, so let's discuss when $w \geq 2$. We denote the differential on $D^w(n)$ as 
+	so we can just focus on proving the first one.
+
+	From previous properties, we know that $w^{\min}(n+1) \leq w^{\min}(n) + 1$, because otherwise there would be no value $w(n+1)$ that can be either $w^{\min}(n)$ or $w^{\min}(n) + 1$. Now we only need to prove $w^{\min}(n+1)\geq w^{\min}(n)$, or in other words, $w^{\min}(n) - 1 \notin w(n+1)$. This is obviously true for $w^{\min}(n) = 1$, so let's discuss when $w \geq 2$. We denote the differential on $D^w(n)$ as
 	\[
 	\Delta_w D^w(n) = D^{w+1}(n) - D^w(n)
 	\]
@@ -325,7 +325,7 @@ w^{\max}_{s,t}(n+1) - w^{\max}_{s,t}(n) &\in  \{0, 1\}
 
 \paragraph{Remark}
 	This property provides a nice way to quickly calculate $E(n)$ for large $n$: instead of checking all $n-1$ possible values for $w$, we only need to check $w = w^{\{min,max\}}(n-1) + \{0, 1\}$ (at most 4 points)
-	
+
 
 \vspace{1cm}
 \begin{lemma}[$w$-Parallelogram]
@@ -361,13 +361,13 @@ w^{\max}_{s,t}(n+1) - w^{\max}_{s,t}(n) &\in  \{0, 1\}
 	\implies& D^{w_{\triangleleft}}(n_{\triangleleft}) < D^{w_{\triangleleft}-1}(n_{\triangleleft}) \\
 	\implies& \Delta E(w_{\triangleleft} - 1) - \Delta E(n_{\triangleleft} - w_{\triangleleft})  < s - t
 	\end{align*}
-	On the other hand, $w_{\triangleleft}$ is also a better optimizer than its right	
+	On the other hand, $w_{\triangleleft}$ is also a better optimizer than its right
 	\begin{align*}
 	&w_{s,t}(n_{\triangleleft}) = \{w_{\triangleleft}\} \\
 	\implies& D^{w_{\triangleleft}}(n_{\triangleleft}) < D^{w_{\triangleleft}+1}(n_{\triangleleft}) \\
 	\implies& \Delta E(w_{\triangleleft} ) - \Delta E(n_{\triangleleft} - w_{\triangleleft}-1) > s - t
 	\end{align*}
-	The three inequalities together give 
+	The three inequalities together give
 	\begin{align*}
 	\Delta E(w_{\triangleleft}) &> \Delta E(w_{\triangleleft} - 1)\\
 	 \Delta E(n_{\triangleleft} - w_{\triangleleft}) & >  \Delta E(n_{\triangleleft} - w_{\triangleleft}-1)
@@ -376,13 +376,13 @@ w^{\max}_{s,t}(n+1) - w^{\max}_{s,t}(n) &\in  \{0, 1\}
 	\begin{align*}
 	\Delta E(w_{\triangleleft}-1) &< \Delta E(w_{\triangleleft}) = \Delta E(w_{\triangleleft}+1) = \dots &= \Delta E(w_{\triangleleft}+p-1) &= a < \Delta E(w_{\triangleleft}+p) \\
 	\Delta E(n_{\triangleleft} - w_{\triangleleft}-1) &< \Delta E(n_{\triangleleft} - w_{\triangleleft}) = \Delta E(n_{\triangleleft} - w_{\triangleleft} + 1) = \dots &= \Delta E(n_{\triangleleft} - w_{\triangleleft} + q - 1) &= b < \Delta E(n_{\triangleleft} - w_{\triangleleft} + q )
-	\end{align*} 
+	\end{align*}
 	This is saying that $n = w_{\triangleleft}$ starts a linear segment of length $p$ with slope $a$, and similarly $n = n_{\triangleleft} - w_{\triangleleft}$ starts a linear segment of length $q$ with slope $b$. Note that we didn't specify the value of $p$ or $q$, and they can be as small as 1. We are guaranteed that $p$ and $q$ are finite, because neither  $\Delta E(w_{\triangleleft})$ or $\Delta E(n_{\triangleleft} - w_{\triangleleft})$ can be equal to $\Delta E(n_{\triangleleft})$ (thus giving an upper bound to $p$ and $q$):
 	\[
 	\Delta E(n_{\triangleleft}) = \Delta E(w_{\triangleleft}) + t = \Delta E(n_{\triangleleft} - w_{\triangleleft}) + s
 	\]
-	
-	Let 
+
+	Let
 	\begin{align*}
 	n_{\triangleright} &= n_{\triangleleft} + p + q\\
 	w_{\triangleright} &= w_{\triangleleft} + p
@@ -397,7 +397,7 @@ w^{\max}_{s,t}(n+1) - w^{\max}_{s,t}(n) &\in  \{0, 1\}
 	& > a - b + t - s =0
 	\end{align*}
 	Given the convexity of $D^w(n)$ over $w$, this indicates a single optimizer $w_{s,t}(n_{\triangleright}) = \{w_{\triangleright}\}$.
-	
+
 	Let's then show that $w_{s,t}^{min}(n_{\triangleleft} + k) = w_{\triangleleft}$ for $k = 1,2,\dots,q$. Again, consider the differential of $D^w(n_{\triangleleft} + k)$ at $w_{\triangleleft}$ on both sides
 	\begin{align*}
 		\Delta_w D^{w_{\triangleleft} - 1}(n_{\triangleleft} + k) &= \Delta E(w_{\triangleleft} - 1) - \Delta E(n_{\triangleleft} + k - w_{\triangleleft}) + t - s\\
@@ -410,7 +410,7 @@ w^{\max}_{s,t}(n+1) - w^{\max}_{s,t}(n) &\in  \{0, 1\}
 	w^{\min}_{s,t}(n) = w_{\triangleright} + n - n_{\triangleright} \quad \text{for } n = n_{\triangleleft} + q,\dots,n_{\triangleright}
 	\]
 	because $w^{\min}_{s,t}(n)$ needs to climb the rise of $w_{\triangleright} - w_{\triangleleft} = p$ over the run $n_{\triangleright} - (n_{\triangleleft} + q) = p$, and we have proved that the slope of $w^{\min}_{s,t}(n)$ is 1 at maximum, so this forces a segment of constant slope 1. With this, we have proved the full formula for $w^{\min}_{s,t}(n)$ between $n_{\triangleleft}$ and $n_{\triangleright}$.
-	
+
 	We can use the same technique for $w^{\max}_{s,t}(n)$. We will first show that  $w_{s,t}^{max}(n_{\triangleright} - k) = w_{\triangleright}$ for $k = 1,2,\dots,q$. Consider the differential
 	\begin{align*}
 		\Delta_w D^{w_{\triangleright} - 1}(n_{\triangleright} - k) &= \Delta E(w_{\triangleright} - 1) - \Delta E(n_{\triangleright} - k - w_{\triangleright}) + t - s \\
@@ -421,7 +421,7 @@ w^{\max}_{s,t}(n+1) - w^{\max}_{s,t}(n) &\in  \{0, 1\}
 		&>a -b +t-s = 0
 	\end{align*}
 	Given the convexity of $D^w(n)$ over $w$, this indicates the largest optimizer is $w_{s,t}^{max}(n_{\triangleright} - k) = w_{\triangleright}$. Using the same rise-and-run argument, we can then prove the full formula for  $w^{\max}_{s,t}(n)$ between $n_{\triangleleft}$ and $n_{\triangleright}$.
-	
+
 	Finally, let's show the linearity of $E(n)$ between $n_{\triangleleft}$ and $n_{\triangleright}$. Considering three consecutive points $n, n+1, n+2$ ($n_{\triangleleft} \le n \le n_{\triangleright} - 2$), we can always find a $w^*$ such that
 	\begin{align*}
 	w^* &\in w(n)\\
@@ -437,16 +437,16 @@ w^{\max}_{s,t}(n+1) - w^{\max}_{s,t}(n) &\in  \{0, 1\}
 	\[
 	\Delta E(n) = \Delta E(n+1)
 	\]
-	which proves 
+	which proves
 	\[
 	\Delta E_{s,t}(n_{\triangleleft}) = \Delta E_{s,t}(n_{\triangleleft} + 1) = \dots \ \Delta E_{s,t}(n_{\triangleright} - 1)
 	\]
-		
+
 \end{proof}
 
 \vspace{1cm}
 \begin{lemma}[Beads]
-	For given $s$ and $t$, $w(n)$ is a sequence of connected ``beads". A bead is defined by a tuple 
+	For given $s$ and $t$, $w(n)$ is a sequence of connected ``beads". A bead is defined by a tuple
 \[
 	(n_{\triangleleft}, n_{\triangleright}, w_{\triangleleft}, w_{\triangleright})
 \]
@@ -472,21 +472,27 @@ w_{\triangleright i} &= w_{\triangleleft (i+1)}
 		\item $w_{\triangleright} - w_{\triangleleft} = 0$, or
 		\item $w_{\triangleright} - w_{\triangleleft} = n_{\triangleright} - n_{\triangleleft}$
 	\end{itemize}
-	For both case, $w(n)$ degenerates into a thin line, with slope $0$ or $1$ respectively. 
-	
-	Because a single-element set $w(n) = \{w^*\}$ can only be followed by another single-element set $w(n+1) = \{w^*\}$ or $w(n+1)=\{w^*+1\}$, or a two-element set $w(n+1) = \{w^*, w^*+1\}$ (which initiates a parallelogram as per previous property), and $w(2) = {1}$, we can see that beads a generated for all $w(n)$
+	For both case, $w(n)$ degenerates into a thin line, with slope $0$ or $1$ respectively.
+
+	Because a single-element set $w(n) = \{w^*\}$ can only be followed by another single-element set $w(n+1) = \{w^*\}$ or $w(n+1)=\{w^*+1\}$, or a two-element set $w(n+1) = \{w^*, w^*+1\}$ (which initiates a parallelogram as per previous property), and $w(2) = {1}$, we can see that beads are generated for all $w(n)$
 \end{proof}
 
 \paragraph{Remark}
+If we define $w' = n-w$, each bead can also be expressed as
+\begin{align*}
+	w_{\triangleleft} \le &w \le w_{\triangleright} \\
+	w'_{\triangleleft} \le &w' \le w'_{\triangleright}
+\end{align*}
+If we plot optimal $w$ on a $w$-$w'$ graph, it will look like series of rectangles. The following is a graph for $s = 9$, $t = 4$
+
+\includegraphics[scale=0.7]{w-n.png}
+
+
 There is more to say about the size of beads. In the previous property, we showed that two linear segments of length $p$ and $q$ respectively, will generate a linear segment of length $p + q$. This implies more beads with larger size will be generated, and the bead size $B(n)$ has the following relation
 \[
 	B(n) = B(w) + B(n-w)
 \]
 This hints the linear growth in bead size $B(n) \sim \mathcal{O}(n)$.
-
-The following is a graph for $s = 9$, $t = 4$. We set the vertical axis as $w - n/2$ to demonstrate the symmetrical nature.
-
-\includegraphics[scale=0.8]{w-n.png}
 
 
 \vspace{1cm}
@@ -510,7 +516,7 @@ The following is a graph for $s = 9$, $t = 4$. We set the vertical axis as $w - 
 	\[
 	\eta_1 < \eta_2 < \eta_3 < \eta_4 < \dots
 	\]
-	
+
 	We call a tuple $(x_k, \eta_k\nearrow\eta_{k+1})$ a ``jump point". Each jump point is related to $E(n)$ in the range $n \in [\eta_k, \eta_{k+1})$. For $\eta_k \le n < \eta_{k+1}$
 	\begin{align*}
 	\Delta E_{s,t}(n) &= x_k\\
@@ -526,14 +532,16 @@ The following is a graph for $s = 9$, $t = 4$. We set the vertical axis as $w - 
 	n_{\triangleleft} &= \eta_k\\
 	n_{\triangleright} &= \eta_{k+1}\\
 	w_{\triangleleft} &= \eta(x_k - t)\\
-	w_{\triangleright} &= \eta(x_{k+1} - t)
+	w_{\triangleright} &= \eta(x_{k+1} - t)\\
+	w'_{\triangleleft} &= \eta(x_k - s)\\
+	w'_{\triangleright} &= \eta(x_{k+1} - s)
 	\end{align*}
 \end{lemma}
 \begin{proof}
 		Proof by induction
 	\paragraph{Base case}
 	The first jump point is $(x_1, \eta_1\nearrow\eta_2) = (s+t, 1\nearrow2)$, which corresponds to $n = 1$. We have shown that $\Delta E(1) = s + t$ so the base case is satisfied.
-	
+
 	\paragraph{Inductive step} A jump point $(x_k, \eta_k\nearrow\eta_{k+1})$, is related to two previous ``probable jump point" $(x_k-s, S\nearrow_?S')$ and $(x_k-t, T\nearrow_?T')$, with the following relation
 	\begin{align*}
 	S &= \eta(x_k-s)\\
@@ -543,7 +551,7 @@ The following is a graph for $s = 9$, $t = 4$. We set the vertical axis as $w - 
 	S + T &= \eta_k \\
 	S' + T' &= \eta_{k+1}
 	\end{align*}
-	At least one of the two probable jump points $x_k-s$, $x_k-t$ must be a real jump point (otherwise $x_k$ wouldn't be a jump point). And then we have the following inequalities 
+	At least one of the two probable jump points $x_k-s$, $x_k-t$ must be a real jump point (otherwise $x_k$ wouldn't be a jump point). And then we have the following inequalities
 	\begin{align*}
 	\Delta E(S) &\ge x_k - s &(\text{Equal when $x_k-s$ is a jump point}) \\
 	\Delta E(T) &\ge x_k - t &(\text{Equal when $x_k-t$ is a jump point}) \\
@@ -563,7 +571,7 @@ The following is a graph for $s = 9$, $t = 4$. We set the vertical axis as $w - 
 	&= \Delta E(T) - \Delta E(S - 1) + t - s\\
 	&> (x_k - t) - (x_k - s) + t - s = 0
 	\end{align*}
-	Either of them might not exist for $T = 1$ or $T = \eta_k - 1$, but it doesn't affect the arguments. Because of convexity of $D^w$, this means 
+	Either of them might not exist for $T = 1$ or $T = \eta_k - 1$, but it doesn't affect the arguments. Because of convexity of $D^w$, this means
 	\[
 	w(\eta_k) = \{T\} = \{\eta(x_k-t)\}
 	\]
@@ -586,7 +594,7 @@ The following is a graph for $s = 9$, $t = 4$. We set the vertical axis as $w - 
 	&=(T'-T + S' - S)x_k\\
 	&=(\eta_{k+1} -\eta_k)x_k
 	\end{align*}
-	If $\eta_{k+1} -\eta_k = 1$, then 
+	If $\eta_{k+1} -\eta_k = 1$, then
 	\[
 	E(\eta_{k+1}) - E(\eta_k) = \Delta E(\eta_k) = x_k
 	\]
@@ -601,7 +609,7 @@ The following is a graph for $s = 9$, $t = 4$. We set the vertical axis as $w - 
 	&=\Delta E(T+1) - \Delta E(S - 1) + t - s\\
 	&> (x_k - t) - (x_k -s) + t -s = 0
 	\end{align*}
-	Again, either of them might not exist, but anyway, due to convexity, the optimizer is among $w\in\{T, T+1\}$ (or potentially both). Their $D^w(\eta_k+1)$ are 
+	Again, either of them might not exist, but anyway, due to convexity, the optimizer is among $w\in\{T, T+1\}$ (or potentially both). Their $D^w(\eta_k+1)$ are
 	\begin{align*}
 	D^T(\eta_k+1) &= E(T) + E(\eta_k+1-T) +Tt +(\eta_k+1-T)s \\
 	&= E(T) + E(S+1) +Tt +(S+1)s\\
@@ -622,15 +630,15 @@ The following is a graph for $s = 9$, $t = 4$. We set the vertical axis as $w - 
 	\]
 	The choice of $w$ among $\{T, T+1\}$ depends on which are jump points
 	\begin{itemize}
-		\item $x_k-s$ is a jump point $\iff T \in w(\eta_k+1)$ 
-		\item $x_k-t$ is a jump point $\iff T+1 \in w(\eta_k+1)$ 
+		\item $x_k-s$ is a jump point $\iff T \in w(\eta_k+1)$
+		\item $x_k-t$ is a jump point $\iff T+1 \in w(\eta_k+1)$
 	\end{itemize}
-	Then $\Delta E(\eta_k)$ would be 
+	Then $\Delta E(\eta_k)$ would be
 	\begin{align*}
 	\Delta E(\eta_k) &= E(\eta_k+1) - E(\eta_k) \\
-	&= x_k 
+	&= x_k
 	\end{align*}
-	Remember $E(\eta_{k+1}) - E(\eta_k) = (\eta_{k+1} -\eta_k)x_k$, then we have 
+	Remember $E(\eta_{k+1}) - E(\eta_k) = (\eta_{k+1} -\eta_k)x_k$, then we have
 	\begin{align*}
 	(\eta_{k+1} -\eta_k)x_k &= E(\eta_{k+1}) - E(\eta_k) \\
 	&= \Delta E(\eta_k) + \Delta E(\eta_k + 1) +\dots+\Delta E(\eta_{k+1} - 1) \\
@@ -638,8 +646,8 @@ The following is a graph for $s = 9$, $t = 4$. We set the vertical axis as $w - 
 	&\geq (\eta_{k+1} -\eta_k)x_k
 	\end{align*}
 	This equality must holds, so this locks all $\Delta E(n) = x_k$ for $\eta_{k} \leq n < \eta_{k+1}$, and this proves the formula for $\Delta E(n)$.
-	
-	As for the values of $w(n)$ in between, we have three cases 
+
+	As for the values of $w(n)$ in between, we have three cases
 	\begin{itemize}
 		\item If both $x_k-s$ and $x_k-t$ are jump points, then we have $w(\eta_k +1) =\{T, T+1\}$, and $E(n)$ is linear for $n \in [S, S']$ and $n \in [T, T']$. We have shown that $w(n)$ will form a parallelogram that satisfy the formula.
 		\item If $x_k-s$ is not a jump point, then we have the following equations
@@ -649,7 +657,7 @@ The following is a graph for $s = 9$, $t = 4$. We set the vertical axis as $w - 
 		w(\eta_{k+1}) &= \{T'\} = \{T+\eta_{k+1} - \eta_k\}
 		\end{align*}
 		The two end points form a slope of 1. Because of $w$-Lipschitz continuity, this forces all $w(n)$ to be on the thin line $w(\eta_{k} + a) = \{T+a\}$.
-		\item If $x_k-t$ is not a jump point, then we have the following equations 
+		\item If $x_k-t$ is not a jump point, then we have the following equations
 		\begin{align*}
 		T &= T'\\
 		w(\eta_{k}) &= \{T\}\\
@@ -658,7 +666,7 @@ The following is a graph for $s = 9$, $t = 4$. We set the vertical axis as $w - 
 		The two end points are on the same level. Because of $w$-Lipschitz continuity, this forces all $w(n)$ to be on the same level.
 	\end{itemize}
 	In summary, we have proved the formula for $w(n)$
-	
+
 
 \end{proof}
 
@@ -683,7 +691,7 @@ x_3 & (\eta_3 \le n < \eta_4) \\
 \dots
 \end{cases}
 \end{align*}
-and the function $E(n)$ is the integral 
+and the function $E(n)$ is the integral
 \begin{align*}
 E(n) &= \int_1^n \Delta E(m)\, dm \\
  &= \left(\sum_{k = 1}^{h-1} x_k (\eta_{k+1} - \eta_k)\right) + x_{h} (n - \eta_{h}) \quad (\eta_{h} \le n < \eta_{h+1}) \\
@@ -700,8 +708,8 @@ Below is the graph of $n = \eta(x)$ and $x = \Delta E(n)$ for $s = \sqrt{2}, t =
 \tkzLabelX[step=1]
 \tkzDrawY[label={$x$},above]
 %\tkzLabelY[step=1]
-\tkzDefPoint( 1, 3.1462643699419726){p0} 
-\tkzDefPoint( 2, 4.5604779323150675){p1} 
+\tkzDefPoint( 1, 3.1462643699419726){p0}
+\tkzDefPoint( 2, 4.5604779323150675){p1}
 \tkzDefPoint( 3, 4.878315177510849 ){p2}
 \tkzDefPoint( 4, 5.974691494688162 ){p3}
 \tkzDefPoint( 5, 6.292528739883945 ){p4}
@@ -711,9 +719,9 @@ Below is the graph of $n = \eta(x)$ and $x = \Delta E(n)$ for $s = \sqrt{2}, t =
 \tkzDefPoint(12, 8.024579547452822 ){p8}
 \tkzDefPoint(15, 8.342416792648605 ){p9}
 
-\tkzDefPoint(0, 1.4142135623730950){pp} 
-\tkzDefPoint(0, 3.1462643699419726){pp0} 
-\tkzDefPoint(0, 4.5604779323150675){pp1} 
+\tkzDefPoint(0, 1.4142135623730950){pp}
+\tkzDefPoint(0, 3.1462643699419726){pp0}
+\tkzDefPoint(0, 4.5604779323150675){pp1}
 \tkzDefPoint(0, 4.878315177510849 ){pp2}
 \tkzDefPoint(0, 5.974691494688162 ){pp3}
 \tkzDefPoint(0, 6.292528739883945 ){pp4}
@@ -724,8 +732,8 @@ Below is the graph of $n = \eta(x)$ and $x = \Delta E(n)$ for $s = \sqrt{2}, t =
 \tkzDefPoint(0, 8.342416792648605 ){pp9}
 
 \tkzDefPoint( 1, 1.4142135623730950){q}
-\tkzDefPoint( 2, 3.1462643699419726){q0} 
-\tkzDefPoint( 3, 4.5604779323150675){q1} 
+\tkzDefPoint( 2, 3.1462643699419726){q0}
+\tkzDefPoint( 3, 4.5604779323150675){q1}
 \tkzDefPoint( 4, 4.878315177510849 ){q2}
 \tkzDefPoint( 5, 5.974691494688162 ){q3}
 \tkzDefPoint( 7, 6.292528739883945 ){q4}
@@ -736,8 +744,8 @@ Below is the graph of $n = \eta(x)$ and $x = \Delta E(n)$ for $s = \sqrt{2}, t =
 \tkzDefPoint(15.5, 8.342416792648605 ){qe}
 
 \tkzDefPoint( 1, 0){qq}
-\tkzDefPoint( 2, 0){qq0} 
-\tkzDefPoint( 3, 0){qq1} 
+\tkzDefPoint( 2, 0){qq0}
+\tkzDefPoint( 3, 0){qq1}
 \tkzDefPoint( 4, 0){qq2}
 \tkzDefPoint( 5, 0){qq3}
 \tkzDefPoint( 7, 0){qq4}
@@ -815,7 +823,7 @@ It is easy to see $\delta$ forms a Pascal's triangle over $(p,q)\in(\mathbb{Z}^+
 \[
 	\delta(ps+qt) = \binom{p+q-2}{q-1} = \frac{(p+q-2)!}{(p-1)!(q-1)!}
 \]
-This can be further generalized to make it also work for $s/t\in\mathbb{Q}$ as 
+This can be further generalized to make it also work for $s/t\in\mathbb{Q}$ as
 \[
 	\delta(x) = \sum_{(p,q)\in(\mathbb{Z}^+)^2}^{ps+qt = x} \frac{(p+q-2)!}{(p-1)!(q-1)!}
 \]
@@ -832,7 +840,7 @@ More interesting property can be revealed via Laplace transform. Consider the fo
 	&= 1 + \sum_{(p,q)\in(\mathbb{Z}^{0+})^2}^{ps+qt < x} \frac{(p+q)!}{p!q!}\\
 	&= 1 + \sum_{p=0}^{\infty}\sum_{q=0}^{\infty} \frac{(p+q)!}{p!q!} \theta(x - (ps + qt))
 \end{align*}
-where $\theta$ is the unit step function. Its Laplace transform is 
+where $\theta$ is the unit step function. Its Laplace transform is
 \begin{align*}
 \mathcal{L}\{\phi\}(\sigma) &= \frac{1}{\sigma} + \sum_{p=0}^{\infty}\sum_{q=0}^{\infty} \frac{(p+q)!}{p!q!} \frac{e^{-(ps+qt)\sigma}}{\sigma} \\
 &= \frac{1}{\sigma} + \frac{1}{\sigma} \sum_{j=0}^{\infty} (e^{-s\sigma} + e^{-t\sigma})^j\\
@@ -870,21 +878,43 @@ Plugging everything back, we get a new formula for $\eta(x)$
 \]
 As the symbol $=^{\star}$ signifies, $\eta(x)$ isn't strictly equal to the series at all points: at jump points, the series converges to half way between left and right function value, as per usual behavior of Laplace transform at discontinuity. Also note on summation order: this series doesn't converge absolutely and summation order is important. We can index $r$ by $|\mathfrak{I}(r)|$ in ascending order. This follows the limit direction in Mellin's inverse formula, together with Cauchy residue theorem.
 
-The expression fo $\eta(x)$ also gives us a way to intuitively generate beads in $E(n)$ and $w(n)$. Consider the following set of tuples 
+
+\vspace{1cm}
+\begin{lemma}[Pascal]
+	$E(n)$ and $w(n)$ can be generated using binomial coefficients
+\end{lemma}
+\begin{proof}
+	Consider the set of all binomial coefficients, tagged with a second component
 \[
-\Omega = \left\{\left(p,q, x=ps+qt, \delta=\binom{p+q-2}{q-1}, \gamma=\binom{p+q-3}{q-2}  \right)\ \middle|\ (p,q)\in(\mathbb{Z}^+)^2 \right\}
+\Omega^E_{s,t} = \left\{\left(\binom{p+q-2}{p-1}, ps+qt \right) \ \middle|\ (p,q)\in(\mathbb{Z}^+)^2 \right\}
 \]
-and sort all the elements by $x$. Each element $\omega\in\Omega$ with distinguished $x$ corresponds to a bead $(n_{\triangleleft}, n_{\triangleright}, w_{\triangleleft}, w_{\triangleright})$ defined by
-\begin{align}
-n_{\triangleright} - n_{\triangleleft} &= \omega.\delta=\binom{p+q-2}{q-1}\\
-w_{\triangleright} - w_{\triangleleft} &= \omega.\gamma=\binom{p+q-3}{q-2}
-\end{align}
-If several elements $\omega_1,\omega_2,\dots,\omega_k$ share an equal $x$, then they generates one bead together:
-\begin{align}
-n_{\triangleright} - n_{\triangleleft} &= \sum_i \omega_i.\delta\\
-w_{\triangleright} - w_{\triangleleft} &= \sum_i \omega_i.\gamma
-\end{align}
-The first bead with $x=s+t$ doesn't generate anything in $w(n)$ as its $\gamma$ is not well-defined. Instead, we always start from $w(2) = \{1\}$ and generate beads starting from the second element in $\Omega$
+Sort all elements by $ps+qt$ in ascending order. For equal elements, the order doesn't matter. Then starting from $n=1$, each element generates a segment in $E(n)$ with the length of $\binom{p+q-2}{p-1}$, and slope ($\Delta n$) of $(ps+qt)$.
+
+Similarly, consider the set of all binomial coefficient pairs, again tagged. Here we use the extension that $\binom{n}{-1} = \binom{n}{n+1} = 0$
+\[
+\Omega^w_{s,t} = \left\{\left(\binom{p+q-3}{q-2}, \binom{p+q-3}{p-2}, ps+qt \right) \ \middle|\ (p,q)\in(\mathbb{Z}^+)^2 \backslash (1,1) \right\}
+\]
+Sort all elements by $ps+qt$ in ascending order. This time for equal elements, we combine them into one element by calculating the sum of $\binom{p+q-3}{q-2}$ and $\binom{p+q-3}{p-2}$. We then connect all vectors $\left(\binom{p+q-3}{q-2}, \binom{p+q-3}{p-2}\right)$ head to tail, starting from $(1,1)$. Each vector becomes a segment $(w_{\triangleleft}, w'_{\triangleleft}) - (w_{\triangleright}, w'_{\triangleright})$, each corresponds to a bead where
+\begin{align*}
+	n_\triangleleft &= w_{\triangleleft} + w'_{\triangleleft} \\
+	n_\triangleright &= w_{\triangleright} + w'_{\triangleright} \\
+\end{align*}
+
+\end{proof}
+
+\paragraph{Remark}
+
+Each bead in the $w(n)$ graph is like expanding a segment in the $w$-$w'$ graph into a rectangle, treating the segment as a diagonal. We can also choose to not to expand into rectangles but to keep the segments. These segments defines a function $w^{\ominus}(n)$. It can be seen that we always have
+\[
+w^{\min}(n)\le w^{\ominus}(n)\le w^{\max}(n)
+\]
+
+The following is the $w$-$w'$ graph of $w^{\ominus}$ for $s=4$, $t=9$
+
+\includegraphics[scale=0.7]{w-n-v.png}
+
+This function will be useful later.
+
 
 \vspace{1cm}
 \begin{lemma}[Fibonacci]
@@ -908,8 +938,8 @@ The first bead with $x=s+t$ doesn't generate anything in $w(n)$ as its $\gamma$ 
 	n_i = \eta(i)
 	\]
 	and one can easily verify that this satisfies the recurrence relation of both $\eta(x)$ and $\{n_i\}_{i}$. And for every $n_i \neq n_{i+1}$, there is a jump point at $(i,n_i\nearrow n_{i+1})$, and we can derive the $\Delta E_{s,t}(n)$ and $w_{s,t}(n)$ formula for integer case from the previous property.
-	
-\end{proof}	
+
+\end{proof}
 
 \paragraph{Remark}
 
@@ -922,7 +952,7 @@ This property provides a way to recursively generate linear segments for $E(n)$ 
 \end{align*}
 This forms a nice geometric progression.
 
-Similarly, for $s = 1$ and $t = 2$, we have 
+Similarly, for $s = 1$ and $t = 2$, we have
 \begin{align*}
 \Delta E_{1,2}(1) &= 3 \\
 \Delta E_{1,2}(2) &= 4\\
@@ -933,7 +963,7 @@ Similarly, for $s = 1$ and $t = 2$, we have
 \end{align*}
 where $\phi_i$ is the $i$th Fibonacci number.
 
-Similar to the continuous $\eta(x)$, we can also find an alternative formula for $n_i$. We first define 
+Similar to the continuous $\eta(x)$, we can also find an alternative formula for $n_i$. We first define
 \[
 \Phi_i = n_{i+s+t+1}
 \]
@@ -969,7 +999,7 @@ n_i = \sum_{\xi} \frac{\xi^{i}}{(\xi - 1)(s\xi^{t}+t\xi^{s})}
 
 \vspace{1cm}
 \begin{lemma}[$s,t$-concavity]
-Fixing $n$ and $s$, $E_{s,t}(n)$ as a function of $t$ is concave 
+Fixing $n$ and $s$, $E_{s,t}(n)$ as a function of $t$ is concave
 \end{lemma}
 \begin{proof}
 Proof by induction. The base case $E_{s,t}(1) = 0$ is concave over $t$. In the recursive equation, all the summation components are concave, and the minimal of concave functions is still a concave function.
@@ -984,7 +1014,7 @@ Fixing $n$ and $s$, $E_{s,t}(n)$ is a piecewise linear function of $t$. The node
 \end{proof}
 
 \paragraph{Remark}
-With this property, we can graph the function with a series of segments. For example, the graph of $E_{1,t}(29)$ over $t\in[0,1]$ is 
+With this property, we can graph the function with a series of segments. For example, the graph of $E_{1,t}(29)$ over $t\in[0,1]$ is
 
 \vspace{0.5cm}
 	\begin{tikzpicture}[yscale=0.8,xscale=1.3]
@@ -993,7 +1023,7 @@ With this property, we can graph the function with a series of segments. For exa
 	\tkzLabelX[step=1]
 	\tkzDrawY[label={$E_{1,t}(29)$},above]
 	\tkzLabelY[step=10]
-	
+
 \tkzDefPoint(0,28){p0}
 \tkzDefPoint(1/27,1162/27){p1} \tkzDrawSegment(p0,p1)
 \tkzDefPoint(1/25,1104/25){p2} \tkzDrawSegment(p1,p2)
@@ -1219,19 +1249,19 @@ From the graph, we can observe that for $t = 1/4$ and $t = 1/2$, we have ``spiky
 \]
 
 \vspace{1cm}
-\begin{lemma}[Node] 
+\begin{lemma}[Node]
 	Every positive rational $t$ will be a node for some $E_{1,t}(n)$-$t$ graph with a large enough $n$
 \end{lemma}
 \begin{proof}
-	To help with the proof, we will use the dual number $a = b + c\varepsilon $, where $\varepsilon$ is the infinitesimal unit (or the nilpotent). Dual numbers form a total order, where numbers are compared by the $b$ component first, then we compare the $c$ component when they share the same $b$. 
-	
+	To help with the proof, we will use the dual number $a = b + c\varepsilon $, where $\varepsilon$ is the infinitesimal unit (or the nilpotent). Dual numbers form a total order, where numbers are compared by the $b$ component first, then we compare the $c$ component when they share the same $b$.
+
 	Let $t + 1\varepsilon$ be at the position of $t$, and we calculate $E(n)$ using the same formula, but with dual numbers involved. The final result can always be expressed in the form
 	\[
-	E_{s,t + 1\varepsilon}(n) = E_{s,t}(n) + \varepsilon \partial_{+t}E_{s,t}(n) 
+	E_{s,t + 1\varepsilon}(n) = E_{s,t}(n) + \varepsilon \partial_{+t}E_{s,t}(n)
 	\]
-	where $\partial_{+t}E_{1,t}(n)  $ is the right derivative w.r.t $t$. Similarly, using $t - 1\varepsilon$, we get the left derivative as 
+	where $\partial_{+t}E_{1,t}(n)  $ is the right derivative w.r.t $t$. Similarly, using $t - 1\varepsilon$, we get the left derivative as
 	\[
-	E_{s,t - 1\varepsilon}(n) = E_{s,t}(n) - \varepsilon \partial_{-t}E_{s,t}(n) 
+	E_{s,t - 1\varepsilon}(n) = E_{s,t}(n) - \varepsilon \partial_{-t}E_{s,t}(n)
 	\]
 	We can find the formula for the derivative themselves as
 	\begin{align*}
@@ -1246,10 +1276,10 @@ From the graph, we can observe that for $t = 1/4$ and $t = 1/2$, we have ``spiky
 	\]
 	so to study for rational $t$, we can equivalently study for coprime integer pairs $s$ and $t$. We want to prove that for any positive coprime integer pair $s$ and $t$, there are some $n$ such that
 	\[
-	\partial_{+t}E_{s,t}(n) \neq \partial_{-t}E_{s,t}(n) 
+	\partial_{+t}E_{s,t}(n) \neq \partial_{-t}E_{s,t}(n)
 	\]
-	
-	
+
+
 	We will use the genfib sequence $\{n_i\}_{i=\min\{s,t\}+1}^{\infty}$ previously discussed. We first prove that, for coprime $s$ and $t$ and large enough $i$, the interval has at least length of 2
 	\[
 	\exists I, \forall i>I, \Delta_i n_{i} \ge 2
@@ -1267,11 +1297,11 @@ From the graph, we can observe that for $t = 1/4$ and $t = 1/2$, we have ``spiky
 	and we can find $(s + t)$ consecutive $r$ values such that there are positive integer solutions: we first pick any consecutive $r$ values, and then add to them by multiple of $s$ and $t$ until solutions become positive. For these $r$, we have
 	\begin{align*}
 	\Delta_i n_{s+t+r} &\geq \Delta_i n_{s+t+r - s} \geq \Delta_i n_{s+t+r - 2s} \geq\dots \geq \Delta_i  n_{s+t+r - ps} \\
-		&\geq \Delta_i n_{s+t+r - ps - t} \geq \Delta_i n_{s+t+r - ps - 2t} \geq\dots \geq \Delta_i  n_{s+t+r - ps - qt} \\ 
+		&\geq \Delta_i n_{s+t+r - ps - t} \geq \Delta_i n_{s+t+r - ps - 2t} \geq\dots \geq \Delta_i  n_{s+t+r - ps - qt} \\
 		&= \Delta n_{s+t} = 1
 	\end{align*}
 	So we have got $(s + t)$ consecutive $\Delta_i n_i\geq 1$, and then any further $\Delta_i n_i$ will use the sum the two element from these $1$s or greater, so they are all greater or equal to 2.
-	
+
 	Going back to proving the existence of nodes. We will prove this by contradiction. Let's assume that the following holds for all positive integer $n$
 	\[
 	\partial_{+t}E_{s,t}(n) = \partial_{-t}E_{s,t}(n) = \delta(n)
@@ -1309,30 +1339,14 @@ From the graph, we can observe that for $t = 1/4$ and $t = 1/2$, we have ``spiky
 	d_{i+st} &= d_{i} + s
 	\end{align*}
 	The contradiction comes from the assumption that there is no node. This proves that there must be a node.
-	
+
 \end{proof}
 
 \paragraph{Remark}
 
-\if false
-However, the first node of given $(s, t)$ can appear pretty late. Our proof above estimated that the node appears around $n_{I+st}$. The $n_i$ sequence growth exponentially like 
-\[
-n_i \sim a^i
-\]
-where $a$ is the solution to the following characteristic equation
-\[
-a^{-s} + a^{-t} = 1
-\]
-It can be seen that the solution $a \in [2^{1/s}, 2^{1/t}]$ (assuming $s \geq t$), so the growth of $n_{I+st}$, omitting the $I$ part, is at least around 
-\[
-n_{I+st} \sim  [2^t, 2^s]
-\]
-So for ratio with larger numbers, the first node position grows exponentially.
-\fi
-
 We can find the first node for given $(s, t)$ using the previously derived formula for $\eta(x)$
 \[
-\eta(x) = 1 + \sum_{(p,q)\in(\mathbb{Z}^+)^2}^{ps+qt<x}\frac{(p+q-2)!}{(p-1)!(q-2)!} 
+\eta(x) = 1 + \sum_{(p,q)\in(\mathbb{Z}^+)^2}^{ps+qt<x}\frac{(p+q-2)!}{(p-1)!(q-2)!}
 \]
 A node is where a perturbation in $(s, t)$ causes a change in the summation terms. This happens if there are multiple $(p,q)\in(\mathbb{Z}^+)^2$ pairs are on the summation boundary, such that $ps+qt = x$. For coprime integer pair $(s, t)$, the smallest $x$ that makes this happen is
 \[
@@ -1342,6 +1356,92 @@ where both $(p,q) = (t+1, 1)$ and $(p,q) = (1, s+1)$ are on the summation bounda
 \[
 n^* = \eta(x^*) + 1 = \eta(st + s + t) + 1
 \]
+
+\vspace{1cm}
+\begin{lemma}[monotonic $w$]
+	Fixing $n$ and $s$, $w_{s,t}(n)$ contains a non-increasing function of $t$; that is, there exists a function $w^{\star}_{s,t}(n) \in w_{s,t}(n)$ that is non-increasing w.r.t. $t$
+\end{lemma}
+\begin{proof}
+	We will show that, fixing $n$ and $s$, $w^{\ominus}_{s,t}(n)$ is a non-increasing function of $t$, and then we can say $w^{\star}_{s,t}(n) = \lfloor w^{\ominus}_{s,t}(n)\rfloor$ satisfies our proposal.
+
+	 Previously we have shown that $w_{s,t}(n)$ only changes value at node $t$ (same goes for $w^{\ominus}_{s,t}(n)$). We can enumerate all nodes $t$ for a given $n$ and $s$ (here we consider $t$ a node if it has been a node for $n$ or smaller). The change in $w^{\ominus}_{s,t}(n)$ when $t$ goes across a node comes from the change in the order of $\Omega^w_{s,t}$'s element. When $t$ goes from a node to a lesser value $t-\varepsilon$, a segment in the $w$-$w'$ graph breaks up into several segments. Their corresponding elements in $\Omega^w_{s,t}$ are generated by
+	 \[
+	 (p_1, q_1),(p_2, q_2),\dots,(p_m,q_m)
+	 \]
+	 Let's assume the order
+	 \[
+	 p_1 \le p_2 \le \dots\le p_m
+	 \]
+	 Each $(p_i,q_i)$ generates a vector $\left(\binom{p_i+q_i-3}{q_i-2}, \binom{p_i+q_i-3}{p_i-2}\right)$ tagged with $p_is+q_it$. Such vector has a slope
+	 \[
+	 S_i=\frac{\binom{p_i+q_i-3}{p_i-2}}{\binom{p_i+q_i-3}{q_i-2}} = \frac{p_i-1}{q_i-1}
+	 \]
+	 Because these segments merge at the node, we have a constant
+	 \[
+	 p_1 s+q_1 t=p_2 s+q_2 t=\dots=p_m s+q_m t = C
+	 \]
+	 which means
+	 \[
+	 S_i =  \frac{p_i-1}{q_i-1} =  \frac{t(p_i-1)}{C - p_i s}
+	 \]
+	 which implies the order of $S_i$ by $p_i$
+	 \[
+	 S_1 \le S_2 \le \dots\le S_m
+	 \]
+	 On the other hand, consider at $t-\varepsilon$
+	 \[
+	 p_i s + q_i (t - \varepsilon) = p_i s + (C - p_i s)\left(1 - \frac{\varepsilon}{t}\right) = \frac{s\varepsilon}{t}p_i + C \left(1 - \frac{\varepsilon}{t}\right)
+	 \]
+	 so these are also ordered by $p_i$
+	 \[
+	 p_1 s + q_1 (t - \varepsilon) \le p_2 s + q_2 (t - \varepsilon) \le \dots \le p_m s + q_m (t - \varepsilon)
+	 \]
+	 These means for $t-\varepsilon$, the broken up vectors with smaller slope come first. The connected vectors form a convex curve on the $w$-$w'$ graph. This means
+	 \[
+	 w^{\ominus}_{s,t-\varepsilon}(n) \ge w^{\ominus}_{s,t}(n)
+	 \]
+	 Similarly, we can also prove for node $t$ that
+	 \[
+	 w^{\ominus}_{s,t+\varepsilon}(n) \le w^{\ominus}_{s,t}(n)
+	 \]
+	 Since these two inequality holds for all nodes, which covers all possible changes in $w^{\ominus}_{s,t}(n)$, we have proved that this function is non-increasing w.r.t. $t$.
+
+	 \begin{tikzpicture}[yscale=0.5,xscale=0.5]
+	 	\tkzInit[xmin=20,ymin=12,xmax=35,ymax=22]
+	 	\tkzDrawX[label={$w'$},right]
+	 	\tkzDrawY[label={$w$},above]
+
+	 	\tkzDefPoint(21,13){A}
+	 	\tkzDefPoint(34,21){B}
+	 	\draw[color=black,-Stealth] (A)--(B);
+
+	 	\tkzDefPoint(26,16){U}
+	 	\tkzLabelPoint(U){$w^{\ominus}_{s,t}$};
+
+	 	\tkzDefPoint(22,13){C}
+	 	\tkzDefPoint(27,14){D}
+	 	\tkzDefPoint(33,18){E}
+	 	\draw[color=red,-Stealth] (A)--(C);
+	 	\draw[color=red,-Stealth] (C)--(D);
+	 	\draw[color=red,-Stealth] (D)--(E);
+	 	\draw[color=red,-Stealth] (E)--(B);
+	 	\tkzDefPoint(28,14.5){V}
+	 	\tkzLabelPoint[color=red](V){$w^{\ominus}_{s,t+\varepsilon}$};
+
+	 	\tkzDefPoint(22,16){F}
+	 	\tkzDefPoint(28,20){G}
+	 	\tkzDefPoint(33,21){H}
+	 	\draw[color=blue,-Stealth] (A)--(F);
+	 	\draw[color=blue,-Stealth] (F)--(G);
+	 	\draw[color=blue,-Stealth] (G)--(H);
+	 	\draw[color=blue,-Stealth] (H)--(B);
+	 	\tkzDefPoint(25,20){V}
+	 	\tkzLabelPoint[color=blue](V){$w^{\ominus}_{s,t-\varepsilon}$};
+
+
+
+	 \end{tikzpicture}
+\end{proof}
 
 \vspace{1cm}
 \begin{lemma}[Mode $M_0$] The optimizer degenerates at extreme $s/t$ ratio. For $n \geq2$
@@ -1360,9 +1460,9 @@ n^* = \eta(x^*) + 1 = \eta(st + s + t) + 1
 	\begin{align*}
 	D^w_{s,t}(n) &= E_{s,t}(w) + E_{s,t}(n-w)+wt+(n-w)s \\
 	&=(w-1)t + \frac{1}{2}w(w-1)s + (n-w-1)t + \frac{1}{2}(n-w)(n-w-1)s+wt+(n-w)s\\
-	&= sw^2 + (t-(n+1)s)w + (n-2)t + \frac{1}{2}n(n+1)s 
+	&= sw^2 + (t-(n+1)s)w + (n-2)t + \frac{1}{2}n(n+1)s
 	\end{align*}
-	The function $D^w_{s,t}(n)$ is quadratic over $w$, which has the axis 
+	The function $D^w_{s,t}(n)$ is quadratic over $w$, which has the axis
 	\[
 		w_{axis} = -\frac{t-(n+1)s}{2s} = \frac{1}{2}\left(-\frac{t}{s} + n+1\right) < \frac{3}{2}
 	\]
@@ -1401,7 +1501,7 @@ w(n_{1,0}) &= w(R + 1) = \{1\} \\
 E(n_{1,0}) &= E(R + 1) = Rt + \frac{1}{2}R(R+1)s\\
  &= (R+(1-1)^2+2\cdot 0)t + \left( \frac{1}{3}(1^3-3\cdot1^2+(3R+5)\cdot 1+\frac{3}{2}(R+1)(R-2)) + 0\cdot(1-1) \right) s
 \end{align*}
-The value for $w(n)$ is irregular at $k=1$ comparing to the rest in mode $M_1$, but we won't use it in induction, so it doesn't matter. 
+The value for $w(n)$ is irregular at $k=1$ comparing to the rest in mode $M_1$, but we won't use it in induction, so it doesn't matter.
 
 If $t/s\notin\mathbb{Z}$, the first point of $S_2$ is also the last point of $M_0$, let's verify it:
 \begin{align*}
@@ -1468,7 +1568,7 @@ t + (k-1+R)s\ &(p = k-1)
 t -Rs \geq 0\ &(p =0)\\
 0\ &(1\leq p \leq k-2)\\
 t -(R+1)s < 0\ &(p = k-1)
-\end{cases}\\ \\ 
+\end{cases}\\ \\
 \Delta_w D^{k}(n_{k,p}) &=  \Delta E(k) - \Delta E(n_{k,p}-k-1) + t -s \\
 &= \begin{cases}
 t+ks &(k \leq R + 1)\\
@@ -1536,7 +1636,7 @@ E(n_{k,p}) &= D^{k}(n_{k,p}) \\
 	\end{align*}
 	Remember that the traditional bisect problem has a time complexity of $F(n) = E(n)/n \sim \mathcal{O}(\log n)$, we can guess that the solution to the functional equation above is in the form (we choose to use the reciprocal of the coefficient because later we will see this is more convenient)
 	\[
-	\tilde{E}_{s,t}(n) = \frac{n\ln n}{\rho_{s,t}} 
+	\tilde{E}_{s,t}(n) = \frac{n\ln n}{\rho_{s,t}}
 	\]
 	Substitute this in the equation, we get
 	\begin{align*}
@@ -1557,7 +1657,7 @@ E(n_{k,p}) &= D^{k}(n_{k,p}) \\
 	\[
 	\frac{s -t }{\ln w - \ln (n-w)} n\ln n =  \frac{s -t }{\ln w - \ln (n-w)}w\ln w + \frac{s -t }{\ln w - \ln (n-w)}(n-w)\ln (n-w)+wt+(n-w)s\,,
 	\]
-	which can be simplified to 
+	which can be simplified to
 	\[
 	\frac{\ln(w/n)}{\ln(1-w/n)} = \frac{t}{s}\,.
 	\]
@@ -1566,7 +1666,7 @@ E(n_{k,p}) &= D^{k}(n_{k,p}) \\
 	\frac{\ln g}{\ln(1-g)} = \frac{t}{s}\quad\text{ or }\quad g^{s} = (1-g)^t\,.
 	\]
 	The solution is unfortunately not easy to express in a closed form, but we do get a normalized optimizer function $g_{s,t}$ independent from $n$. The optimizer for the discrete problem should be similar to this.
-	
+
 	We can also get the coefficient $\rho_{s,t}$ by
 	\[
 	\rho_{s,t} = \frac{\ln w - \ln (n-w)}{s -t } = \frac{\ln g_{s,t} - \ln (1-g_{s,t})}{s -t } = -\frac{\ln g_{s,t}}{t}= - \frac{\ln(1-g_{s,t})}{s}
@@ -1590,26 +1690,26 @@ E(n_{k,p}) &= D^{k}(n_{k,p}) \\
 	\]
 \end{lemma}
 \begin{proof}
-	
+
 	We will use the function $\eta(x)$ previously defined. First of all, let's show that $\eta(x)$ has asymptotic behavior
 	\[
 	\frac{\eta(x)}{e^{\rho_{s,t} x}} = C \in [e^{-(s+t)\rho_{s,t}},e^{-\min\{s,t\}\rho_{s,t}}]
 	\]
-	It is easy to show that any function in the form 
+	It is easy to show that any function in the form
 	\[
 	\eta'(x) = C e^{\rho_{s,t} x}
 	\]
-	satisfies the functional equation 
+	satisfies the functional equation
 	\[
 	\eta'(x) = \eta'(x - s) + \eta'(x - t)
 	\]
 	which $\eta(x)$ also satisfies. So if we find a $\eta'(x)$ that is completely larger or smaller than $\eta(x)$ in the seeding region $(\min\{s,t\}, s+t]$, then by induction such $\eta'(x)$ will always bound $\eta(x)$ above or below. We can choose the end points of the seeding region to get $C_{hi} = e^{-\min\{s,t\}\rho_{s,t}}$ and $C_{lo} = e^{-(s+t)\rho_{s,t}}$ for the upper and lower bound.
-	
-	We first prove the limit on the subsequence $\{\eta_k\}_{k=1}^{\infty}$ . We want to prove 
+
+	We first prove the limit on the subsequence $\{\eta_k\}_{k=1}^{\infty}$ . We want to prove
 	\[
 	\lim_{k\to\infty}\frac{E_{s,t}(\eta_k)}{\tilde{E}_{s,t}(\eta_k)} = 1
 	\]
-	The value of $E(\eta_k)$ can be expressed as 
+	The value of $E(\eta_k)$ can be expressed as
 	\begin{align*}
 	E(\eta_k) &= x_1 (\eta_2 - \eta_1) + x_2 (\eta_3 - \eta_2) + \dots +x_{k-1} (\eta_k - \eta_{k-1})\\
 	&=  x_{k-1}\eta_k - (x_1 \eta_1 + (x_2 - x_1) \eta_2 + (x_3 - x_2)\eta_3 + \dots + (x_{k-1} - x_{k-2}) \eta_{k-1}) \\
@@ -1628,8 +1728,8 @@ E(n_{k,p}) &= D^{k}(n_{k,p}) \\
 	The difference between $x_{k-1}$ and $x_k$ is bounded
 	\[
 	x_k - x_{k-1} = M \le \max\{s, t\}
-	\]	
-	because otherwise we would have a long constant region for $\eta(x)$, which traces back to an equally long seeding region, which we know is only $\max\{s, t\}$ long. On the other hand, the sequence $\{x_k\}$ is unbounded, because each jump point at $x_k$ should create another two jump points $x_k+s$ and $x_k+t$ that is also part of the $\{x_k\}$ sequence, thus leading the sequence to grow unbounded. This means the limit 
+	\]
+	because otherwise we would have a long constant region for $\eta(x)$, which traces back to an equally long seeding region, which we know is only $\max\{s, t\}$ long. On the other hand, the sequence $\{x_k\}$ is unbounded, because each jump point at $x_k$ should create another two jump points $x_k+s$ and $x_k+t$ that is also part of the $\{x_k\}$ sequence, thus leading the sequence to grow unbounded. This means the limit
 	\begin{align*}
 	\lim_{k\to\infty}\frac{\rho_{s,t}x_{k-1}}{\ln\eta_k} &= \lim_{k\to\infty}\frac {\rho_{s,t}x_{k-1}}{\rho_{s,t}x_k +\ln C } \\
 	&= \lim_{k\to\infty}\frac {\rho_{s,t}x_{k-1}}{\rho_{s,t}(x_{k-1} + M) +\ln C }\\
@@ -1640,7 +1740,7 @@ E(n_{k,p}) &= D^{k}(n_{k,p}) \\
 	\[
 	\lim_{k\to\infty}\frac{E_{s,t}(\eta_k)}{\tilde{E}_{s,t}(\eta_k)} = 1
 	\]
-	
+
 	In order to prove the full limit, let's look at some properties of $\tilde{E}(n)$. Consider the following two points on the curve
 	\begin{align*}
 	A &= (a, K a\ln a)\\
@@ -1650,7 +1750,7 @@ E(n_{k,p}) &= D^{k}(n_{k,p}) \\
 	\[
 	Y_a(n) = K(\ln a + 1)n - Ka
 	\]
-	Because $\tilde{E}(n)$ is convex, this tangent line is always below $\tilde{E}(n)$. We denote the linear function that passes both $A$ and $B$ as $L_{a,b}(n)$. Then for $a\le n\le b$, we have 
+	Because $\tilde{E}(n)$ is convex, this tangent line is always below $\tilde{E}(n)$. We denote the linear function that passes both $A$ and $B$ as $L_{a,b}(n)$. Then for $a\le n\le b$, we have
 	\begin{align*}
 	\frac{L_{a,b}(n)}{\tilde{E}(n)} &\le \frac{L_{a,b}(n)}{Y_a(n)} \\
 	&\le \frac{L_{a,b}(b)}{Y_a(b)} \\
@@ -1671,7 +1771,7 @@ E(n_{k,p}) &= D^{k}(n_{k,p}) \\
 	&= \lim_{k\to\infty} \frac{1}{1 + \frac{\ln C''' + 1 - C'''}{\ln \eta_{k+1}}} \\
 	&= 1 \quad (\text{$\eta_{k+1}$ is unbounded, while $C'''$ is bounded})
 	\end{align*}
-	and the squeeze theorem locks the limit to 
+	and the squeeze theorem locks the limit to
 	\begin{align*}
 	\lim_{k\to\infty}\frac{L_{\eta_{k},\eta_{k+1}}(n)}{\tilde{E}(n)} = 1
 	\end{align*}
@@ -1688,17 +1788,17 @@ E(n_{k,p}) &= D^{k}(n_{k,p}) \\
 	\begin{align*}
 	\lim_{k\to\infty} \frac{E(n)}{\tilde{E}(n)} = 1
 	\end{align*}
-	which implies 
+	which implies
 	\[
 	\lim_{n\to\infty} \frac{E(n)}{\tilde{E}(n)} = 1
 	\]
-	
-	
+
+
 \end{proof}
 
 \paragraph{Remark}
 
-The proof also hinted the function converges at the order of $1+\mathcal{O}(1/\log(n))$, which is very slow. 
+The proof also hinted the function converges at the order of $1+\mathcal{O}(1/\log(n))$, which is very slow.
 
 
 \vspace{1cm}
@@ -1709,7 +1809,7 @@ The proof also hinted the function converges at the order of $1+\mathcal{O}(1/\l
 	\]
 \end{lemma}
 \begin{proof}
-	Remember the genfib sequence can be expressed as 
+	Remember the genfib sequence can be expressed as
 	\[
 	n_i = \sum_{\xi} \frac{\xi^i}{(\xi - 1)(s \xi^t + t \xi^s)}
 	\]
@@ -1741,7 +1841,7 @@ The proof also hinted the function converges at the order of $1+\mathcal{O}(1/\l
 
 \vspace{1cm}
 \begin{lemma}[$\eta$ asymptote, rational]
-	Define function $\upsilon_{s,t}(x)$ as 
+	Define function $\upsilon_{s,t}(x)$ as
 	\[
 	\upsilon_{s,t}(x) =  \eta_{s,t}(x) \big/ \frac{e^{\rho_{s,t} x}}{\rho_{s,t}(s e^{t\rho_{s,t}} + te^{s\rho_{s,t}})}
 	\]
@@ -1760,8 +1860,8 @@ The proof also hinted the function converges at the order of $1+\mathcal{O}(1/\l
 	\begin{align*}
 	\limsup_{x\to\infty} \upsilon_{s,t}(x) = \frac{\rho_{s,t}}{e^{\rho_{s,t}} - 1} \lim_{x\to\infty} n_{x+1}  \big/ \frac{e^{\rho_{s,t} x}}{( e^{\rho_{s,t}} - 1)(s e^{t\rho_{s,t}} + t e^{s\rho_{s,t}})}  = \frac{\rho_{s,t}}{1 - e^{-\rho_{s,t}}}
 	\end{align*}
-	
-	Now let's generalize this to all $s/t\in\mathbb{Q}$. First of all, we have the following identity for homogeneity 
+
+	Now let's generalize this to all $s/t\in\mathbb{Q}$. First of all, we have the following identity for homogeneity
 	\begin{align*}
 	\eta_{ks,kt}(kx) &= \eta_{s, t}(x) \\
 	k\rho_{ks,kt} &= \rho_{s,t}
@@ -1772,7 +1872,7 @@ The proof also hinted the function converges at the order of $1+\mathcal{O}(1/\l
 		&= \eta_{s,t}(x) \big/ \frac{e^{\rho_{s,t} x}}{\rho_{s,t}(s e^{t\rho_{s,t}} + te^{s\rho_{s,t}})}\\
 		&= \upsilon_{s,t}(x)
 	\end{align*}
-    Notice that every $(s,t)$ pair is proportional to some coprime integer pair $(s', t')$ as 
+    Notice that every $(s,t)$ pair is proportional to some coprime integer pair $(s', t')$ as
 	\[
 	 (s,t) = \gcd(s,t)\cdot(s',t')
 	\]
@@ -1794,7 +1894,7 @@ The proof also hinted the function converges at the order of $1+\mathcal{O}(1/\l
 \begin{lemma}[$\eta$ asymptote, irrational]
 	For $s/t\notin\mathbb{Q}$
 	\begin{align*}
-	\lim_{x\to\infty} \upsilon_{s,t}(x) = 1 
+	\lim_{x\to\infty} \upsilon_{s,t}(x) = 1
 	\end{align*}
 \end{lemma}
 \begin{proof}
@@ -1859,7 +1959,7 @@ Let's explore the asymptotic behavior of $\phi^{\mu}(x)$. Consider the following
 \begin{align*}
 \lim_{x\to\infty}\frac{\phi^{\mu}(x)}{e^{\rho x}} = \lim_{x\to\infty}\sum_{r} \frac{(1-e^{-\mu r})e^{(r-\rho)x}}{\mu r^2(se^{-sr}+te^{-tr})}
 \end{align*}
-Let's try exchanging the limit and the summation using Tannery's theorem. We can construct the bound $M_r$ 
+Let's try exchanging the limit and the summation using Tannery's theorem. We can construct the bound $M_r$
 \[
 M_r = \frac{U}{\mu |r|^2 V}\ge \left| \frac{1-e^{-\mu r}}{\mu r^2(se^{-sr}+te^{-tr})} \right| \ge \left| \frac{(1-e^{-\mu r})e^{(r-\rho)x}}{\mu r^2(se^{-sr}+te^{-tr})} \right|
 \]
@@ -1925,17 +2025,17 @@ If we extend $\gcd$ to irrational pairs so that $\gcd(s, t) = 0$ for $s/t\notin 
 	\[
 		V_{s,t}(n) = \min_{w_{s,t}^{\min}(n)\le w \le w_{s,t}^{\max}(n)}^{w\in\mathbb{R}} \left\{ \left|\frac{w}{n} - g_{s,t}\right| \right\}
 	\]
-	Then we have, 
+	Then we have,
 	\[
 	\lim_{n\to\infty} V_{s,t}(n) = 0
 	\]
 \end{lemma}
 \begin{proof}
-	We will first prove the following weaker limit: for jump points $\{(x_i, \eta_i\nearrow\eta_{i+1})\}_{i=1}^\infty$, 
+	We will first prove the following weaker limit: for jump points $\{(x_i, \eta_i\nearrow\eta_{i+1})\}_{i=1}^\infty$,
 	\[
 	\lim_{i\to\infty} \frac{\eta(x_i - t)}{\eta_i} = g_{s,t}
 	\]
-	
+
 	For $s/t\in\mathbb{Q}$, without loss of generality, we will only discuss for coprime integer pair $(s, t)$. We previously proved that, for genfib sequence
 	\[
 	\lim_{i\to\infty}    \frac{n_i}{e^{\rho_{s,t} i}} = \frac{1}{( e^{\rho_{s,t}} - 1)(s e^{t\rho_{s,t}} + t e^{s\rho_{s,t}})}
@@ -1944,17 +2044,17 @@ If we extend $\gcd$ to irrational pairs so that $\gcd(s, t) = 0$ for $s/t\notin 
 	\begin{align*}
 	\lim_{i\to\infty} \frac{\eta(x_i - t)}{\eta_i} = \lim_{i\to\infty} \frac{n_{i-t}}{n_i}= e^{-t\rho_{s,t}}	= g_{s,t}
 	\end{align*}
-	
+
 	For $s/t\notin\mathbb{Q}$, with the $\eta$ asymptote for irrational case
 	\[
 	\lim_{i\to\infty} \frac{\eta(x_i - t)}{\eta_i} = \lim_{i\to\infty} \frac{e^{\rho(x_i-t)}}{e^{\rho x_i}}  = g_{s,t}
 	\]
-	
+
 	Remember $w_{s,t}(\eta_i) = \{\eta(x_i - t)\}$, so the limit above is actually a subsequence of the general $w$-limit at joints:
 	\[
 	\lim_{i\to\infty} V_{s,t}(\eta_i) = 0
 	\]
-	Now consider $\eta_i\le n \le \eta_{i+1}$. Because of the parallelogram property, we know that the linear interpolation of joint $w$ is with in the $w$ interval 
+	Now consider $\eta_i\le n \le \eta_{i+1}$. Because of the parallelogram property, we know that the linear interpolation of joint $w$ is with in the $w$ interval
 	\[
 		w'(n) = \frac{\eta_{i+1} - n}{\eta_{i+1} - \eta_{i}} w(\eta_i) + \frac{n - \eta_{i}}{\eta_{i+1} - \eta_{i}} w(\eta_{i+1}) \in [w^{\min}(n), w^{\max}(n)]
 	\]
@@ -1990,25 +2090,23 @@ If we extend $\gcd$ to irrational pairs so that $\gcd(s, t) = 0$ for $s/t\notin 
 \end{lemma}
 \begin{proof}
 	We can plot the graph of real optimizer $w_{s,t}(n)$ as a map over $n$ and $t/s$. In the following graphs, the horizontal axis from left to right is $n$ running from $2$ to $10,000,000$ in logarithmic scale, and the vertical axis from up to down is ratio $r= t/s$ running from $1$ to $10,000,000$ in logarithmic scale.  All of these graphs are expected to have a perfect mirror for $r= t/s \in (0, 1]$ in logarithmic scale so we omitted that part. These graphs aren't accurate as they don't show the values when $r$ is an integer or a simple fraction, where $w$ can be a much larger set than its neighbors; nonetheless, they still display interesting properties for most $r$.
-	
+
 	\includegraphics[scale=0.3]{w.png}\,\includegraphics[scale=0.3]{bias.png}
-	
+
 	\vspace{0.3cm}
-	
+
 	\includegraphics[scale=0.3]{variance.png}\,\includegraphics[scale=0.3]{e-bias.png}
-	
+
 	\vspace{0.3cm}
-	
-	\includegraphics[scale=0.3]{mode.png}
-	
-	The first graph id colored using the average relative optimizer $w_{s,t}(n)$, where color gradients runs from 0.0 to 0.5
+
+	The first graph is colored using the average relative optimizer $w_{s,t}(n)$, where color gradients runs from 0.0 to 0.5
 	\[
 	c_1 = \frac{w^{\max}_{s,t}(n) + w^{\min}_{s,t}(n)}{2n}
 	\]
 	The second graph is colored using the relative difference of optimizer $w_{s,t}(n)$ against the continuous optimizer, where 0 difference is light yellow:
 	\[
 	c_2 = \frac{w^{\max}_{s,t}(n) + w^{\min}_{s,t}(n)}{2n} - g_{s,t}
-	\]  
+	\]
 	The third graph is colored using the relative variance of optimizer $w_{s,t}(n)$, where 0 is colored dark green.
 	\[
 	c_3 = \frac{w^{\max}_{s,t}(n) - w^{\min}_{s,t}(n)}{n}
@@ -2017,29 +2115,8 @@ If we extend $\gcd$ to irrational pairs so that $\gcd(s, t) = 0$ for $s/t\notin 
 	\[
 	c_4 =\frac{E_{s,t}(n)} {\tilde{E}_{s,t}(n)} = \frac{\rho_{s,t} E_{s,t}(n)} {n \ln n}
 	\]
-	
-	We can see the graph is divided into several regions. We have already discussed mode $M_0$ and $M_1$ above. There are also mode $M_2$, $M_3$ and so on. A new mode $M_{n+1}$ is formed when the ``short branch" ($E(w)$ when $w$ is small) falls into mode $M_n$. For mode beyond $M_4$, they seems to ``fade away" and becomes very close to the continuous optimizer. We can find the approximated boundaries between these modes. As $t/s$ grows very large, and $g$ becomes very small, we have
-	\[
-		-\frac{\ln g}{g}\sim \frac{t}{s}
-	\]
-	\[
-		g \sim \frac{W_0(t/s)}{t/s}
-	\]
-	where $W_0$ is the Lambert W function. We have previously shown that the boundary between $M_0$ and $M_1$ is around
-	\[
-		n_{0|1}\sim \frac{t}{s}
-	\]
-	for large $t/s$. Each further mode transition happens when the small branch also encounters a mode transition. The length of the small branch is approximately $w \sim n\cdot g$, so the mode transition point forms geometric sequence approximately
-	\[
-		n_{k| k+1} \sim n_{k-1| k}/g \sim \left.n_{k-1| k}\middle/\frac{W_0(t/s)}{t/s}\right. \sim \frac{(t/s)^{k+1}}{(W_0(t/s))^{k}}
-	\]
-	On the logarithmic scale, the boundary between $M_k$ and $M_{k+1}$ looks like a line 
-	\[
-		\log n_{k| k+1} \sim (k + 1) \log\frac{t}{s} - k\log W_0\left(\frac{t}{s}\right)
-	\]
-	These lines match what we see in the graphs.
-	
-	We can also understand mode boundaries with the joint function $\eta(x)$. Consider the differential in mode $M_0$
+
+	We can see the graph is divided into several regions. We have already discussed mode $M_0$ and $M_1$ above. There are also mode $M_2$, $M_3$ and so on. A new mode $M_{n+1}$ is formed when the ``short branch" ($E(w)$ when $w$ is small) falls into mode $M_n$. For mode beyond $M_4$, they seems to ``fade away" and becomes very close to the continuous optimizer. We can find the boundaries between these modes using the joint function $\eta(x)$. Consider the differential in mode $M_0$ (again we assume $t>s$)
 	\[
 	\Delta E(n) = t + ns, \quad n < \frac{t}{s} + 1
 	\]
@@ -2049,26 +2126,31 @@ If we extend $\gcd$ to irrational pairs so that $\gcd(s, t) = 0$ for $s/t\notin 
 	\]
 	This means the boundary between $M_0$ and $M_1$ is at
 	\[
-	n_{0|1} \sim \eta_{s,t}(2t + s)
+	n_{0|1} = \eta_{s,t}(2t + s)
 	\]
 	Because each boundary generates the next boundary by being the short branch, we can derive that in general
 	\[
-	n_{k|k+1} \sim \eta_{s,t}((k+2)t + s)
+	n_{k|k+1} = \eta_{s,t}((k+2)t + s)
 	\]
-	Also remember that for coprime integer pairs $(s, t)$, the first node is at
+	When $t>>s$, the recurrent formula for $\eta(x)$ is similar to performing integration to previous regions. $\eta(x)$ function behaves like a linear function before $n_{0|1}$, quadratic function before $n_{1|2}$, then cubic before $n_{2|3}$, and so on. We can therefore approximate the mode boundary as
 	\[
-	n^* = \eta_{s,t}(st + s + t) + 1
+	n_{k|k+1} \sim \frac{(t/s)^{k+1}}{(k+1)!}
 	\]
-	which is right after $n_{s-1|s}$, the boundary between $M_{s-1}$ and $M_s$.
-	
-	In fact, if we group all $n = \eta_{s,t}(ps + qt)$ by integer pairs $(p, q)$, we can get a nice pattern. In the graph below, each block in the range
+	Around the range where $s/t$ is close to $1$, modes seem to blend together to form the $S$ mode. This mode roughly has the boundary $n_S = e^{t/s}$. Indeed, the approximated boundary for mode $M$ always wraps around the boundary for mode $S$
+	\[
+	\frac{(t/s)^{k+1}}{(k+1)!} < e^{t/s}
+	\]
+
+	\includegraphics[scale=0.3]{mode.png}
+
+	If we group all $n = \eta_{s,t}(ps + qt)$ by integer pairs $(p, q)$, we can get a nice pattern. In the graph below, each block in the range
 	\[
 	\eta_{s,t}(ps + qt) < n < \eta_{s,t}((ps + qt)^+)
-	\] 
+	\]
 	is colored according to $(p, q)$. The hue is controlled by $p$, while the brightness alternates for different $q$.
-	
+
 	\includegraphics[scale=0.3]{web.png}
-	
+
 	This graph displays a similar pattern seen in the optimizer variance graph, and also clearly shows different regions with different colors.
 \end{proof}
 
