@@ -1456,7 +1456,7 @@ n^* = \eta(x^*) + 1 = \eta(st + s + t) + 1
 	\[
 	E_{s,t}(2) = E_{s,t}(1) + E_{s,t}(1) + t + s = t + s = (2-1)t + \frac{1}{2}\cdot 2 \cdot (2-1) s
 	\]
-	\paragraph{Inductive step} Assuming $E_{s,t}(k) = (k-1)t + \frac{1}{2}k(k-1)s$ holds for all $k = 1,2,\dots n-1$ and $t/s > k - 2$, we can show that, for $t/s > n - 2 > k - 2$:
+	\paragraph{Inductive step} Assuming $E_{s,t}(k) = (k-1)t + \frac{1}{2}k(k-1)s$ holds for all $k = 1,2,\dots, n-1$ and $t/s > k - 2$, we can show that, for $t/s > n - 2 > k - 2$:
 	\begin{align*}
 	D^w_{s,t}(n) &= E_{s,t}(w) + E_{s,t}(n-w)+wt+(n-w)s \\
 	&=(w-1)t + \frac{1}{2}w(w-1)s + (n-w-1)t + \frac{1}{2}(n-w)(n-w-1)s+wt+(n-w)s\\
@@ -2154,7 +2154,70 @@ If we extend $\gcd$ to irrational pairs so that $\gcd(s, t) = 0$ for $s/t\notin 
 	This graph displays a similar pattern seen in the optimizer variance graph, and also clearly shows different regions with different colors.
 \end{proof}
 
+\vspace{1cm}
+\begin{lemma} [Secondary cost]
+We can extent $s$ and $t$ to any positive element in a linearly ordered albelian group.
+\end{lemma}
+\begin{proof}
+
+In the proof for nodes, we used dual numbers for $s$ and $t$. This hints that the problem itself can be extended beyond real numbers. Indeed, the definition for the function $E_{s,t}(n)$ and $w_{s,t}(n)$ is well-defined for any $s$ and $t$ in a linearly ordered albelian group, where $n$ and $w$ are still positive integers, and multiplication is defined as repeated group operation.
+
+According to Hahn embedding theorem, such group can always be embedded in some additive group $\mathbb{R}^\Psi$ endowed with a lexicographical order, where the index set $\Psi$ is well-ordered. In the previous example, dual numbers can be seen as $\mathbb{R}^{\{1, \epsilon \}} \cong \mathbb{R}\times\mathbb{R}$. In general, we can separate the group as $\mathbb{R}^\Psi \cong \mathbb{R}\times\mathbb{S}$, where $\mathbb{R}$, which we call the primary cost, is the most significant term in the lexicographical order, and $\mathbb{S}$ is the rest of the terms, which we call the secondary cost. Secondary cost has practical meaning: aside from the time cost, performing computer reboot can also cost other things such as wearing on hardware. When the time costs are equal, we might start comparing these secondary costs and have preference among options having the same primary cost.
+
+We will use $s^\circ$ and $t^\circ$ to represent the primary cost component of $s$ and of $t$. We will also assume that both $s^\circ$ and $t^\circ$ are both positive for now. 
+
+We can see that the many formula we have developed can be extended to $\mathbb{R}^\Psi$. For example, the $\eta(x)$ function retains its definition, only to extent its domain to $\{x\in\mathbb{R}^\Psi \,|\, x > \min\{s, t\}\}$. The set $\Omega_{s,t}^w$ also generates beads of the same size as before, and beads are still sorted by $ps+qt$. What is potentially changed is that previously merged beads due to equal $ps+qt$ can be broken up because of unequal secondary cost.
+
+Previously we said that $w_{s,t}(n)$ only depends on the ratio $s/t$. This ratio is not well defined for an arbitrary group. We can redefine it here as follows
+\begin{itemize}
+	\item When $s^\circ / t^\circ$ is irrational, we define $s/t =  s^\circ / t^\circ$. In this case, the generated $w_{s,t}(n)$ purely depends on the primary cost, and is identical to $w_{s^\circ, t^\circ}(n)$. This is because all $ps+qt$ are distinct for irrational $s/t$ (hence no merged beads), and are in the same order regardless of the presence of secondary costs.
+	\item When $s^\circ / t^\circ = S/T$ is rational ($S$ and $T$ are coprime positive integers), and $Ts = St$, then we define $s/t = s^\circ/t^\circ$. In this case, all secondary cost display the same ratio as the primary cost, and the generated $w_{s,t}(n)$ is identical to $w_{s^\circ, t^\circ}(n)$
+	\item When $s^\circ / t^\circ = S/T$ is rational, but $Ts > St$, we define $s/t = (s^\circ/t^\circ)^+$, which is not exactly a real number. In this case, the resulting $w_{s,t}(n)$ is almost the same as $w_{s^\circ, t^\circ}(n)$, but all the merged beads break up in a way favoring using less ``$s$", identical to $w_{s^\circ+\epsilon, t^\circ}(n)$.
+	\item When $s^\circ / t^\circ = S/T$ is rational, but $Ts < St$, we similarly define $s/t = (s^\circ/t^\circ)^-$. In this case, $w(n)$ is generated  identical to $w_{s^\circ-\epsilon, t^\circ}(n)$.
+\end{itemize}
+We have redefined $s/t$ in a set $\mathbb{R}^\star$ that extends the set of positive real numbers. $\mathbb{R}^\star$ contains all positive real numbers, but for every rational number $a$, it also adds two additional elements $a^-$ and $a^+$. These new elements capture the new equivalent classes where $s/t$ is ``almost rational", but shifted by secondary costs.
+
+As for edge cases we haven't discussed yet:
+\begin{itemize}
+	\item if one of $s^\circ$ or $t^\circ$ is zero, then $w(n)$ are generated as if $s$ or $t$ is 0.
+	\item if both $s^\circ$ and $t^\circ$ are zero, we can consider the next significant term in the secondary cost, and make it the new primary cost. We can then discuss according to different cases like above.
+\end{itemize}	
+	
+\end{proof}
+
+\vspace{1cm}
+\begin{lemma}[Mode $M_0'$] If $s$ or $t$ is not a positive number, even without practical meaning, we can show that the corresponding $E(n)$ and $w(n)$ is an extension of the $M_0$ modeL
+	\begin{align*}
+		E_{s,t}(n) = (n-1)t + \frac{1}{2}n(n-1)s,\quad & w_{s,t}(n) = \{1\},\quad  &\text{for } s \le 0 \mbox{ and } s < t \\
+		E_{s,t}(n) = (n-1)s + \frac{1}{2}n(n-1)t,\quad & w_{s,t}(n) = \{n-1\},\quad  &\text{for } t \le 0 \mbox{ and } t < s \\
+		E_{s,t}(n) = \frac{1}{2}(n+2)(n-1)t,\quad & w_{s,t}(n) = \{1, n-1\} &\text{for } s = t < 0\\
+		E_{s,t}(n) = 0,\quad& w_{s,t}(n) = \{1, 2, \dots,n-1\} &\text{for } s = t = 0
+	\end{align*}
+\end{lemma}
+\begin{proof}
+The first two cases can be proved in a similar way we proved the mode $M_0$, with a small modification in the induction step. Using the first case as an example, when inducing $E(n)$ ($n \ge 3$) from $E(1),\dots,E(n-1)$, we have
+\[
+D^w_{s,t}(n) = sw^2 + (t-(n+1)s)w + (n-2)t + \frac{1}{2}n(n+1)s
+\]
+which now can be either raising linear when $s=0$ (so $w=1$ is the obvious optimal choice), or a downward quadratic when $s<0$. When it is quadratic, the axis is
+\[
+w_{axis}  = \frac{1}{2}\left(-\frac{t}{s} + n+1\right) > \frac{n}{2}
+\]
+Since the quadratic is downward, we want to find the point furthest from the axis, which is again $w=1$.
 
 
+The third case can be again proved using the same technique. This time, we have 
+\[
+D^w_{s,t}(n) = sw^2  -nsw + (n-2)s + \frac{1}{2}(n-4)(n+1)s
+\]
+which is a downward parabola with an axis
+\[
+w_{axis} = \frac{n}{2}
+\]
+which means $w=1$ and $w=n-1$ are equally the furthest away from the axis and minimize $D^w_{s,t}(n)$. For $n > 3$, this is the only mode where $w$ isn't a single integer interval.
+
+When both $s$ and $t$ are zero, there is no cost regardless how we perform the bisecting, so any possible $w$ is equally optimal.
+	
+\end{proof}
 
 \end{document}
