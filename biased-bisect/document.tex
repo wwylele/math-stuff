@@ -866,22 +866,29 @@ Below is the graph of $n = \eta(x)$ and $x = \Delta E(n)$ for $s = \sqrt{2}, t =
 \end{lemma}
 
 \vspace{1cm}
+\begin{definition}[Midpoint joins]
+	Define the slightly modified function $\eta_0(x)$ as 
+	\[
+	\eta_0(x) = \lim_{\varepsilon\to 0} \frac{1}{2}(\eta(x-\varepsilon) + \eta(x+\varepsilon))
+	\]
+\end{definition}
+
+\vspace{1cm}
 \begin{lemma}[Laplace joints]
 	\[
-	\eta(x) =^{\star} \sum_r \frac{e^{rx}}{r(s e^{tr} + t e^{sr})}
+	\eta_0(x) =  \sum_r \frac{e^{rx}}{r(s e^{tr} + t e^{sr})}
 	\]
 	where $r$ are all complex roots of equation
 	\[
 	e^{-sr} + e^{-tr} = 1
 	\]
-	and symbol $=^{\star}$ means equality except at jump points.
 \end{lemma}
 
 \begin{proof}
 
 Consider the following shifted function $\phi(x)$
 \begin{align*}
-	\phi(x) &= \eta(x + s +t) \\
+	\phi(x) &= \eta_0(x + s +t) \\
 	&= 1 + \sum_{(p,q)\in(\mathbb{Z}^+)^2}^{ps+qt < x+s+t} \frac{(p+q-2)!}{(p-1)!(q-1)!}\\
 	&= 1 + \sum_{(p,q)\in(\mathbb{Z}^{0+})^2}^{ps+qt < x} \frac{(p+q)!}{p!q!}\\
 	&= 1 + \sum_{p=0}^{\infty}\sum_{q=0}^{\infty} \frac{(p+q)!}{p!q!} \theta(x - (ps + qt))
@@ -918,11 +925,11 @@ C_r &= \lim_{\sigma\to r} \frac{\sigma - r}{\sigma(1- (e^{-s\sigma} + e^{-t\sigm
 &= \lim_{\sigma\to r} \frac{\partial_\sigma(\sigma - r)}{\sigma\partial_\sigma(1- (e^{-s\sigma} + e^{-t\sigma}))} \\
     &= \frac{1}{r(s e^{-sr} + t e^{-tr})}
 \end{align*}
-Plugging everything back, we get a new formula for $\eta(x)$
+Plugging everything back, we get the new formula for $\eta_0(x)$
 \[
-\eta(x) =^{\star} \frac{1}{2}(\eta(x^-) + \eta(x^+)) = \sum_r \frac{e^{r(x - (s +t))}}{r(s e^{-sr} + t e^{-tr})}  = \sum_r \frac{e^{rx}}{r(s e^{tr} + t e^{sr})}
+\eta_0(x) = \sum_r \frac{e^{r(x - (s +t))}}{r(s e^{-sr} + t e^{-tr})}  = \sum_r \frac{e^{rx}}{r(s e^{tr} + t e^{sr})}
 \]
-As the symbol $=^{\star}$ signifies, $\eta(x)$ isn't strictly equal to the series at all points: at jump points, the series converges to half way between left and right function value, as per usual behavior of Laplace transform at discontinuity. Also note on summation order: this series doesn't converge absolutely and summation order is important. We can index $r$ by $|\mathfrak{I}(r)|$ in ascending order. This follows the limit direction in Mellin's inverse formula, together with Cauchy residue theorem.
+Note that this series doesn't converge absolutely and summation order is important. We can index $r$ by $|\mathfrak{I}(r)|$ in ascending order. This follows the limit direction in Mellin's inverse formula, together with Cauchy residue theorem.
 
 \end{proof}
 
@@ -956,7 +963,11 @@ Sort all elements in $\Omega^w_{s,t}$ by $ps+qt$ in ascending order. This time f
 
 \vspace{1cm}
 \begin{definition}[Middle]
-	For each bead $	B(n_{\triangleleft}, n_{\triangleright}, w_{\triangleleft}, w_{\triangleright})$, define $w^{\ominus}_{s,t}(n)$ as the linear interpolation between $[w_{\triangleleft}, w_{\triangleright}]$, for real number $n$ between $[n_{\triangleleft}, n_{\triangleright}]$. Since beads are connected, this defines a function $w_{s,t}^{\ominus}: [2, \infty)\to\mathbb{R}$
+	For each bead $	B(n_{\triangleleft}, n_{\triangleright}, w_{\triangleleft}, w_{\triangleright})$, define $w^{\ominus}_{s,t}(n)$ as the linear interpolation on real number between $[n_{\triangleleft}, n_{\triangleright}]$
+	\[
+		w^{\ominus}_{s,t}(n) = \frac{n - n_{\triangleleft}}{n_{\triangleright} - n_{\triangleleft}} w_{\triangleright} + \frac{n_{\triangleright} - n}{n_{\triangleright} - n_{\triangleleft}}w_{\triangleleft}
+	\]
+	Since beads are connected, this defines a function $w_{s,t}^{\ominus}: [2, \infty)\to\mathbb{R}$
 \end{definition}
 
 \paragraph{Remark}
@@ -965,7 +976,7 @@ It can be seen that we always have
 w^{\min}(n)\le w^{\ominus}(n)\le w^{\max}(n)
 \]
 
-Each bead in the $w(n)$ graph is rectangle in the $w$-$w'$, and $w^{\ominus}$ are the raising diagonals. The following is the $w$-$w'$ graph of $w^{\ominus}$ for $s=4$, $t=9$
+Each bead in the $w(n)$ graph is rectangle in the $w$-$w'$, and $w^{\ominus}$ are the rising diagonals. The following is the $w$-$w'$ graph of $w^{\ominus}$ for $s=4$, $t=9$
 
 \includegraphics[scale=0.7]{w-n-v.png}
 

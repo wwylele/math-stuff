@@ -152,7 +152,7 @@ Because $\lim_{n\to\infty}B_n = B$, by the definition of limit, for any (small) 
 \[
 |A_n - A|  < \frac{2\delta}{M}
 \]
-???的
+???
 
 \end{proof}
 
@@ -162,4 +162,50 @@ Because $\lim_{n\to\infty}B_n = B$, by the definition of limit, for any (small) 
 \]
 \end{theorem}
 
+\section{Let's go higher dimensions}
+
+For some positive integer parameter $p$, sequence $\{a_n^{(p)}\}_{n=0}^{\infty}$ satisfies
+\begin{align*}
+	a_0^{(p)} &= 1\\
+	\sum_{0\le i_1,i_2,\dots,i_p\le n}^{i_1+i_2+\dots+i_p=n} a_{i_1}^{(p)}a_{i_2}^{(p)}\dots a_{i_p}^{(p)} &= 1 \quad \forall n \ge 0
+\end{align*}
+
+\begin{theorem}
+	\[
+	a_{n}^{(p)} = \frac{1}{np}\cdot\left(\frac{1}{p} + 1\right)\left(\frac{1}{2p} + 1\right)\dots\left(\frac{1}{(n -1)p} + 1\right) = \frac{\Gamma\left(n + \frac{1}{p}\right)}{\Gamma(n+1)\Gamma\left(\frac{1}{p}\right)}
+	\]
+\end{theorem}
+\begin{proof}
+	Consider function 
+	\[
+	f(x) = (1-x)^{-1/p}
+	\]
+	which has derivatives
+	\[
+	f^{(n)}(x) = \frac{1}{p}\left(\frac{1}{p} + 1 \right)\dots\left(\frac{1}{p} + n -1\right)(1-x)^{-1/p-n}
+	\]
+	so it has Taylor series at $x=0$
+	\[
+	f(x) = \sum_{n=0}^{\infty} \frac{1}{n!}\cdot\frac{1}{p}\left(\frac{1}{p} + 1 \right)\dots\left(\frac{1}{p} + n -1\right) x^n
+	\]
+	At the same time, we have
+	\[
+	(f(x))^p = \frac{1}{1-x} = \sum_{n=0}^{\infty}x^n
+	\]
+	By comparing coefficients, we can prove the theorem
+\end{proof}
+
+\begin{theorem}
+	Define sequence $\{x_n^{(p)}\}_{n=1}^{\infty}$ as the partial sum
+	\[
+	x_n^{(p)} = \sum_{k=0}^{n-1} a_k
+	\]
+	Then
+	\[
+	x_n^{(p)} = \left(\frac{1}{p} + 1\right)\left(\frac{1}{2p} + 1\right)\dots\left(\frac{1}{(n-1)p} + 1\right) = \frac{\Gamma\left(n + \frac{1}{p}\right)}{\Gamma(n)\Gamma\left(\frac{1}{p} + 1\right)} \sim \mathcal{O}(n^{1/p})
+	\]
+\end{theorem}
+\begin{proof}
+	By induction. Omitted
+\end{proof}
 \end{document}
