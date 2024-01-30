@@ -19,7 +19,7 @@ bottom=2cm,
 \begin{document}
 \maketitle
 \section{Definition}
-For an integer $b > 1$, we define the volcano function $M_b(x): (0, 1] \to \mathbb{R}$ as
+For an integer $b > 1$, we define the volcano function $M_b(x): [0, 1] \to \mathbb{R}$ as
 \[
 M_b(x) = \sum_{k=0}^\infty b^{-a_k}((b-1)a_k-2k)\,,
 \]
@@ -27,7 +27,10 @@ where the sequence $\{a_k\}_{k=0}^{\infty}$ are positive, non-decreasing integer
 \[
 x = \sum_{k=0}^\infty b^{-a_k}
 \]
-and the same value doesn't appear in $a_k$ more than $b-1$ times. This is equivalent to the base-$b$ expansion of $x$, and by mandating an infinite sequence, we guarantee that such expansion is unique.
+and the same value doesn't appear in $a_k$ more than $b-1$ times. This is equivalent to the base-$b$ expansion of $x$, and by mandating an infinite sequence, we guarantee that such expansion is unique. Note that this isn't well-defined for $x=0$, so we define the special case
+\[
+M_b(0) = 0
+\]
 
 \section{Finite expansion compatibility}
 For $x$ that has finite expansion in base-$b$, we can find
@@ -297,8 +300,36 @@ is symmetrical for $x$ and $x'$, so their sum $M_b(x)$ and $M_b(x')$ is also sym
 
 
 
-\section{Limit?}
+\section{Limit}
 
+Let's define the following piece-wise function $L_b(x)$ for $x\in[0,1]$
+\[
+L_b(x) = (b-1-2i)x + \frac{i(i+1)}{b}\quad\mbox{for }x\in\left[\frac{i}{b}, \frac{i+1}{b}\right]\quad\mbox{for }i = 0, 1, \dots,b-1
+\]
+Then the self-symmetry relation of $M_b(x)$ can be written as
+\[
+M_b(x) = L_b(x) + \frac{M_b(\{bx\})}{b}
+\]
+where $\{a\}$ is the fractional part of $a$. Using the minimum and maximum value of $M_b(x)$, we have
+\[
+M_b(x) - L_b(x) = \frac{M_b(\{bx\})}{b} \in \left[0, \max\left\{\frac{b+2}{4(b+1)}, \frac{b+1}{4b}\right\}\right]\subseteq\left[0, \frac{4}{3}\right]
+\]
+\[
+\frac{M_b(x)}{b} - \frac{L_b(x)}{b} \in \left[0, \frac{4}{3b}\right]
+\]
+We can also rewrite $L_b(x)$ in a different way:
+\[
+L_b(x) = bx(1-x) - \frac{\{bx\}( 1-\{bx\} ) }{b}
+\]
+so we have
+\[
+\frac{L_b(x)}{b}  - x(1-x) \in \left[-\frac{1}{4b^2}, 0\right]
+\]
+and combining with the previous inequality, we have
+\[
+\frac{M_b(x)}{b}   - x(1-x)\in \left[-\frac{1}{4b^2}, \frac{4}{3b}\right]
+\]
+Taking the limit, we have
 \[
 \lim_{b\to\infty}\frac{M_b(x)}{b} = x(1-x)
 \]

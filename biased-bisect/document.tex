@@ -134,7 +134,11 @@ For parameters $s, t\in\mathbb{R}^+$ and $n \in\mathbb{Z}^+$, define
 	\end{align*}
 \end{definition}
 \paragraph{Remark}
-The normalized function $E(n)$ is easier to work with than $F(n)$, as it eliminates the fraction part. When $s$ and $t$ are integers, the output of $E(n)$ are as well. From now on, we will focus on analyzing $E(n)$ and $w(n)$. Note that the optimizer $w_{s,t}(n)$ outputs a set of $w$. It is not necessarily always a single $w$ that minimize the function.
+We can easily see that
+\[
+E_{s,t}(n) = nF_{s,t}(n)
+\]
+The normalized function $E(n)$ is easier to work with than $F(n)$, as it eliminates the fractional terms. More over, when $s$ and $t$ are integers, the output of $E(n)$ are as well, meaning one can program it using just integer arithmetic. From now on, we will focus on analyzing $E_{s,t}(n)$ and $w_{s,t}(n)$. Note that the optimizer $w_{s,t}(n)$ outputs a set of $w$. It is not necessarily always a single $w$ that minimize the function.
 
 
 \vspace{1cm}
@@ -168,9 +172,8 @@ This means it is only the ratio $s/t$ that affects the bisecting strategy.
 		E_{s,t}(n) = E_{t,s}(n)
 	\]
 	\[
-		w_{s,t}(n) + w_{t,s}(n) = n
+		w \in w_{s,t}(n) \iff n-w \in w_{t,s}(n)
 	\]
-As $w(n)$ are sets, the second equation can be understood as a 1-to-1 correspondence between the two sets.
 \end{lemma}
 \begin{proof}
 	Let $w' = n - w$, we can rewrite the formula for $D^w_{s,t}(n)$ and $E_{s,t}(n)$ as
@@ -182,10 +185,7 @@ As $w(n)$ are sets, the second equation can be understood as a 1-to-1 correspond
 	\[
 	E_{s,t}(n) = \min_w\{D^w_{s,t}(n)\} = \min_{w'}\{D^{w'}_{t,s}(n)\} = E_{t,s}(n)
 	\]
-	and the optimizer for $E_{t,s}(n)$ is the set for $w'$, which has a 1-to-1 map to $w$ that satisfies the relationship
-	\[
-	w + w' = n
-	\]
+	and the optimizer for $E_{t,s}(n)$ is the set for $w'$, consisting of all $n-w$.
 \end{proof}
 \paragraph{Remark}
  Together with previous proposition, this means we only needs to study either $s/t \le1$ or $s/t \ge 1$.
@@ -1331,7 +1331,7 @@ From the graph, we can observe that for $t = 1/4$ and $t = 1/2$, we have ``spiky
 \begin{proof}
 	To help with the proof, we will use the dual number $a = b + c\varepsilon $, where $\varepsilon$ is the infinitesimal unit (or the nilpotent). Dual numbers form a total order, where numbers are compared by the $b$ component first, then we compare the $c$ component when they share the same $b$.
 
-	Put $t + 1\varepsilon$ be at the position of $t$, and we calculate $E(n)$ using the same formula, but with dual numbers involved. The final result can always be expressed in the form
+	Put $t + 1\varepsilon$ at the position of $t$, and we calculate $E(n)$ using the same formula, but with dual numbers involved. The final result can always be expressed in the form
 	\[
 	E_{s,t + 1\varepsilon}(n) = E_{s,t}(n) + \varepsilon \partial_{+t}E_{s,t}(n)
 	\]
@@ -1356,7 +1356,7 @@ From the graph, we can observe that for $t = 1/4$ and $t = 1/2$, we have ``spiky
 	\]
 
 
-	We will use the genfib sequence $\{n_i\}_{i=\min\{s,t\}+1}^{\infty}$ previously discussed. We first prove that, for coprime $s$ and $t$ and large enough $i$, the interval has at least length of 2
+	We will use the genfib sequence $\{n_i\}_{i=\min\{s,t\}+1}^{\infty}$ previously discussed. We first prove that, for coprime $s$ and $t$ and large enough $i$, the differential in the sequence is at least 2
 	\[
 	\exists I, \forall i>I, \Delta_i n_{i} \ge 2
 	\]
@@ -1380,18 +1380,18 @@ From the graph, we can observe that for $t = 1/4$ and $t = 1/2$, we have ``spiky
 
 	Going back to proving the existence of nodes. We will prove this by contradiction. Let's assume that the following holds for all positive integer $n$
 	\[
-	\partial_{+t}E_{s,t}(n) = \partial_{-t}E_{s,t}(n) = \delta(n)
+	\partial_{+t}E_{s,t}(n) = \partial_{-t}E_{s,t}(n) = \gamma(n)
 	\]
 	This implies the derivative will have the unified formula
 	\begin{align*}
-	\delta(1) &= 0\\
-	\delta(n) &= \delta(w) + \delta(n-w) + w\quad \forall w\in w_{s,t}(n) \quad(n\geq 2)
+	\gamma(1) &= 0\\
+	\gamma(n) &= \gamma(w) + \gamma(n-w) + w\quad \forall w\in w_{s,t}(n) \quad(n\geq 2)
 	\end{align*}
 	We can also derive the secondary differential formula for $n\geq 2$
 	\begin{align*}
-	\Delta_n \delta(n) =\begin{cases}
-	\Delta_n  \delta(n-w) & (w\in w_{s,t}(n), w\in w_{s,t}(n+1) )\\
-	\Delta_n  \delta(w) + 1 & (w\in w_{s,t}(n), w+1\in w_{s,t}(n+1) )
+	\Delta_n \gamma(n) =\begin{cases}
+	\Delta_n  \gamma(n-w) & (w\in w_{s,t}(n), w\in w_{s,t}(n+1) )\\
+	\Delta_n  \gamma(w) + 1 & (w\in w_{s,t}(n), w+1\in w_{s,t}(n+1) )
 	\end{cases}
 	\end{align*}
 	Consider the three related $n$-intervals $[n_{i}, n_{i+1})$, $[n_{i + t-s}, n_{i + t-s + 1})$ and $[n_{i+t}, n_{i+t + 1})$ ($i > I$). For large enough $i$, the intervals have at least length of 2. So we have
@@ -1401,10 +1401,10 @@ From the graph, we can observe that for $t = 1/4$ and $t = 1/2$, we have ``spiky
 	\end{align*}
 	Applying the secondary differential formula, we get
 	\begin{align*}
-	\Delta_n \delta(n_{i+t}) &= \Delta_n \delta(n_{i + t-s}) \\
-	\Delta_n \delta(n_{i+t}) &= \Delta_n \delta(n_{i}) + 1
+	\Delta_n \gamma(n_{i+t}) &= \Delta_n \gamma(n_{i + t-s}) \\
+	\Delta_n \gamma(n_{i+t}) &= \Delta_n \gamma(n_{i}) + 1
 	\end{align*}
-	Let's denote $\Delta_n \delta(n_i) = d_i$. The equation above means, for all $i$ greater than a large enough $I$, we have
+	Let's denote $\Delta_n \gamma(n_i) = d_i$. The equation above means, for all $i$ greater than a large enough $I$, we have
 	\begin{align*}
 	d_{i+s} &= d_{i}\\
 	d_{i+t} &= d_{i} + 1
@@ -1450,7 +1450,7 @@ n^* = \eta(x^*) + 1 = \eta(st + s + t) + 1
 	\[
 	S_i=\frac{\binom{p_i+q_i-3}{p_i-2}}{\binom{p_i+q_i-3}{q_i-2}} = \frac{p_i-1}{q_i-1}
 	\]
-	Because these segments merge at the node, we have a constant
+	On the one hand, because these segments merge at the node, all the tags are equals to a constant
 	\[
 	p_1 s+q_1 t=p_2 s+q_2 t=\dots=p_m s+q_m t = C
 	\]
@@ -1462,7 +1462,7 @@ n^* = \eta(x^*) + 1 = \eta(st + s + t) + 1
 	\[
 	S_1 \le S_2 \le \dots\le S_m
 	\]
-	On the other hand, consider at $t-\varepsilon$
+	On the other hand, consider the tags at $t-\varepsilon$
 	\[
 	p_i s + q_i (t - \varepsilon) = p_i s + (C - p_i s)\left(1 - \frac{\varepsilon}{t}\right) = \frac{s\varepsilon}{t}p_i + C \left(1 - \frac{\varepsilon}{t}\right)
 	\]
@@ -2014,11 +2014,11 @@ which is only possible for $\theta = 0$ due to irrational $s/t$.
 
 On the other hand, all roots $r$ are bounded on the left side as well. For $r$ with low enough real component, $|e^{-sr} + e^{-tr}| \ge |e^{-s\Re(r)} - e^{-t\Re(r)}|$ can grow unbounded, nullifying the possibility of a root which would require  $|e^{-sr} + e^{-tr}|=1$.
 
-We can also show that all complex roots is distributed evenly. Let's consider a rectangular contour on $g(r) = e^{-sr} + e^{-tr} - 1$ for the argument principle, whose height is $H$, and the left and right sides are far away enough. For the top and the bottom sides, as only $\Im(r)$ changes, the total change in $\Arg(g(r))$ is less than $2\pi$. For the right side, because $g(r)$ is always very close to $-1$, the total change in $\Arg(g(r))$ is also less than $2\pi$. For the left side, $g(r)$ is asymptotically similar to $e^{-\max\{s,t\}r}-1$, which has total change in $\Arg(g(r))$ of about $\max\{s,t\}H$. So in general, the total number of roots inside the contour is about $\max\{s,t\}H/(2\pi)$, give or take 3. Because all roots are also restricted in a vertical strip, we can show that
+We can also show that all complex roots is distributed evenly. Let's consider a rectangular contour on $g(r) = e^{-sr} + e^{-tr} - 1$ for the argument principle, whose height is $H$, and the left and right sides are far away enough. For the top and the bottom sides, as only $\Re(r)$ changes, the total change in $\Arg(g(r))$ is less than $2\pi$. For the right side, because $g(r)$ is always very close to $-1$, the total change in $\Arg(g(r))$ is also less than $2\pi$. For the left side, $g(r)$ is asymptotically similar to $e^{-\max\{s,t\}r}-1$, which has total change in $\Arg(g(r))$ of about $\max\{s,t\}H$. So in general, the total number of roots inside the contour is about $\max\{s,t\}H/(2\pi)$, give or take 3. Because all roots are also restricted in a vertical strip, we can show that
 \[
 \lim_{n\to\infty}\frac{|r_n|}{n} = \frac{\pi}{\max\{s,t\}}
 \]
-where $r_n$ are roots in ascend order of their magnitude.
+where $r_n$ are roots in ascending order in their magnitude.
 
 Next, let's introduce the smooth step function, for a small positive $\mu$
 \[
