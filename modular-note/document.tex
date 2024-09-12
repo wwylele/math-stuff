@@ -1,0 +1,256 @@
+\documentclass[]{article}
+\usepackage{cancel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{mathtools}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+\newcommand{\ud}{\mathrm{d}}
+
+\begin{document}
+This is my own note on modularity theorem. It mainly focus more on ``what it is" than on ``why it is". It contains imprecise statements and claims without proof.
+
+\section{Modular Curve}
+
+We start with the upper-half complex plane $\mathcal{H} = \{\tau\in\mathbb{C}\mid\mathfrak{R}(\tau)>0\}$, and its extension $\mathcal{H}^* = \mathcal{H} \cup \{\infty\} \cup\mathbb{Q}$. The added elements in $\mathcal{H}^*$ are called ``cusps".
+
+A 2-by-2 invertible matrix $\gamma = \left( \begin{matrix}
+	a & b \\c& d
+\end{matrix}\right)$ acts on $\tau\in\mathcal{H}^*$ by
+\[
+\gamma \tau = \frac{a\tau + b}{c\tau + d}
+\]
+This can be seen as a linear transformation on the projective point $(\tau:1)$, and all properties of matrix multiplication applies.
+
+We then focus on the modular group $\mathbf{SL}_2(\mathbb{Z})$ which consists of 2-by-2 matrix with integer entries and determinant $1$. This group defines a equivalence relation on $\mathcal{H}^*$, where $\tau_1 \sim \tau_2$ iff for some $\gamma\in\mathbf{SL}_2(\mathbb{Z})$, $\tau_1 = \gamma\tau_2$. This induces a quotient set $\mathcal{H}^* / \mathbf{SL}_2(\mathbb{Z})$ containing equivalent classes. We can choose a subset $D \subset \mathcal{H}^*$ called the fundamental region, which contains exactly one representative for all equivalent classes. This is often chosen as
+\[
+D = \{\tau\in\mathcal{H} \mid -\frac{1}{2}<\mathfrak{R}(\tau)<\frac{1}{2} \land |\tau| > 1 \} \cup \{\mbox{some boundary points}\}
+\]
+
+We further define modular group at level $N$ as
+\[
+\Gamma_0(N) = \left\{ \left(\begin{matrix}
+		a&b \\ c&d
+	\end{matrix}\right) \in \mathbf{SL}_2(\mathbb{Z}) \ \middle|\ c\equiv0\mod N \right\}
+\]
+Similarly, this induces a equivalence relation ship and a quotient set
+\[
+X_0(N) = \mathcal{H}^* /\Gamma_0(N)
+\]
+which are called modular curves. Consequently, we have $\mathbf{SL}_2(\mathbb{Z}) = \Gamma_0(1)$. The fundamental region for $\Gamma_0(N)$ is larger that that for $\Gamma_0(1)$. In fact, it consists of multiple copies of $D$ transformed by different $\gamma \in \Gamma_0(1)$, such that no two copies are related by any $\gamma\in\Gamma_0(N)$
+
+By mapping the complex plane holomorphically, one can make $X_0(N)$ a compact Riemann surface. This can be intuitively understood as gluing the fundamental region into a closed surface. Such surface is characterized by its genus $g$, which can be computed for each $N$. The first few $X_0(N)$ have genus 0 until $N = 11$. $X_0(11)$ is the first curve with genus 1. The genus then gradually increases as $N$ increases.
+
+\section{Modular Functions}
+
+We would like to define functions that are invariant under modular group $\Gamma_0(N)$, so they can be lifted to functions on $X_0(N)$. Naively, we define meromorphic modular functions at level $N$ as $f:\mathcal{H}^*\to\hat{\mathbb{C}}$ satisfies
+\[
+f(\gamma\tau) = f(\tau)\quad \forall \gamma \in\Gamma_0(N) 
+\]
+which can be readily lifted to a meromorphic function $X_0(N)\to\mathbb{C}$. Unfortunately, such function necessarily contains poles when lifted, so it cannot be made holomorphic.
+
+The most famous modular function is the $j$-invariant at level 1. It is the unique function that is holomorphic on $\mathcal{H}$ and has a simple pole on the cusp such that
+\[
+j(e^{2\pi i / 3}) = 0, \quad j(i) = 1728
+\]
+It has a $q$-expansion with integer coefficients, where $q = e^{2\pi i \tau}$
+\[
+j(\tau) = q^{-1} + 744 + 196884q + \dots
+\]
+It can be shown that all modular functions at level 1 is a rational function of $j(\tau)$, so this is the canonical modular function at level 1.
+
+The second important function is $j_N(\tau) = j(N\tau)$, which is a modular function at level $N$
+\begin{align*}
+j_N\left(\left(\begin{matrix}a & b \\ Nc & d\end{matrix}\right)\tau\right) &= j\left(\left(\begin{matrix}N & 0 \\0 & 1\end{matrix}\right)\left(\begin{matrix}a & b \\ Nc & d\end{matrix}\right)\tau\right) \\
+&= j\left(\left(\begin{matrix}a & Nb \\ c & d\end{matrix}\right)\left(\begin{matrix}N & 0 \\0 & 1\end{matrix}\right)\tau\right) \\
+&= j\left(\left(\begin{matrix}N & 0 \\0 & 1\end{matrix}\right)\tau\right) \\ 
+&= j_N\left(\tau\right)
+\end{align*}
+Function $j$ and $j_N$ satisfies a symmetric equation $\Phi_N(j, j_N) = 0$. The degree of $X$ and $Y$ in $\Phi_N(X, Y)$ is $|\Gamma_0(1):\Gamma_0(N)|$, In particular, when $N = p$ is a prime number,$|\Gamma_0(1):\Gamma_0(p)| = p + 1$, and we have
+\[
+	\Phi_p(X, j(\tau)) = (X- j(p\tau)) \prod_{b = 0}^{p-1}\left(X - j\left(\frac{\tau +b}{p}\right)\right)
+\] 
+showing $j_p$ is one of the $p+1$ roots related to $j$. Note that those $p+1$ factors on RHS are completely symmetric, even though they don't appear so. Transforming $t$ by $\gamma \in \Gamma_0(p)$, permitted by modular functions, can arbitrarily permute these factors.
+
+Similar to level 1, it can be shown that all modular functions at level $N$ is a rational function of $j(\tau)$ and $j_N(\tau)$.
+
+\section{Modular Forms}
+Modular functions as defined above doesn't get us far. To explore for more properties on the modular curve, we define meromorphic weak modular forms of weight 2 at level $N$ as $f:\mathcal{H}^*\to\hat{\mathbb{C}}$ that satisfies
+\[
+f(\gamma\tau) = (c\tau +d)^2f(\tau)\quad \forall \gamma=\left(\begin{matrix}a & b \\ c & d\end{matrix}\right) \in\Gamma_0(N) 
+\]
+This is not immediately invariant under modular group. However, the associated differential $f(t)\ud t$ is:
+\begin{align*}
+f(\gamma\tau)\ud(\gamma\tau) &= (c\tau+d)^2f(\tau) \ud\left(\frac{a\tau + b}{c\tau +d}\right) \\
+&= (c\tau+d)^2f(\tau) \frac{a(c\tau+d) - c(a\tau + b)}{(c\tau + d)^2} \ud\tau \\
+&= f(\tau)\ud \tau
+\end{align*}
+This means an integration on $f(\tau)$ on path $c$ is an invariant under $\gamma\in\Gamma_0(N)$
+\[
+\int_c f(\tau)\ud \tau = \int_{\gamma c} f(\tau)\ud \tau
+\]
+With this, we would like to lift integration $\int f(t)\ud t$ to $X_0(N)$. Before we can actually do this, we need a stricter definition, which we call cusp forms of weight 2 on level $N$, where $f(\tau)$ additionally satisfies the followings
+\begin{itemize}
+	\item $f$ is holomorphic on $\mathcal{H}$.
+	\item $f$ vanishes on cusp.
+\end{itemize}
+Both conditions ensures that $f$ has no poles when lifted to $X_0(N)$. The second condition is needed because a finite but non-zero value at cusp will be ``curled up" into a pole after lifting. With a cusp form $f(\tau)$, path integration on $X_0(N)$ is now well-defined as a lifting from $\mathcal{H}^*$
+
+As a Riemann surface, integrating a holomorphic differential along a closed path always yields zero unless the path is around a handle. Each handle provides two basic ways to integrate to a non-zero value: along latitude and along longitude. Hence for a genus $g$ surface, which has $g$ handles, the integrating $f$ on a closed path yields an element in a lattice $\Lambda_f\subset \mathbb{C}$ of rank at most $2g$. With this, integration with the same start and end points are the same up to $\Lambda_f$. We can then define the enti-derivative
+\[
+F(\tau) = 2\pi i \int_{\infty}^{\tau} f(t)\ud t
+\] 
+The factor $2\pi i$ here simplifies the $q$-expansion of $F$. We can then lift $F$ to a function $X_0(N) \to \mathbb{C} / \Lambda_f$
+
+All weight 2 cusp forms at level $N$ form a vector space $\mathcal{S}_2(N)$ of finite dimension. Incidentally, the dimension of this vector space equals the genus $g$. This will make more sense as we show the correspondence between the vector space basis and handles later.
+
+Similar to $j$-invariant, cusp forms also have $q$-expansions, but there is no constant or negative-exponent term
+\[
+f(\tau) = \sum_{n = 1}^{\infty} a_n q^n
+\]
+
+\section{Old and New Forms}
+
+If $f(\tau)$ is a cusp form at level $N$, then for any positive integer $d$, $g(\tau) = f(d\tau)$ is a cusp form at level $dN$, as well as at any level $M$ such that $dN \mid M$. This shows the cusp form space at level $N$ partially comes from lower levels. This decompose the cusp form space
+\[
+\mathcal{S}_2(N) =   \mathcal{S}_2^{\mbox{old}}(N) \oplus \mathcal{S}_2^{\mbox{new}}(N)
+\]
+with cusp forms coming from lower levels and new cusp forms. The integration of cusp forms on $X_0(N)$ also decomposes accordingly: the rank of $\Lambda_f$ for $f\in\mathcal{S}_2^{\mbox{old,new}}(N)$ is at most $\dim\left(\mathcal{S}_2^{\mbox{old,new}}(N)\right)$. From now on, we will only focus on new forms.
+
+\section{Hecke Operator}
+Hecke operator for positive integer $n$ is linear map $T_n: \mathcal{S}_2(N)\to\mathcal{S}_2(N)$ defined as
+\[
+(T_n f)(\tau) = \sum_{ad=n, (a,N) = 1} \frac{a}{d} \sum_{b = 0}^{d - 1}  f\left(\frac{a\tau+b}{d}\right)
+\]
+Consequently, it also operates on the anti-derivative $F$ as
+\[
+(T_n F)(\tau) = \sum_{ad=n, (a,N) = 1}  \sum_{b = 0}^{d - 1}  F\left(\frac{a\tau+b}{d}\right)
+\]
+For prime $n = p \nmid N$, this expression shows similarity to $\Phi_p(X, Y)$
+\[
+(T_{p\nmid N} F)(\tau) = F\left(p\tau\right) + \sum_{b = 0}^{p - 1}  F\left(\frac{\tau+b}{p}\right)
+\]
+
+Let's come back to weight 2 modular forms. When $f$ is expressed as $q$-expansion $\sum_{n = 1}^{\infty} a_n q^n$, Hecke operator transform the coefficients as
+\[
+(T_m f)(\tau) = \sum_{n=1}^{\infty} a'_n q^n
+\]
+\[
+a'_n = \sum_{\alpha\mid(m,n),(\alpha,N) = 1} \alpha a_{mn/\alpha^2}
+\]
+Specifically, we have for $T_m$
+\[
+a'_1 = a_m
+\]
+
+It can be shown that eigenvectors of $T_n$ when acting on $\mathcal{S}_2^{\mbox{new}}(N)$ coincide for all $n$. Therefore Hecke operators provides canonical basis of $\mathcal{S}_2^{\mbox{new}}(N)$, which are called eigenforms. With an eigenform with eigenvalue $\lambda_n$, we have
+\[
+\lambda_n a_1 = a'_1 = a_n 
+\]
+We can normalize $a_1 = 1$ to equate $q$-coefficients $a_n$ with eigenvalues $\lambda_n$. From now on, we assume eigenforms are always normalized such that
+\[
+(T_n f)(\tau) = a_n f(\tau)
+\]
+\[
+f(\tau) = \sum_{n=1}^{\infty} a_nq^n
+\]
+It can be shown that the $q$-coefficients of an eigenform all belongs to an algebraic number field $\mathbf{K}_f$, and for any algebraic conjugation $\sigma$ of $\mathbf{K}_f$, one can show that
+\[
+f^{\sigma}(\tau) =  \sum_{n=1}^{\infty} a_n^{\sigma} q^n
+\]
+is also an eigenform. This induces an equivalence relation among eigenforms, and partition them into groups, where eigenforms in the same group share the same algebraic number field. Specifically, an eigenform with rational coefficients is the only element in its group, as the only algebraic conjugation of $\mathbb{Q}$ is the identity. It can be also shown that if coefficients are rational, they are all necessarily integers.
+
+Integration on $X_0(N)$ also further decomposes accordingly. For an eigenform $f$ with $n$ algebraic conjugates, $\Lambda_f$ has rank at most $2n$. Specifically for $f$ with integer coefficients, $\Lambda_f$ has rank of $2$. We will focus on these eigenforms.
+
+\section{Elliptic Curve}
+An elliptic curve is commonly modeled as non-singular curve with a cubic equation. Each elliptic curve $E$ is naturally equipped with a group structure, where the point at infinity is the identity element $0_{E}$, and colinear points $P$, $Q$, and $R$ are treated as $P +_{E} Q +_{E} R = 0_{E}$. One way to model elliptic curve is 
+\[
+y^2 = 4x^2 - g_2 - g_3
+\]
+and $(x, y) = (\wp_{g_2, g_3}(z), \wp'_{g_2, g_3}(z))$ are the Weierstrass-$\wp$ function and its derivative. $\wp_{g_2, g_3}(z)$ is a doubly periodic meromorphic function, or in other words, it can be seen as a function $\mathbb{C}/\Lambda_{g_2,g_3} \to \hat{\mathbb{C}}$ for some (rank-2) lattice $\Lambda_{g_2,g_3}$. The elliptic curve group is translated to complex plane by
+\[
+(\wp(u), \wp'(u)) +_E (\wp(v), \wp'(v)) = (\wp(u + v), \wp'(u + v))
+\]
+General elliptic curve can be obtained by linearly transforming $x$ and $y$, thus they can be expressed with some doubly periodic functions $x(z)$ and $y(z)$ , which are linear functions of $\wp(z)$ and $\wp'(z)$.
+
+Recall that an eigenform with integer coefficients induces a map $F: X_0(N) \to \mathbb{C} / \Lambda_f$ by integration, and the rank of $\Lambda_f$ is 2. When $\Lambda_f\subseteq\Lambda_{g_2,g_3}$, the composition $\phi(\tau) = (\phi_x(\tau), \phi_y(\tau)) = (x(F(\tau)), y(F(\tau)))$ defines a map $\phi: X_0(N)\to E$. Specifically when $\Lambda_f=\Lambda_{g_2,g_3}$, this defines an optimal map, and assuming the Manin constant conjecture, this corresponds to an elliptic curve with integer coefficients in its equation (if the conjecture is false, this needs to be adjusted by a integer factor on the lattice). All rational elliptic curves induced by the same eigenform $f$ are in the same isogeny class.
+
+Hecke operator is then transferred to elliptic curves. Composing the Hecke operator on anti-derivative F with $x(z)$ and $y(z)$, we get a relation between points on $E$
+\begin{align*}
+T_n(\phi(\tau)) &= (x(\cdot), y(\cdot)) (T_n F) (\tau) \\
+&= (x(\cdot), y(\cdot))  \sum_{ad=n, (a,N) = 1}  \sum_{b = 0}^{d - 1}  F\left(\frac{a\tau+b}{d}\right) \\
+&= \sum_{ad=n, (a,N) = 1}  \sum_{b = 0}^{d - 1} \phi\left(\frac{a\tau+b}{d}\right)
+\end{align*}
+and since $f$ is an eigenform
+\[
+\sum_{ad=n, (a,N) = 1}  \sum_{b = 0}^{d - 1} \phi\left(\frac{a\tau+b}{d}\right) = a_n *_E \phi(\tau)
+\]
+
+As $F$, $\wp$, and $\wp'$ are all meromorphic, the composition functions $\phi_x$ and $\phi_y$ are modular functions at level $N$, and thus are rational functions of $j$ and $j_N$. In fact, one can show that coefficients in these rational functions are integers. Unfortunately, these coefficients are usually very large. For example, the map induced by the cusp form at level $N = 11$ has maximum degree 11 in both $j$ and $j_N$, and the largest coefficient has 127 digits.
+
+\section{Field of Other Characteristic}
+Given a prime $p$, the finite field $\mathbb{F}_p$ can be constructed from modular arithmetic mod $p$. It can then be extended to its algebraic closure $\overline{\mathbb{F}_p}$. $\overline{\mathbb{F}_p}$ demonstrates a lot of similar properties to algebraic numbers $\overline{\mathbb{Q}}$, but it has characteristic $p$. This creates the Frobenius map $x \mapsto x^p$, which has the following interesting properties
+\begin{itemize}
+	\item The Frobenius map preserves not only multiplication, but also addition $(a+b)^p = a^p + b^p$, and thus is a field homomorphism.
+	\item Consequently, for a given $a \in \overline{\mathbb{F}_p}$, one can factorize $(x^p - a) = (x - b)^p$ for some $b \in \overline{\mathbb{F}_p}$, showing that the equation $x^p = a$ has a single root $x = b$ with multiplicity $p$. In other words, the Frobenius map has a well-defined inverse map, which we will denote as $b = a^{1/p}$
+	\item The roots of the equation $x^p = x$ over $\overline{\mathbb{F}_p}$ are exactly all $p$ elements from the finite field $\mathbb{F}_p$. In other words, $\mathbb{F}_p$ is the fixed point set of the Frobenius map.
+\end{itemize}
+
+Number from $\overline{\mathbb{Q}}$ can be (mostly) reduced to numbers in $\overline{\mathbb{F}_p}$: we first reduce all integers to $\mathbb{F}_p$ by mod $p$. Then for other algebraic numbers, we take their minimal integral polynomials and reduce coefficients, mapping them to polynomials in $\mathbb{F}_p$. This doesn't work if the leading coefficient reduces to zero, in which case we conceptually reduce the number to $\infty$, which is not really an element in $\overline{\mathbb{F}_p}$. However, this does work well when we reduce rational elliptic curve $E$ to $\tilde{E}$ over $\overline{\mathbb{F}_p}$, where points with such numbers will be mapped to the point at infinity, which is still part of the elliptic curve.
+
+The modular polynomial $\Phi_p(X, Y)$ for prime $p$ also reduces nicely in $\overline{\mathbb{F}_p}$
+\[
+\Phi_p(X, Y) \equiv (X^p - Y)(X - Y^p) \mod p
+\]
+Previously we shows that when $Y = j(\tau)$, the roots of $X$ in $\Phi_p(X, Y)$ are exactly
+\[
+X = j(p\tau), j\left(\frac{\tau}{p}\right), j\left(\frac{\tau + 1}{p}\right),\dots,j\left(\frac{\tau + p -1}{p}\right)
+\]
+so these roots are reduced in $\overline{\mathbb{F}_p}$ as
+\[
+\tilde{X} = \tilde{j}(\tau)^p, \tilde{j}(\tau)^{1/p}, \tilde{j}(\tau)^{1/p},\dots (\mbox{$p$ times})
+\]
+Again, it is not necessarily $j(p\tau)$ that is reduced to $j(\tau)^p$; as all $X$ roots are symmetric in modular group, it can be any of them. A similar statement can be said when $Y = j_N(\tau)$ and $p \nmid N$: all roots for $X$ will be reduced to $\tilde{j}_N(\tau)^p$ once and $\tilde{j}_N(\tau)^p$ $p$-times. In fact, the reduction for $j(\tau)$ and $j(N\tau)$ is synchronous: if $j(\gamma\tau)$ is reduced to $j(\tau)^p$, then $j_N(\gamma\tau)$ is reduced to $\tilde{j}_N(\tau)^p$. This means for any modular function $f$ at level $N$ that are rational functions of $j$ and $j_N$ with integer coefficients, we have
+\begin{align*}
+X &= f(p\tau), f\left(\frac{\tau}{p}\right), f\left(\frac{\tau + 1}{p}\right),\dots,f\left(\frac{\tau + p -1}{p}\right)\\
+&\Downarrow\\
+\tilde{X} &= \tilde{f}(\tau)^p, \tilde{f}(\tau)^{1/p}, \tilde{f}(\tau)^{1/p},\dots (\mbox{$p$ times})
+\end{align*}
+
+\section{Eichler–Shimura Relation}
+For prime $p\nmid N$, the Hecke operator $T_p$ on the elliptic curve relates 
+\[
+\phi\left(p\tau\right) +_E \sum_{b=0}^{p-1}\phi\left(\frac{\tau+b}{p}\right)  = a_p *_E \phi(\tau)
+\]
+Reducing the equation to $\overline{\mathbb{F}_p}$ using the theorem we developed above, we get
+\[
+\tilde{\phi}(\tau)^p +_{\tilde{E}} p *_{\tilde{E}} \tilde{\phi}(\tau)^{1/p} = a_p *_{\tilde{E}} \tilde{\phi}(\tau)
+\]
+Now consider the subgroup over the finite field $E(\mathbb{F}_p) = \tilde{E}\cap \mathbf{P}(\mathbb{F}_p^2)$. They are fixes points of the Frobenius map, so for a point $A$ in the subgroup, we have
+\[
+A +_{\tilde{E}} p *_{\tilde{E}} A = a_p *_{\tilde{E}} A
+\]
+\[
+(1 + p - a_p) *_{\tilde{E}} A = 0_{\tilde{E}}
+\]
+One way this can work is equating the multiplier with the subgroup order, i.e. number of points on $E(\mathbb{F}_p)$
+\[
+1 + p - a_p = \# E(\mathbb{F}_p)
+\]
+However, this argument can also be missing a negative sign. A better argument is to consider Frobenius map $\sigma$ on $\mathrm{Pic}^0(\tilde{E})$:
+\[
+\sigma_* + \sigma^* = a_p 
+\]
+Then we have
+\begin{align*}
+\# E(\mathbb{F}_p) &= \mathrm{deg}(\sigma - 1) \\
+&= (\sigma - 1)_* (\sigma - 1)^* \\
+&= (\sigma_* - 1_*) (\sigma^* - 1^*) \\
+&= \sigma_*\sigma^* - \sigma_* - \sigma^* + 1_*1^* \\
+&= p - a_p + 1
+\end{align*}
+This relates the cusp form coefficients $a_p$ with the size of elliptic curve on finite fields.
+
+\end{document}

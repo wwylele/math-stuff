@@ -179,7 +179,7 @@ If category $Q$ exists, we can generate its elements, say $t = \{a\rightarrow b,
 
 \paragraph{Generation from $Q$}Then we show that if any element $s\in Q$ is in the normal subgroup $s \in H\triangleleft A_{n+1}$, we can find an element $t \in P$ that is also in the normal subgroup $H$, leading to $H = A_{n+1}$. We can use normal subgroup's definition to generate another category-$Q$ element $s' = u\circ s \circ u^{-1}$, where $u = \{a\rightarrow b,b\rightarrow c, c\rightarrow a\}$, and $s = \{a\rightarrow b,b\rightarrow c,c\rightarrow d,d\rightarrow \dots\rightarrow z,z\rightarrow a\}$, then $s' = \{a\rightarrow b,b\rightarrow d,d\rightarrow \dots\rightarrow z,z\rightarrow c,c\rightarrow a\}$. Now we can generates an element $t = s\circ s'^{-1} = \{b\rightarrow z,c\rightarrow b,z\rightarrow c\}$, which is an element in $P$, from where we can generate all elements into $H$.
 
-\paragraph{Conclusion}Now we conclude that the to make $H \triangleleft A_5$ a proper subgroup, it can only contain elements in $A$, which means $H = \mathrm{E}$.
+\paragraph{Conclusion}Now we conclude that the to make $H \triangleleft A_{n+1}$ a proper subgroup, it can only contain elements in $A$, which means $H = \mathrm{E}$.
 
 \end{proof}
 
@@ -198,7 +198,7 @@ If category $Q$ exists, we can generate its elements, say $t = \{a\rightarrow b,
 \begin{proof}
 	Assuming $S_n$ has another normal subgroup $H \triangleleft S_n$, then its intersection with $A_n$, $K = H \cap A_n \triangleleft A_n$. Using theorem \ref{an-simple}, $K$ can be only $A_n$ or $\mathrm{E}$ .
 	
-	If $K = A_n$, then $A_n \in H$. As $A_n$ is a subgroup of $S_n$ with index of 2, shown by theorem \ref{reduce-sn1}, $H$ can only have index of 1 or 2, which correspond to $H = S_n$ or $H = A_n$.
+	If $K = A_n$, then $A_n \subseteq H$. As $A_n$ is a subgroup of $S_n$ with index of 2, shown by theorem \ref{reduce-sn1}, $H$ can only have index of 1 or 2, which correspond to $H = S_n$ or $H = A_n$.
 	
 	If $K = \mathrm{E}$, $H$ doesn't contain any even permutation except for $e$. If $H$ contains an odd permutation $s$, then $s^2 = e \Rightarrow s^{-1} = s$ (otherwise the group closure would imply another even permutation is in $H$). If there is another odd permutation $t\in H$, $s\circ t= e \Rightarrow t = s^{-1} = s$ (same reasoning with closure). This means $H$ can contain at most one odd permutation. Assuming $H$ contains one odd permutation $s$, $s$ must contain a pair $a\rightarrow b, b\rightarrow a$ and possibly a few other similar pairs (because $s^2=e$). We can set $t = \{a\rightarrow c, c\rightarrow a\}$ (while in $s$ it is either $c\rightarrow c$ or $c\rightarrow d,d \rightarrow c$), then $s'=t\circ s\circ t^{-1} = \{c\rightarrow b, b\rightarrow c,\dots\}\neq s$ is another odd permutation that should be in $H$ according to the definition of normal subgroup, which means $H$ now has two odd permutations, contradicting to the assumption. So $H$ cannot contain any odd permutation, thus $H = \mathrm{E}$.
 \end{proof}

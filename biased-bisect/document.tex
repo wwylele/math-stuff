@@ -935,12 +935,16 @@ Note that this series doesn't converge absolutely and summation order is importa
 
 \vspace{1cm}
 \begin{definition}[Pascal]
-	Define the following tuple sets
+	Define the following tuple sets, which are binomial coefficients tagged by $ps+qt$
 	\[
 	\Omega^E_{s,t} = \left\{\left(\binom{p+q-2}{p-1}, ps+qt \right) \ \middle|\ (p,q)\in(\mathbb{Z}^+)^2 \right\}
 	\]
 	\[
 	\Omega^w_{s,t} = \left\{\left(\binom{p+q-3}{q-2}, \binom{p+q-3}{p-2}, ps+qt \right) \ \middle|\ (p,q)\in(\mathbb{Z}^+)^2 \backslash (1,1) \right\}
+	\]
+	Here we take the extended binomial coefficients where 
+	\[
+	\binom{N}{-1} = \binom{N}{N+1} = 0, \quad\forall N \in \mathbb{Z}^{0+}
 	\]
 \end{definition}
 
@@ -2289,7 +2293,7 @@ As for edge cases we haven't discussed yet:
 \end{proof}
 
 \vspace{1cm}
-\begin{lemma}[Mode $M_0'$] If $s$ or $t$ is not a positive number, even without practical meaning, we can show that the corresponding $E(n)$ and $w(n)$ is an extension of the $M_0$ modeL
+\begin{lemma}[Mode $M_0'$] If $s$ or $t$ is not a positive number, even without practical meaning, we can show that the corresponding $E(n)$ and $w(n)$ is an extension of the $M_0$ mode:
 	\begin{align*}
 		E_{s,t}(n) = (n-1)t + \frac{1}{2}n(n-1)s,\quad & w_{s,t}(n) = \{1\},\quad  &\text{for } s \le 0 \mbox{ and } s < t \\
 		E_{s,t}(n) = (n-1)s + \frac{1}{2}n(n-1)t,\quad & w_{s,t}(n) = \{n-1\},\quad  &\text{for } t \le 0 \mbox{ and } t < s \\
