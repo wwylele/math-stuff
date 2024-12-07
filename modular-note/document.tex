@@ -98,7 +98,7 @@ With this, we would like to lift integration $\int f(t)\ud t$ to $X_0(N)$. Befor
 \end{itemize}
 Both conditions ensures that $f$ has no poles when lifted to $X_0(N)$. The second condition is needed because a finite but non-zero value at cusp will be ``curled up" into a pole after lifting. With a cusp form $f(\tau)$, path integration on $X_0(N)$ is now well-defined as a lifting from $\mathcal{H}^*$
 
-As a Riemann surface, integrating a holomorphic differential along a closed path always yields zero unless the path is around a handle. Each handle provides two basic ways to integrate to a non-zero value: along latitude and along longitude. Hence for a genus $g$ surface, which has $g$ handles, the integrating $f$ on a closed path yields an element in a lattice $\Lambda_f\subset \mathbb{C}$ of rank at most $2g$. With this, integration with the same start and end points are the same up to $\Lambda_f$. We can then define the enti-derivative
+As a Riemann surface, integrating a holomorphic differential along a closed path always yields zero unless the path is around a handle. Each handle provides two basic ways to integrate to a non-zero value: along latitude and along longitude. Hence for a genus $g$ surface, which has $g$ handles, the integrating $f$ on a closed path yields an element in a lattice $\Lambda_f\subset \mathbb{C}$ of rank at most $2g$. With this, integration with the same start and end points are the same up to $\Lambda_f$. We can then define the anti-derivative
 \[
 F(\tau) = 2\pi i \int_{\infty}^{\tau} f(t)\ud t
 \] 
@@ -117,7 +117,7 @@ If $f(\tau)$ is a cusp form at level $N$, then for any positive integer $d$, $g(
 \[
 \mathcal{S}_2(N) =   \mathcal{S}_2^{\mbox{old}}(N) \oplus \mathcal{S}_2^{\mbox{new}}(N)
 \]
-with cusp forms coming from lower levels and new cusp forms. The integration of cusp forms on $X_0(N)$ also decomposes accordingly: the rank of $\Lambda_f$ for $f\in\mathcal{S}_2^{\mbox{old,new}}(N)$ is at most $\dim\left(\mathcal{S}_2^{\mbox{old,new}}(N)\right)$. From now on, we will only focus on new forms.
+with cusp forms coming from lower levels and new cusp forms. The integration of cusp forms on $X_0(N)$ also decomposes accordingly: the rank of $\Lambda_f$ for $f\in\mathcal{S}_2^{\mbox{old,new}}(N)$ is at most $2\dim\left(\mathcal{S}_2^{\mbox{old,new}}(N)\right)$. From now on, we will only focus on new forms.
 
 \section{Hecke Operator}
 Hecke operator for positive integer $n$ is linear map $T_n: \mathcal{S}_2(N)\to\mathcal{S}_2(N)$ defined as
@@ -212,7 +212,7 @@ so these roots are reduced in $\overline{\mathbb{F}_p}$ as
 \[
 \tilde{X} = \tilde{j}(\tau)^p, \tilde{j}(\tau)^{1/p}, \tilde{j}(\tau)^{1/p},\dots (\mbox{$p$ times})
 \]
-Again, it is not necessarily $j(p\tau)$ that is reduced to $j(\tau)^p$; as all $X$ roots are symmetric in modular group, it can be any of them. A similar statement can be said when $Y = j_N(\tau)$ and $p \nmid N$: all roots for $X$ will be reduced to $\tilde{j}_N(\tau)^p$ once and $\tilde{j}_N(\tau)^p$ $p$-times. In fact, the reduction for $j(\tau)$ and $j(N\tau)$ is synchronous: if $j(\gamma\tau)$ is reduced to $j(\tau)^p$, then $j_N(\gamma\tau)$ is reduced to $\tilde{j}_N(\tau)^p$. This means for any modular function $f$ at level $N$ that are rational functions of $j$ and $j_N$ with integer coefficients, we have
+Again, it is not necessarily $j(p\tau)$ that is reduced to $\tilde{j}(\tau)^p$; as all $X$ roots are symmetric in modular group, it can be any of them. A similar statement can be said when $Y = j_N(\tau)$ and $p \nmid N$: all roots for $X$ will be reduced to $\tilde{j}_N(\tau)^p$ once and $\tilde{j}_N(\tau)^p$ $p$-times. In fact, the reduction for $j(\tau)$ and $j(N\tau)$ is synchronous: if $j(\gamma\tau)$ is reduced to $j(\tau)^p$, then $j_N(\gamma\tau)$ is reduced to $\tilde{j}_N(\tau)^p$. This means for any modular function $f$ at level $N$ that is a rational function of $j$ and $j_N$ with integer coefficients, we have
 \begin{align*}
 X &= f(p\tau), f\left(\frac{\tau}{p}\right), f\left(\frac{\tau + 1}{p}\right),\dots,f\left(\frac{\tau + p -1}{p}\right)\\
 &\Downarrow\\
@@ -228,7 +228,7 @@ Reducing the equation to $\overline{\mathbb{F}_p}$ using the theorem we develope
 \[
 \tilde{\phi}(\tau)^p +_{\tilde{E}} p *_{\tilde{E}} \tilde{\phi}(\tau)^{1/p} = a_p *_{\tilde{E}} \tilde{\phi}(\tau)
 \]
-Now consider the subgroup over the finite field $E(\mathbb{F}_p) = \tilde{E}\cap \mathbf{P}(\mathbb{F}_p^2)$. They are fixes points of the Frobenius map, so for a point $A$ in the subgroup, we have
+Now consider the subgroup over the finite field $E(\mathbb{F}_p) = \tilde{E}\cap \mathbf{P}_2(\mathbb{F}_p)$. They are fixes points of the Frobenius map, so for a point $A$ in the subgroup, we have
 \[
 A +_{\tilde{E}} p *_{\tilde{E}} A = a_p *_{\tilde{E}} A
 \]
@@ -252,5 +252,28 @@ Then we have
 &= p - a_p + 1
 \end{align*}
 This relates the cusp form coefficients $a_p$ with the size of elliptic curve on finite fields.
+
+\section{Bad Reduction}
+Primes $p \mid N$ are called bad primes, which induces different behavior from the standard Eichler–Shimura Relation. The Hecke operator is missing one term
+\[
+\sum_{b=0}^{p-1}\phi\left(\frac{\tau+b}{p}\right)  = a_p *_E \phi(\tau)
+\]
+
+On the right side, the elliptic curve $E$ will be reduced to a singular curve $\tilde{E}$, which is no longer elliptic. The singular curve still possesses a group structure, with one singular point which is outside of the group. This means the order of the group is now one less than the number of points on the curve.
+
+On the left side, when applying reduction to $\phi(\tau)$ with bad primes, it can land on either a normal point or the singular point. When it lands on a normal point, its rational functions of $j(\tau)$ and $j_N(\tau)$ will ``collapse" to rational functions of $j(\tau)$ and $j_{N_p}(\tau)$, where $N_p = N / p^r$ removes all $p$ factors from $N$. In this case, the left side still reduces to some $\tilde{\phi}^p$ and $\tilde{\phi}^{1/p}$, but with only $p$ terms in total.
+
+Combining together, we get for $A \in \tilde{E}\cap \mathbf{P}_2(\mathbb{F}_p)$
+\[
+p *_{\tilde{E}} A = a_p *_{\tilde{E}} A
+\]
+\[
+p - a_p = \mathrm{ord}(E(\mathbb{F}_p)) = \# E(\mathbb{F}_p) - 1
+\]
+which ends up with the same formula as the one for good prime
+\[
+\# E(\mathbb{F}_p) = p - a_p + 1
+\]
+
 
 \end{document}
