@@ -869,7 +869,7 @@ Below is the graph of $n = \eta(x)$ and $x = \Delta E(n)$ for $s = \sqrt{2}, t =
 \begin{definition}[Midpoint joins]
 	Define the slightly modified function $\eta_0(x)$ as 
 	\[
-	\eta_0(x) = \lim_{\varepsilon\to 0} \frac{1}{2}(\eta(x-\varepsilon) + \eta(x+\varepsilon))
+	\eta_0(x) = \lim_{\varepsilon\to 0^+} \frac{1}{2}(\eta(x-\varepsilon) + \eta(x+\varepsilon))
 	\]
 \end{definition}
 
@@ -2325,6 +2325,94 @@ which means $w=1$ and $w=n-1$ are equally the furthest away from the axis and mi
 
 When both $s$ and $t$ are zero, there is no cost regardless how we perform the bisecting, so any possible $w$ is equally optimal.
 	
+\end{proof}
+
+\vspace{1cm}
+\begin{lemma}
+	For rational $s/t$, $E_{s,t}(n)$ can be expanded to a series
+	\[
+	E_{s,t}(n) = \frac{n\ln n}{\rho} + \sum_z R(z)  n^{-z}
+	\]
+	for a collection of $z$ and their associated coefficient $R(z)$
+\end{lemma}
+\begin{proof}
+Without losing generality, we assume $s$ and $t$ are coprime integers. Consider the (modified) Mellin transform of the continuous $\Delta E_{s,t}(n)$
+\begin{align*}
+	\zeta_{s,t}(z) = \mathcal{M}\{\Delta E_{s,t}\}(z) &= \int_1^{\infty} \Delta E_{s,t}(n)n^{z-1} \, dn \\
+	&= \int_{s+t}^{\infty} x (\eta(x))^{z-1} \eta'(x)\, dx \quad (n = \eta(x))\\
+	&= \sum_{x=ps+qt}^{(p,q)\in(\mathbb{Z}^+)^2}  \frac{x}{z} \left(\lim_{\varepsilon\to 0^+}(\eta(x +\varepsilon))^z - (\eta(x-\varepsilon))^z \right)\\
+	 &=   \sum_{k=s+t}^{\infty}  \frac{k}{z} \left(n_{k+1}^z - n_k^z \right)\\
+	&= -\frac{(s+t)n_{s+t}^z}{z} - \frac{1}{z}\sum_{k={s+t+1}}^{\infty} n_k^z \\
+	&= -\frac{s+t}{z} - \frac{1}{z}\sum_{k=1}^{\infty} \left(\sum_{\xi} \frac{\xi^{k}}{(\xi - 1)(s\xi^{-s}+t\xi^{-t})}\right)^z \\
+	&= -\frac{s+t}{z} - \frac{1}{z}\sum_{k=1}^{\infty} \left( \frac{\xi_*^{k}}{(\xi_* - 1)(s\xi_*^{-s}+t\xi_*^{-t})}\right)^z \left(1 + \sum_{\xi\neq\xi_*} \frac{(\xi_* - 1)(s\xi_*^{-s}+t\xi_*^{-t})}{(\xi - 1)(s\xi^{-s}+t\xi^{-t})} \left(\frac{\xi}{\xi_*}\right)^k\right)^z\\
+	&= -\frac{s+t}{z} - \frac{1}{z}\sum_{k=1}^{\infty} \left( \frac{\xi_*^{k}}{(\xi_* - 1)(s\xi_*^{-s}+t\xi_*^{-t})}\right)^z \sum_{j=0}^{\infty} {z\choose j} \left(\sum_{\xi\neq\xi_*} \frac{(\xi_* - 1)(s\xi_*^{-s}+t\xi_*^{-t})}{(\xi - 1)(s\xi^{-s}+t\xi^{-t})} \left(\frac{\xi}{\xi_*}\right)^k\right)^j \\
+		&= -\frac{s+t}{z} - \frac{1}{z} \sum_{j=0}^{\infty}   \left( \frac{1}{(\xi_* - 1)(s\xi_*^{-s}+t\xi_*^{-t})}\right)^{z-j} {z\choose j} \sum_{k=1}^{\infty} \xi_*^{(z-j)k} \left(\sum_{\xi\neq\xi_*} \frac{\xi^k}{(\xi - 1)(s\xi^{-s}+t\xi^{-t})} \right)^j 
+\end{align*}
+Here $\xi_*$ is again the unique real positive root of $\xi^{-s} + \xi^{-t} = 1$. By exchanging summation at the end, we aim to extend $\zeta_{s,t}(z)$ to a meromorphic function of on the entire complex plane. The inner sum is a geometric series
+\begin{align*}
+	\zeta_{s,t}^j(z) &= \sum_{k=1}^{\infty} \xi_*^{(z-j)k} \left(\sum_{\xi\neq\xi_*} \frac{\xi^k}{(\xi - 1)(s\xi^{-s}+t\xi^{-t})} \right)^j \\
+	&= \sum_{k=1}^{\infty} \sum_{|\mathbf{j}|=j} {j\choose\mathbf{j}} \frac{ \left(\xi_*^{z-j} \prod_m \xi_m^{j_m}  \right)^k  }{\prod_{m} \left((\xi_m - 1)(s\xi_m^{-s}+t\xi_m^{-t})\right)^{j_m}} \\
+	&= \sum_{|\mathbf{j}|=j} {j\choose\mathbf{j}}  \left(\xi_*^{j-z}\prod_m \xi_m^{-j_m}   - 1\right)^{-1} \prod_{m} \left((\xi_m - 1)(s\xi_m^{-s}+t\xi_m^{-t})\right)^{-j_m}
+\end{align*}
+where $\xi_m$ are all non-$\xi_*$ roots of $\xi^{-s} + \xi^{-t} = 1$, and there are $(\max\{s, t\} - 1)$ of them.  $\mathbf{j} = (j_1,j_2,\dots,j_m)$ is the a $\mathbf{Z}^{0+}$-vector of dimension $(\max\{s, t\} - 1)$. Plugging this back, we get
+\begin{align*}
+	\zeta_{s,t}(z) &=-\frac{s+t}{z} - \frac{1}{z} \sum_{\mathbf{j}}^{\infty}  {z\choose{\mathbf{j},z-|\mathbf{j}|}}   \frac{1}{\xi_*^{|\mathbf{j}|-z}  \prod_m \xi_m^{-j_m}- 1}\frac{\left( (\xi_* - 1)(s\xi_*^{-s}+t\xi_*^{-t})\right)^{|\mathbf{j}|-z} } {\prod_{m} \left((\xi_m - 1)(s\xi_m^{-s}+t\xi_m^{-t})\right)^{j_m}}
+\end{align*}
+There are poles where one of the denominator is zero
+\[
+	\xi_*^{|\mathbf{j}|-z} \prod_m \xi_m^{-j_m}  = 1
+\]
+\[
+z_{\mathbf{j},k} =  \frac{1}{\ln\xi_*}\left(2\pi k i  + \sum_m j_m \ln \frac{\xi_*}{\xi_m}\right) , \quad  \mathbf{j}\in(\mathbb{Z}^{0+})^{\max\{s, t\} - 1},\, k \in \mathbb{Z}
+\]
+The residue at each pole, except for $z = 0$, is
+\[
+\mathrm{Res}(\zeta_{s,t}, z_{\mathbf{j},k}) = \frac{1}{z_{\mathbf{j},k}\ln \xi_*}{z_{\mathbf{j},k}\choose{\mathbf{j},z_{\mathbf{j},k}-|\mathbf{j}|}} \frac{\left( (\xi_* - 1)(s\xi_*^{-s}+t\xi_*^{-t})\right)^{|\mathbf{j}|-z_{\mathbf{j},k}} } {\prod_{m} \left((\xi_m - 1)(s\xi_m^{-s}+t\xi_m^{-t})\right)^{j_m}}
+\]
+Meanwhile $z_{\mathbf{0},0} = 0$ is a pole of order 2. Its residue is
+\[
+\mathrm{Res}(\zeta_{s,t}, 0) = \frac{1}{2} - (s+t) - \frac{\ln\left((\xi_* - 1)(s\xi_*^{-s}+t\xi_*^{-t})\right)}{\ln\xi_*}
+\]
+and the coefficient of $z^{-2}$ at $z = 0$ is $1/\ln\xi_* = 1/\rho$. It can be shown that $\zeta_{s,t}$ has a simple expansion by poles
+\[
+\zeta_{s,t}(z) = \frac{1}{\rho z^2} + \sum_{\mathbf{j},k} \frac{\mathrm{Res}(\zeta_{s,t}, z_{\mathbf{j},k})}{z - z_{\mathbf{j},k}}
+\]
+We can then recover the function $\Delta E_{s,t}(n)$ by inverse Mellin transform
+\[
+\Delta E_{s,t}(n) = \frac{\ln n }{\rho} - \sum_{\mathbf{j},k} \mathrm{Res}(\zeta_{s,t}, z_{\mathbf{j},k}) n^{-z_{\mathbf{j},k}}
+\]
+where the summation is over all poles of $\zeta_{s,t}$. $E(n)$ can be found by integration:
+\[
+E_{s,t}(n) = \int_1^n \Delta E_{s,t}(x)\, dx = \frac{n\ln n -n + 1 }{\rho} - \sum_{\mathbf{j},k}  \frac{\mathrm{Res}(\zeta_{s,t}, z_{\mathbf{j},k})}{1-z_{\mathbf{j},k}}(n^{1-z_{\mathbf{j},k}} - 1 )
+\]
+
+\paragraph{Remark}
+
+For irrational $s / t$, we can attempt the a similar transformation
+\begin{align*}
+	\zeta_{s,t}(z) &= -\frac{s+t}{z} - \frac{1}{z}\int_{s+t}^{\infty}\left(\eta(x)\right)^z\,dx\\
+	&= -\frac{s+t}{z} - \frac{1}{z}\int_{0}^{\infty}\left( \sum_r \frac{e^{rx}}{r(s e^{-sr} + t e^{-tr})}\right)^z\,dx\\
+	&= -\frac{s+t}{z} - \frac{1}{z}\int_{0}^{\infty} \frac{e^{\rho z x }}{\left(\rho(s e^{-s\rho} + t e^{-t\rho})\right)^z} \left(1 +  \sum_{r\ne\rho} \frac{e^{(r-\rho)x}\rho(s e^{-s\rho} + t e^{-t\rho})}{r(s e^{-sr} + t e^{-tr})}\right)^z\,dx \\
+	&= -\frac{s+t}{z} - \frac{1}{z}\int_{0}^{\infty} \frac{e^{\rho z x }}{\left(\rho(s e^{-s\rho} + t e^{-t\rho})\right)^z} \sum_{j=0}^{\infty}{z\choose j}\left(\sum_{r\ne\rho} \frac{e^{(r-\rho)x}\rho(s e^{-s\rho} + t e^{-t\rho})}{r(s e^{-sr} + t e^{-tr})}\right)^j\,dx\\
+	&= -\frac{s+t}{z} - \frac{1}{z}\sum_{j=0}^{\infty}\frac{1}{\left(\rho(s e^{-s\rho} + t e^{-t\rho})\right)^{z-j}} {z\choose j}\int_{0}^{\infty}  e^{\rho z x } \left(\sum_{r\ne\rho} \frac{e^{(r-\rho)x}}{r(s e^{-sr} + t e^{-tr})}\right)^j\,dx \\
+	&= -\frac{s+t}{z} - \frac{1}{z}\sum_{j=0}^{\infty}\frac{1}{\left(\rho(s e^{-s\rho} + t e^{-t\rho})\right)^{z-j}} {z\choose j}\int_{0}^{\infty}  e^{\rho z x }  \sum_{|\mathbf{j}| = j}{j\choose \mathbf{j}}  \prod_m \left(\frac{e^{(r_m-\rho)x}}{r_m(s e^{-sr_m} + t e^{-tr_m})}\right)^{j_m}\,dx \\
+	&= -\frac{s+t}{z} + \frac{1}{z}\sum_{j=0}^{\infty}\frac{1}{\left(\rho(s e^{-s\rho} + t e^{-t\rho})\right)^{z-j}} {z\choose j}   \sum_{|\mathbf{j}| = j}{j\choose \mathbf{j}}  \frac{1}{\rho z + \sum_m j_m (r_m-\rho)} \prod_m \left(r_m(s e^{-sr_m} + t e^{-tr_m})\right)^{-j_m}\\
+	&= -\frac{s+t}{z} + \frac{1}{z}\sum_{|\mathbf{j}|<\infty}  \frac{{z\choose \mathbf{j}, z-|\mathbf{j}|}}{\rho z + \sum_m j_m (r_m-\rho)}  \frac{\left(\rho(s e^{-s\rho} + t e^{-t\rho})\right)^{|\mathbf{j}|-z}}{\prod_m\left(r_m(s e^{-sr_m} + t e^{-tr_m})\right)^{j_m}}
+\end{align*}
+where $\rho$ is the unique real root of $e^{-sr} + e^{-tr} = 1$, $m$ indexes through all (infinitely many) non-$\rho$ roots $r_m$ of the same equation, and $\mathbf{j} = (j_1,j_2,\dots)$ is a $\mathbb{Z}^{0+}$-vector with the same index, equipped with $1$-norm. If this were a meromorphic function on the entire complex plane, its poles are at the following location
+\[
+z = \sum_m j_m \left(1 - \frac{r_m}{\rho}\right) =  |\mathbf{j}| - \frac{\mathbf{j}\cdot\mathbf{r}}{\rho},\quad |\mathbf{j}| < \infty
+\]
+However, we notice that there are infinitely many $r_m$ whose real parts are arbitrarily close to $\rho$, and they also comes in conjugate pairs. We can use them to find dense poles along the real line. Hence $\zeta_{s,t}(z)$ is not a meromorphic function, and we can't simply apply inverse Mellin transform. Nevertheless, we can heuristically calculate residues as before. For non-zero poles
+\[
+\mathrm{Res}(\zeta_{s,t}, z) = \frac{1}{\rho z}{z\choose \mathbf{j}, z-|\mathbf{j}|}  \frac{\left(\rho(s e^{-s\rho} + t e^{-t\rho})\right)^{|\mathbf{j}|-z}}{\prod_m\left(r_m(s e^{-sr_m} + t e^{-tr_m})\right)^{j_m}}
+\]
+and the residue and the order 2 pole $z=0$ is
+\[
+\mathrm{Res}(\zeta_{s,t}, 0) = -(s+t) - \frac{\ln\left(\rho  (se^{-s\rho} + te^{-t\rho})\right)}{\rho}
+\]
+and the coefficient of $z^{-2}$ at $z = 0$ is $1/\rho$. Applying the same Mellin transform with a partial collection of poles can still somewhat approximate $\Delta E_{s,t}(n)$, but it seems to require a particular summation order, which hasn't been strictly proved.
+
 \end{proof}
 
 \end{document}
